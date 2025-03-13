@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green Frames</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body>
+    <header class="w-full bg-gray-800 text-white">
+        <div class="container mx-auto flex justify-between items-center p-4">
+      
+          <!-- Logo -->
+          <h1 class="text-xl font-bold">Green Frames</h1>
+      
+          <!-- Desktop Navigation -->
+          <nav class="hidden md:flex space-x-4">
+            <a href="#" class="hover:text-gray-400">Home</a>
+            <a href="#" class="hover:text-gray-400">About</a>
+            <a href="#" class="hover:text-gray-400">Gallery</a>
+            <a href="#" class="hover:text-gray-400">Contact</a>
+          </nav>
+      
+          <!-- Mobile Menu Button -->
+          <button id="menu-toggle" class="md:hidden p-2 border rounded">
+            ☰
+          </button>
+      
+        </div>
+      
+        <!-- Mobile Menu (Hidden Initially) -->
+        <nav id="mobile-menu" class="hidden flex flex-col absolute top-16 right-0 bg-gray-900 p-4 w-48 shadow-lg">
+          <a href="#" class="menu-item block px-4 py-2 bg-gray-700 opacity-0 transform translate-x-full transition-all duration-300 ease-out">Home</a>
+          <a href="#" class="menu-item block px-4 py-2 bg-gray-700 opacity-0 transform translate-x-full transition-all duration-500 ease-out">About</a>
+          <a href="#" class="menu-item block px-4 py-2 bg-gray-700 opacity-0 transform translate-x-full transition-all duration-700 ease-out">Gallery</a>
+          <a href="#" class="menu-item block px-4 py-2 bg-gray-700 opacity-0 transform translate-x-full transition-all duration-900 ease-out">Contact</a>
+        </nav>
+      </header>
+      
+      <!-- JavaScript for Bricks Animation -->
+      <script>
+        document.getElementById("menu-toggle").addEventListener("click", function() {
+          let menu = document.getElementById("mobile-menu");
+          let menuItems = document.querySelectorAll(".menu-item");
+      
+          if (menu.classList.contains("hidden")) {
+            menu.classList.remove("hidden");
+            setTimeout(() => {
+              menuItems.forEach((item, index) => {
+                setTimeout(() => {
+                  item.classList.remove("opacity-0", "translate-x-full");
+                }, index * 100); // Delay each menu item slightly
+              });
+            }, 10);
+          } else {
+            menuItems.forEach((item, index) => {
+              setTimeout(() => {
+                item.classList.add("opacity-0", "translate-x-full");
+              }, (menuItems.length - index - 1) * 100);
+            });
+      
+            setTimeout(() => {
+              menu.classList.add("hidden");
+            }, 500);
+          }
+        });
+      </script>
+</body>      
+  </html>
+  

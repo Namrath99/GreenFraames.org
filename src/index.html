@@ -8,13 +8,129 @@
     <title>Tailwind Test</title>
     <link href="../dist/output.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100 flex justify-center items-center h-screen">
+<body class="h-[100vh]">
+    <header class="w-full sticky top-0 bg-green-200 h-[15vh] touch-manipulation">
+        <div class="flex w-full md:w-[90%] h-full mx-auto">
+            <div class="flex w-2/3 md:w-1/2 justify-left sm:justify-center ml-4 md:ml-0 items-center">
+                <img src="assets/Unknown.jpeg" alt="logo" class="h-1/2">
+                <h1 class="font-bold md:text-4xl xl:text-5xl text-gray-800 text-2xl">Green Frames</h1>
+            </div>
+            <!-- nav bar for large screens -->
+            <nav class="hidden md:flex flex-row w-1/2 h-1/2 mx-auto justify-evenly items-end my-auto">
+                <a href="#" class="hover:text-gray-400 text-center p-1 w-1/6 h-auto">Home</a>
+                <a href="#" class="hover:text-gray-400 text-center p-1 w-1/6 h-auto">About</a>
+                <a href="#" class="hover:text-gray-400 text-center p-1 w-1/6 h-auto">Gallery</a>
+                <a href="#" class="hover:text-gray-400 text-center p-1 w-1/6 h-auto">Contact</a>
+            </nav>
+            <div class="md:hidden relative my-auto flex w-1/3 justify-end">
+              <!-- the below <p> makes the button unclickable between to complete the animations -->
+            <p id="overlay" class="md:hidden block absolute top-0 left-auto mr-4 w-12 h-full z-[-1]"></p>
+            <button id="menu-toggle" class="md:hidden my-auto p-2 mr-4 h-1/3 w-12">|||</button>
+          </div>
+          <!-- original nav bar  -->
+            <!-- <nav id="mobile-menu" class="hidden flex flex-col absolute top-[20vh] right-0 bg-green-200 p-4 w-48 shadow-lg"> -->
+              <!--test nav bar-->
+              <nav id="mobile-menu" class="hidden flex flex-col absolute top-[15vh] right-0 bg-green-200 p-4 w-48 shadow-lg overflow-hidden">
+              <!--elements to make the bricks broken-fall effect -->
+              <a href="#" class="menu-item block px-4 py-2 bg-green-700 opacity-0 transform translate-x-full transition-all duration-300">Home</a>
+                <a href="#" class="menu-item block px-4 py-2 bg-green-700 opacity-0 transform translate-x-full transition-all duration-500">About</a>
+                <a href="#" class="menu-item block px-4 py-2 bg-green-700 opacity-0 transform translate-x-full transition-all duration-700">Gallery</a>
+                <a href="#" class="menu-item block px-4 py-2 bg-green-700 opacity-0 transform translate-x-full transition-all duration-900">Contact</a>
+              <!-- to make the bricks falls one after the other -->
+                <!-- <a class="menu-item transform translate-x-full transition-all ease-linear duration-500 block px-4 py-2 bg-green-700 opacity-0">Home</a>
+                <a class="menu-item transform translate-x-full transition-all ease-linear duration-500 block px-4 py-2 bg-green-700 opacity-0">Home</a>
+                <a class="menu-item transform translate-x-full transition-all ease-linear duration-500 block px-4 py-2 bg-green-700 opacity-0">Home</a>
+                <a class="menu-item transform translate-x-full transition-all ease-linear duration-500 block px-4 py-2 bg-green-700 opacity-0">Home</a> -->
 
-    <div class="p-6 max-w-sm mx-auto bg-white rounded-xl shadow-md space-y-4">
-        <h1 class="text-2xl font-bold text-center text-blue-600">Tailwind is Working! 🎉</h1>
-        <p class="text-gray-600 text-center">If you see this styled box, Tailwind CSS is properly installed.</p>
-        <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Click Me!</button>
-    </div>
+              </nav>
+              <script>
+                // //to make the bricks broken-fall effect
+                document.getElementById("menu-toggle").addEventListener("click", function() {
+                  document.getElementById("overlay").classList.replace("z-[-1]", "z-10");
+                  let menu = document.getElementById("mobile-menu");
+                  let menuItems = document.querySelectorAll(".menu-item");
+              
+                  if (menu.classList.contains("hidden")) {
+                    menu.classList.remove("hidden");
+                    setTimeout(() => {
+                      menuItems.forEach((item, index) => {
+                        setTimeout(() => {
+                          item.classList.remove("opacity-0", "translate-x-full");
+                        }, index * 100);
+                      });
+                    }, 10);
+
+                    // Home → 0ms delay 300ms duration
+                    // About → 100ms delay 500ms duration
+                    // Gallery → 200ms delay 700ms duration
+                    // Contact → 300ms delay 900ms duration
+                  } else {
+                    menuItems.forEach((item, index) => {
+                      setTimeout(() => {
+                        item.classList.add("opacity-0", "translate-x-full");
+                      }, (menuItems.length - index - 1) * 100);
+                    });
+              
+                    setTimeout(() => {
+                      menu.classList.add("hidden");
+                    }, 500);
+                  }
+                  setTimeout(() => {
+                    document.getElementById("overlay").classList.replace("z-10", "z-[-1]");
+                  }, 700);
+                });
+
+              //to make the bricks falls one after the other
+              // document.getElementById("menu-toggle").addEventListener("click", function() {
+              //     document.getElementById("overlay").classList.replace("z-[-1]", "z-10");
+              //     let menu = document.getElementById("mobile-menu");
+              //     let menuItems = document.querySelectorAll(".menu-item");
+              
+              //     if (menu.classList.contains("hidden")) {
+              //       menu.classList.remove("hidden");
+              //       setTimeout(() => {
+              //         menuItems.forEach((item, index) => {
+              //           setTimeout(() => {
+              //             item.classList.remove("opacity-0", "translate-x-full");
+              //           }, index * 250);
+              //         });
+              //       }, 10);
+              //     } else {
+              //       menuItems.forEach((item, index) => {
+              //         setTimeout(() => {
+              //           item.classList.add("opacity-0", "translate-x-full");
+              //         }, (menuItems.length - index - 1) * 100);
+              //       });
+              
+              //       setTimeout(() => {
+              //         menu.classList.add("hidden");
+              //       }, 500);
+              //     }
+              //     setTimeout(() => {
+              //       document.getElementById("overlay").classList.replace("z-10", "z-[-1]");
+              //     }, 1000);
+              //   });
+              </script>
+              
+
+        </div>
+    </header>
+
+    <footer class="hidden md:flex fixed w-full bottom-0 bg-green-200 h-[5vh]">
+        <div class="w-[90%] h-full mx-auto flex">
+        <div class="w-1/2 flex h-full justify-center items-center">
+          <a href="#" class="m-4">prev ^</a>
+          <a href="#" class="m-4">next v</a>
+        </div>
+        <div class="w-1/2 flex h-full justify-center items-center">
+            <a href="#" class="m-4 my-auto">I</a>
+            <a href="#" class="m-4">F</a>
+            <a href="#" class="m-4">W</a>
+        </div>
+        </div>
+    </footer>
 
 </body>
+
+
 </html>
