@@ -9,7 +9,8 @@
     <link href="../dist/output.css" rel="stylesheet">
 </head>
 <body class="h-screen w-full flex flex-col bg-green-100">
-    <header class="w-full sticky top-0 bg-green-200 h-[15vh] touch-manipulation">
+    <header class="w-full sticky top-0 bg-green-200 h-[15vh] z-10">
+      <!-- in the above header i had to put z-10 for the mobile-menu to overlay on the rest of the body to be visible -->
         <div class="flex w-full md:w-[90%] h-full mx-auto">
             <div class="flex w-2/3 md:w-1/2 justify-left sm:justify-left ml-4 md:ml-0 items-center">
                 <img src="assets/Unknown.jpeg" alt="logo" class="h-1/2">
@@ -136,7 +137,7 @@
               <div id="info-side" class="max-xl:hidden w-[40%] flex flex-col">
                   <div id="info-carousel" class="h-[80%] w-full relative overflow-hidden">
                     <!-- carousel code start --> 
-                     <!-- all the below problems were due to borders that you to debug the layouts -->
+                     <!-- all the below problems were due to borders that you used to debug the layouts -->
                      <!-- i added w-full in the next line and min-w-full in .carousel-slide (all 3)-->
                       <!-- at first why the width full didnt work for the .carousel-slide elements before min-w-full, even after why does each slide not fit perfectly to full width of carousel-container?, tried to use justify evenly didnt work out! -->
                     <div id="carousel-container" class="w-full h-full flex transition-transform duration-500 ease-in-out">

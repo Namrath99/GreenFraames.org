@@ -11,4 +11,9 @@
 /* p{
     border: 1px solid red;
 } */
+ *{
+    @apply touch-manipulation;
+    /* revert this double-tap disable by doing "touch-auto" to the main image only */
+    /* later when the real images are ready in the layout, we can simulate double tap using js to zoom-fit just the photo to fit the screen! */
+ }
   
