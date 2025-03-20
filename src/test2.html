@@ -9,7 +9,7 @@
     <link href="../dist/output.css" rel="stylesheet">
 </head>
 <body class="h-screen w-full flex flex-col bg-green-100">
-    <header class="w-full sticky top-0 bg-green-200 h-[15vh] z-10">
+    <header class="w-full sticky top-0 bg-green-300 h-[15vh] z-10">
       <!-- in the above header i had to put z-10 for the mobile-menu to overlay on the rest of the body to be visible -->
         <div class="flex w-full md:w-[90%] h-full mx-auto">
             <div class="flex w-2/3 md:w-1/2 justify-left sm:justify-left ml-4 md:ml-0 items-center">
@@ -134,39 +134,81 @@
                   <a href="#" class="">W</a>
                 </div>
               </div>
-              <div id="info-side" class="max-xl:hidden w-[40%] flex flex-col bg-green-300">
-                  <div id="info-carousel" class="h-[80%] w-full relative overflow-hidden">
+
+              
+               
+              
+
+              <!-- original code start -->
+              <div id="info-side" class="max-xl:hidden h-full w-[40%] flex flex-col bg-green-200 relative">
+                  <div id="info-carousel" class="h-[80%] w-full overflow-hidden">
                     <!-- carousel code start --> 
                      <!-- all the below problems were due to borders that you used to debug the layouts -->
                      <!-- i added w-full in the next line and min-w-full in .carousel-slide (all 3)-->
                       <!-- at first why the width full didnt work for the .carousel-slide elements before min-w-full, even after why does each slide not fit perfectly to full width of carousel-container?, tried to use justify evenly didnt work out! -->
-                    <div id="carousel-container" class="w-full h-full flex transition-transform duration-500 ease-in-out">
-                      <div class="carousel-slide min-w-full h-full overflow-y-auto p-5">
+
+                    <!-- test code for dynamic space below carousel starts header -->
+                    <div id="carousel-container" class="w-full h-full flex transition-transform duration-500 ease-in-out ">
+                      
+                      <div id="first-slide" class="carousel-slide min-w-full h-full flex flex-col overflow-y-auto p-5 bg-slate-400">
+                        <div>
+                            <h2 class="text-lg font-bold text-center">Slide 1 Title</h2>
+                            <p class="text-gray-700">Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
+                        </div>
+                        <div class="flex-1 min-h-[10%] bg-black"></div>
+                    </div>
+        
+                    <div id="second-slide" class="carousel-slide min-w-full h-auto flex flex-col p-5 bg-slate-400">
+                        <div>
+                            <h2 class="text-lg font-bold text-center">Slide 2 Title</h2>
+                            <p class="text-gray-700 overflow-y-auto">Some other text...More text for this slide...More text for this slide...More text for this slide...More text for this slide...More text for this slide...More text for this slide...More text for this slide...More text for this slide...More text for this slide...More text for this slide...More text for this slide...More text for this slide...More text for this slide...More text for this slide...More text for this slide...More text for this slide...More text for this slide...More text for this slide...More text for this slide...More text for this slide...More text for this slide...More text for this slide...More text for this slide...More text for this slide...More text for this slide...More text for this slide...More text for this slide...More text for this slide...More text for this slide...More text for this slide...More text for this slide...More text for this slide...More text for this slide...More text for this slide...More text for this slide...More text for this slide...</p>
+                        </div>
+                        <div class="flex-1 min-h-[10%] bg-black"></div>
+                    </div>
+        
+                    <div id="third-slide" class="carousel-slide min-w-full h-auto flex flex-col overflow-y-auto p-5 bg-slate-400">
+                        <div>
+                            <h2 class="text-lg font-bold text-center">Slide 3 Title</h2>
+                            <p class="text-gray-700">More text for this slide...More text for this slide...More text for this slide...</p>
+                        </div>
+                        <div class="flex-1 min-h-[10%] bg-black overflow-y-auto"></div>
+                    </div>
+                    <!-- test code for dynamic space below carousel ends header -->
+
+                      <!-- original code start -->
+                      <!-- <div id="first-slide" class="carousel-slide min-w-full h-auto overflow-y-auto p-5 bg-slate-400">
                           <h2 class="text-lg font-bold text-center">Slide 1 Title</h2>
-                          <p class="text-gray-700">Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
+                          <p class="text-gray-700">Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, slide...consectetur adipiscing elitLorem ipsum dolor sit amet, consectetur adipiscing elit consectetur adipiscing elitLorem ipsum dolor sit amet, consectetur slide...consectetur adipiscing elitLorem ipsum dolor sit amet, consectetur adipiscing elit consectetur adipiscing elitLorem ipsum dolor sit amet, consectetur slide...consectetur adipiscing elitLorem ipsum dolor sit amet, consectetur adipiscing elit consectetur adipiscing elitLorem ipsum dolor sit amet, consectetur slide...consectetur adipiscing elitLorem ipsum dolor sit amet, consectetur adipiscing elit consectetur adipiscing elitLorem ipsum dolor sit amet, consectetur slide...consectetur adipiscing elitLorem ipsum dolor sit amet, consectetur adipiscing elit consectetur adipiscing elitLorem ipsum dolor sit amet, consectetur  consectetur adipiscing elitLorem ipsum dolor sit amet, consectetur adipiscing elitLorem ipsum dolor sit amet, consectetur adipiscing elitLorem ipsum dolor sit amet, consectetur adipiscing elitLorem ipsum dolor sit amet, consectetur adipiscing elit</p>
                       </div>
-                      <div class="carousel-slide min-w-full h-full overflow-y-auto p-5">
+                      <div id="second-slide" class="carousel-slide min-w-full h-auto overflow-y-auto p-5 bg-slate-400">
                           <h2 class="text-lg font-bold text-center">Slide 2 Title</h2>
                           <p class="text-gray-700">Some other text...</p>
                       </div>
-                      <div class="carousel-slide min-w-full h-full overflow-y-auto p-5">
+                      <div id="third-slide" class="carousel-slide min-w-full h-auto overflow-y-auto p-5 bg-slate-400">
                           <h2 class="text-lg font-bold text-center">Slide 3 Title</h2>
-                          <p class="text-gray-700">More text for this slide...</p>
-                      </div>
+                          <p class="text-gray-700">More text for this slide...consectetur adipiscing elitLorem ipsum dolor sit amet, consectetur adipiscing elit consectetur adipiscing elitLorem ipsum dolor sit amet, consectetur adipiscing elitLorem ipsum dolor sit amet, consectetur adipiscing elitLorem ipsum dolor sit amet, consectetur adipiscing elitLorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+                      </div> -->
+                      <!-- original code end  -->
                   </div>
-                  <button id="prev-slide" class="absolute h-[10%] left-2 top-[5%] transform -translate-y-1/2 bg-slate-300 text-white  rounded-full focus:outline-none">←</button>
-                  <button id="next-slide" class="absolute h-[10%] right-2 top-[5%] transform -translate-y-1/2 bg-slate-400 text-white  rounded-full focus:outline-none">→</button>
-                </div>
+                  <!-- in the buttons below i have added "focus:outline-none" to not let the browser apply colored border around prev or next buttons when the uses switches from buttons to using arrow keys on the keyboard, its a browser default -->
+                   <!-- you have to position them to be in vertical centre of donate-section later-->
+                    <button id="prev-slide" class="absolute h-[10%] left-2 bottom-0 transform -translate-y-1/2 bg-slate-300 text-white  rounded-full focus:outline-none">←</button>
+                    <button id="next-slide" class="absolute h-[10%] right-2 bottom-0 transform -translate-y-1/2 bg-slate-400 text-white  rounded-full focus:outline-none">→</button>
+                  </div>
                   <!-- carousel code ends here -->
-                  <div id="button-section" class="h-[20%] flex justify-center items-center">
-                    <button id="donate-button" class="border-2 border-green-500 p-3">Donate</button>
+
+                   <!-- <div id="test-element" class=" min-h-[10%] flex-1 bg-black">Test element</div> -->
+
+                  <div id="donate-section" class="h-[20%] flex justify-center items-center">
+                    <button id="donate-button" class="border-green-500 border-2 p-3">Donate</button>
                   </div>
               </div>
+              <!-- original code end -->
             </div>
 
         </div>
     </div>
-    <footer class="hidden md:flex fixed w-full bottom-0 bg-green-200 h-[5vh]">
+    <footer class="hidden md:flex fixed w-full bottom-0 bg-green-300 h-[5vh]">
         <div class="w-[90%] h-full mx-auto flex">
         <div class="w-1/2 flex h-full justify-center items-center">
           <a href="#" class="m-4">prev ^</a>
@@ -194,11 +236,15 @@
         //if you need to add more slides change the last else to have else if(currentSlide==lastslide), and add else if(currentSlide==lastslide-1){logic} to take care of next button bg color and ofcourse remove the logic related to next slide in else if(currentSlide==1).
         if(currentSlide==0){
               document.getElementById("prev-slide").classList.replace("bg-slate-400","bg-slate-300")
+              // document.getElementById("carousel-container").style.height =`${document.getElementById("first-slide").offsetHeight}px`;
             }else if(currentSlide==1){
                 if(document.getElementById("prev-slide").classList.contains("bg-slate-300")){document.getElementById("prev-slide").classList.replace("bg-slate-300","bg-slate-400")}
-                if(document.getElementById("next-slide").classList.contains("bg-slate-300")){document.getElementById("next-slide").classList.replace("bg-slate-300","bg-slate-400")}                
+                if(document.getElementById("next-slide").classList.contains("bg-slate-300")){document.getElementById("next-slide").classList.replace("bg-slate-300","bg-slate-400")}
+                // document.getElementById("carousel-container").style.height =`${document.getElementById("second-slide").offsetHeight}px`;
+                
             }else{ //for the last slide i.e, currentSlide==2,
               document.getElementById("next-slide").classList.replace("bg-slate-400","bg-slate-300")
+              // document.getElementById("carousel-container").style.height =`${document.getElementById("third-slide").offsetHeight}px`;
             }
     }
 
