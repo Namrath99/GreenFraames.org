@@ -141,18 +141,32 @@
                      <!-- i added w-full in the next line and min-w-full in .carousel-slide (all 3)-->
                       <!-- at first why the width full didnt work for the .carousel-slide elements before min-w-full, even after why does each slide not fit perfectly to full width of carousel-container?, tried to use justify evenly didnt work out! -->
                     <div id="carousel-container" class="w-full h-full flex transition-transform duration-500 ease-in-out">
-                      <div class="carousel-slide min-w-full h-full overflow-y-auto p-5">
+                      <!-- implemented dynamic divs which takeup rest of the space left after the text, to contain ainmal emojis! -->
+                      <div id="first-slide" class="carousel-slide min-w-full h-auto p-5 flex flex-col">
+                        <div id="slide1-content" class="min-h-[25%] max-h-[80%]">
                           <h2 class="text-lg font-bold text-center">Slide 1 Title</h2>
-                          <p class="text-gray-700">Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
+                          <p class="text-gray-700 max-h-[85%] overflow-y-auto">Lorem ipsum dolor sit amet, </p>
+                        </div>
+                        <div class="flex-1 min-h-[20%] bg-black"></div>
                       </div>
-                      <div class="carousel-slide min-w-full h-full overflow-y-auto p-5">
+
+                      <div id="second-slide" class="carousel-slide min-w-full h-auto p-5 flex flex-col">
+                        <div id="slide2-content" class="min-h-[25%] max-h-[80%]">
                           <h2 class="text-lg font-bold text-center">Slide 2 Title</h2>
-                          <p class="text-gray-700">Some other text...</p>
+                          <p class="text-gray-700 max-h-[85%] overflow-y-auto">Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet,</p>
+                        </div>
+                        <div class="flex-1 min-h-[20%] bg-black"></div>
                       </div>
-                      <div class="carousel-slide min-w-full h-full overflow-y-auto p-5">
+
+
+                      <div id="third-slide" class="carousel-slide min-w-full h-auto p-5 flex flex-col">
+                        <div id="slide3-content" class="min-h-[25%] max-h-[80%]">
                           <h2 class="text-lg font-bold text-center">Slide 3 Title</h2>
-                          <p class="text-gray-700">More text for this slide...</p>
+                          <p class="text-gray-700 max-h-[85%] overflow-y-auto">Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet, </p>
+                        </div>
+                        <div class="flex-1 min-h-[20%] bg-black"></div>
                       </div>
+
                   </div>
                   <button id="prev-slide" class="absolute h-[10%] left-2 top-[5%] transform -translate-y-1/2 bg-slate-300 text-white  rounded-full focus:outline-none">←</button>
                   <button id="next-slide" class="absolute h-[10%] right-2 top-[5%] transform -translate-y-1/2 bg-slate-400 text-white  rounded-full focus:outline-none">→</button>
