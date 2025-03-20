@@ -129,15 +129,15 @@
 
               <!-- test code for #image-side starts here -->
               <div id="image-side" class="max-xl:w-full w-[60%] bg-black relative h-full flex flex-col justify-center items-center">
-                <a id="PhotographerId" href="#" class="hidden max-xl:block w-full absolute bottom-[100%] text-center text-[clamp(.5rem,1rem,5vh)]">@Photographer</a>
+                <a id="PhotographerId" href="#" class="hidden max-xl:block w-full absolute bottom-[100%] text-center text-[clamp(.5rem,1rem,5vh)]">By:@Photographer</a>
                 <!-- <div id="image-section" class="w-full h-full flex flex-col justify-center items-center"> -->
                   <!-- here i created #PhotographerIdxl-placeholder to make the image vertically centered even when the user's text size changes -->
                   <!-- you must render the name of the photographer at top and bottom too, to keep the image centered with dynamic text size change above and below!-->
-                  <a id="PhotographerIdxl-placeholder" href="#" class="hidden xl:block text-white invisible h-full">@Photographer</a>
-                  <div class="flex-auto max-h-full xl:max-h-[90%]">
+                  <a id="PhotographerIdxl-placeholder" href="#" class="hidden xl:block invisible h-[5%]"></a>
+                  <div class="flex-auto h-full xl:max-h-[90%]">
                     <img src="assets/dog-medium-rectangle.jpg" class="h-full w-auto max-w-full object-contain">
                   </div>
-                  <a id="PhotographerIdxl" href="#" class="hidden xl:block w-full text-white text-center h-full">@Photographer</a>
+                  <a id="PhotographerIdxl" href="#" class="hidden xl:block w-full text-white text-center h-[5%] text-[2vh]">@Photographer</a>
 
                 <!-- </div> -->
 
@@ -176,7 +176,7 @@
                       <!-- at first why the width full didnt work for the .carousel-slide elements before min-w-full, even after why does each slide not fit perfectly to full width of carousel-container?, tried to use justify evenly didnt work out! -->
                     <div id="carousel-container" class="w-full h-full flex transition-transform duration-500 ease-in-out">
                       <!-- implemented dynamic divs which takeup rest of the space left after the text, to contain ainmal emojis! -->
-                      <div id="first-slide" class="carousel-slide min-w-full h-auto p-5 flex flex-col">
+                      <div id="first-slide" class="carousel-slide min-w-full h-auto px-6 flex flex-col">
                         <div id="slide1-content" class="min-h-[25%] max-h-[80%]">
                           <h2 class="text-lg font-bold text-center">Slide 1 Title</h2>
                           <p class="text-gray-700 max-h-[85%] overflow-y-auto">Lorem ipsum dolor sit amet, </p>
@@ -184,7 +184,7 @@
                         <div class="flex-auto min-h-[20%] bg-black"></div>
                       </div>
 
-                      <div id="second-slide" class="carousel-slide min-w-full h-auto p-5 flex flex-col">
+                      <div id="second-slide" class="carousel-slide min-w-full h-auto px-6 flex flex-col">
                         <div id="slide2-content" class="min-h-[25%] max-h-[80%]">
                           <h2 class="text-lg font-bold text-center">Slide 2 Title</h2>
                           <p class="text-gray-700 max-h-[85%] overflow-y-auto">Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet,</p>
@@ -193,7 +193,7 @@
                       </div>
 
 
-                      <div id="third-slide" class="carousel-slide min-w-full h-auto p-5 flex flex-col">
+                      <div id="third-slide" class="carousel-slide min-w-full h-auto px-6 flex flex-col">
                         <div id="slide3-content" class="min-h-[25%] max-h-[80%]">
                           <h2 class="text-lg font-bold text-center">Slide 3 Title</h2>
                           <p class="text-gray-700 max-h-[85%] overflow-y-auto">Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet, </p>
@@ -207,7 +207,7 @@
                 </div>
                   <!-- carousel code ends here -->
                   <div id="button-section" class="h-[20%] flex justify-center items-center">
-                    <button id="donate-button" class="border-2 border-green-500 p-3">Donate</button>
+                    <button id="donate-button" class="border-2 border-green-500 px-6 h-1/2 w-1/3 text-center text-xl">Donate</button>
                   </div>
               </div>
             </div>
