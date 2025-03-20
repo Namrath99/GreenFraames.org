@@ -8,13 +8,13 @@
     <title>Tailwind Test</title>
     <link href="../dist/output.css" rel="stylesheet">
 </head>
-<body class="h-screen w-full flex flex-col bg-green-100">
+<body class="h-screen w-full min-w-[270px] min-h-[350px] flex flex-col bg-green-100">
     <header class="w-full sticky top-0 bg-green-200 h-[15vh] z-10">
       <!-- in the above header i had to put z-10 for the mobile-menu to overlay on the rest of the body to be visible -->
         <div class="flex w-full md:w-[90%] h-full mx-auto">
             <div class="flex w-2/3 md:w-1/2 justify-left sm:justify-left ml-4 md:ml-0 items-center">
                 <img src="assets/Unknown.jpeg" alt="logo" class="h-1/2">
-                <h1 class="font-bold md:text-4xl xl:text-5xl text-gray-800 text-2xl">Green Frames</h1>
+                <h1 class="font-bold md:text-4xl xl:text-5xl text-gray-800 text-2xl text-[clamp(0.25rem,1.5rem,15vh)]">Green Frames</h1>
             </div>
             <!-- nav bar for large screens -->
             <nav class="hidden md:flex flex-row w-1/2 h-1/2 mx-auto justify-evenly items-end my-auto">
@@ -117,24 +117,58 @@
         </div>
     </header>
 
-    <div id="main" class="w-full flex flex-col flex-1">
+    <div id="main" class="w-full flex flex-col flex-auto h-[80vh]">
         <nav id="internal-nav" class="w-[90%] max-sm:w-full flex flex-row max-sm:fixed max-sm:bottom-0 h-[5vh] max-sm:mx-0 items-center mx-auto">
           <!-- had to mention "max-sm:flex max-sm:items-center max-sm:justify-center" to make the items centered vertically in 100% cases  -->
-            <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200">All</a>
-            <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200">By viewers</a>
-            <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200">By Author</a>
+            <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">All</a>
+            <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">By viewers</a>
+            <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">By Author</a>
         </nav>
-        <div class="w-[90%] mx-auto flex-1 flex justify-center items-center pb-[5vh] sm:max-md:pb-0">
-            <div id="post-card" class="w-[90%] h-[80%] flex flex-row">
-              <div id="image-side" class="max-xl:w-full w-[60%] bg-black relative">
-                <a id="PhotographerId" href="#" class="hidden max-xl:block w-full absolute top-[-28px] text-center">@Photographer</a>
-                <div id="social-icons" class="hidden max-md:flex w-full absolute bottom-[-30px] justify-evenly items-center">
+        <div class="w-[90%] mx-auto flex-auto flex justify-center items-center pb-[5vh] sm:max-md:pb-0 h-[75vh]">
+            <div id="post-card" class="w-[90%] h-[80%] flex flex-row justify-center items-center">
+
+              <!-- test code for #image-side starts here -->
+              <div id="image-side" class="max-xl:w-full w-[60%] bg-black relative h-full flex flex-col justify-center items-center">
+                <a id="PhotographerId" href="#" class="hidden max-xl:block w-full absolute bottom-[100%] text-center text-[clamp(.5rem,1rem,5vh)]">@Photographer</a>
+                <!-- <div id="image-section" class="w-full h-full flex flex-col justify-center items-center"> -->
+                  <!-- here i created #PhotographerIdxl-placeholder to make the image vertically centered even when the user's text size changes -->
+                  <!-- you must render the name of the photographer at top and bottom too, to keep the image centered with dynamic text size change above and below!-->
+                  <a id="PhotographerIdxl-placeholder" href="#" class="hidden xl:block text-white invisible h-full">@Photographer</a>
+                  <div class="flex-auto max-h-full xl:max-h-[90%]">
+                    <img src="assets/dog-medium-rectangle.jpg" class="h-full w-auto max-w-full object-contain">
+                  </div>
+                  <a id="PhotographerIdxl" href="#" class="hidden xl:block w-full text-white text-center h-full">@Photographer</a>
+
+                <!-- </div> -->
+
+
+                <div id="social-icons" class="hidden max-md:flex w-full absolute top-[100%] justify-evenly items-center">
                   <a href="#" class="">I</a>
                   <a href="#" class="">F</a>
                   <a href="#" class="">W</a>
                 </div>
               </div>
-              <div id="info-side" class="max-xl:hidden w-[40%] flex flex-col bg-green-300">
+
+              <!-- original code -->
+              <!-- <div id="image-side" class="max-xl:w-full w-[60%] bg-black relative h-full">
+                <a id="PhotographerId" href="#" class="hidden max-xl:block w-full absolute top-[-28px] text-center">@Photographer</a>
+                <div id="image-section" class="w-full h-full flex flex-col justify-center items-center"> -->
+                  <!-- here i created #PhotographerIdxl-placeholder to make the image vertically centered even when the user's text size changes -->
+                  <!-- you must render the name of the photographer at top and bottom too, to keep the image centered with dynamic text size change above and below!-->
+                  <!-- <a id="PhotographerIdxl-placeholder" href="#" class="hidden xl:block text-white invisible">@Photographer</a>
+                  <img src="assets/vertical-animal.jpg" class="h-auto max-h-full w-auto max-w-full object-contain flex-1">
+                  <a id="PhotographerIdxl" href="#" class="hidden xl:block w-full text-white text-center">@Photographer</a>
+
+                </div>
+
+
+                <div id="social-icons" class="hidden max-md:flex w-full absolute bottom-[-30px] justify-evenly items-center">
+                  <a href="#" class="">I</a>
+                  <a href="#" class="">F</a>
+                  <a href="#" class="">W</a>
+                </div>
+              </div> -->
+              <div id="info-side" class="max-xl:hidden w-[40%] flex flex-col bg-green-300 h-full">
                   <div id="info-carousel" class="h-[80%] w-full relative overflow-hidden">
                     <!-- carousel code start --> 
                      <!-- all the below problems were due to borders that you used to debug the layouts -->
@@ -147,7 +181,7 @@
                           <h2 class="text-lg font-bold text-center">Slide 1 Title</h2>
                           <p class="text-gray-700 max-h-[85%] overflow-y-auto">Lorem ipsum dolor sit amet, </p>
                         </div>
-                        <div class="flex-1 min-h-[20%] bg-black"></div>
+                        <div class="flex-auto min-h-[20%] bg-black"></div>
                       </div>
 
                       <div id="second-slide" class="carousel-slide min-w-full h-auto p-5 flex flex-col">
@@ -155,7 +189,7 @@
                           <h2 class="text-lg font-bold text-center">Slide 2 Title</h2>
                           <p class="text-gray-700 max-h-[85%] overflow-y-auto">Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet,</p>
                         </div>
-                        <div class="flex-1 min-h-[20%] bg-black"></div>
+                        <div class="flex-auto min-h-[20%] bg-black"></div>
                       </div>
 
 
@@ -164,11 +198,11 @@
                           <h2 class="text-lg font-bold text-center">Slide 3 Title</h2>
                           <p class="text-gray-700 max-h-[85%] overflow-y-auto">Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet, </p>
                         </div>
-                        <div class="flex-1 min-h-[20%] bg-black"></div>
+                        <div class="flex-auto min-h-[20%] bg-black"></div>
                       </div>
 
                   </div>
-                  <button id="prev-slide" class="absolute h-[10%] left-2 top-[5%] transform -translate-y-1/2 bg-slate-300 text-white  rounded-full focus:outline-none">←</button>
+                  <button id="prev-slide" class="absolute h-[5vh] left-2 top-[5%] transform -translate-y-1/2 bg-slate-300 text-white  rounded-full focus:outline-none">←</button>
                   <button id="next-slide" class="absolute h-[10%] right-2 top-[5%] transform -translate-y-1/2 bg-slate-400 text-white  rounded-full focus:outline-none">→</button>
                 </div>
                   <!-- carousel code ends here -->
@@ -183,8 +217,8 @@
     <footer class="hidden md:flex fixed w-full bottom-0 bg-green-200 h-[5vh]">
         <div class="w-[90%] h-full mx-auto flex">
         <div class="w-1/2 flex h-full justify-center items-center">
-          <a href="#" class="m-4">prev ^</a>
-          <a href="#" class="m-4">next v</a>
+          <a href="#" class="m-4 text-[clamp(.5rem,1rem,5vh)]">prev ^</a>
+          <a href="#" class="m-4 text-[clamp(.5rem,1rem,5vh)]">next v</a>
         </div>
         <div class="w-1/2 flex h-full justify-center items-center">
             <a href="#" class="m-4">I</a>
