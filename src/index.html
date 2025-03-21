@@ -28,9 +28,7 @@
             <p id="overlay" class="md:hidden block absolute top-0 left-auto mr-4 w-12 h-full z-[-1]"></p>
             <button id="menu-toggle" class="md:hidden my-auto p-2 mr-4 h-1/3 w-12">|||</button>
           </div>
-          <!-- original nav bar  -->
-            <!-- <nav id="mobile-menu" class="hidden flex flex-col absolute top-[20vh] right-0 bg-green-200 p-4 w-48 shadow-lg"> -->
-              <!--test nav bar-->
+              <!-- nav bar for smaller screens -->
               <nav id="mobile-menu" class="hidden flex flex-col absolute top-[15vh] right-0 bg-green-200 p-4 w-48 shadow-lg overflow-hidden">
               <!--elements to make the bricks broken-fall effect -->
               <a href="#" class="menu-item block px-4 py-2 bg-green-700 opacity-0 transform translate-x-full transition-all duration-300">Home</a>
@@ -127,19 +125,27 @@
         <div class="w-[90%] mx-auto flex-auto flex justify-center items-center pb-[5vh] sm:max-md:pb-0 h-[75vh]">
             <div id="post-card" class="w-[90%] h-[80%] flex flex-row justify-center items-center">
 
-              <!-- test code for #image-side starts here -->
               <div id="image-side" class="max-xl:w-full w-[60%] bg-black relative h-full flex flex-col justify-center items-center">
-                <a id="PhotographerId" href="#" class="hidden max-xl:block w-full absolute bottom-[100%] text-center text-[clamp(.5rem,1rem,5vh)]">By:@Photographer</a>
-                <!-- <div id="image-section" class="w-full h-full flex flex-col justify-center items-center"> -->
-                  <!-- here i created #PhotographerIdxl-placeholder to make the image vertically centered even when the user's text size changes -->
-                  <!-- you must render the name of the photographer at top and bottom too, to keep the image centered with dynamic text size change above and below!-->
+                <a id="PhotographerId" href="#" class="hidden max-xl:block w-full absolute bottom-[100%] text-center text-[clamp(.5rem,1rem,5vh)] bg-green-200">By:@Photographer</a>
+                  <!-- here i created a invisble element #PhotographerIdxl-placeholder to make the image vertically centered even when the user's text size changes -->
                   <a id="PhotographerIdxl-placeholder" href="#" class="hidden xl:block invisible h-[5%]"></a>
-                  <div class="flex-auto h-full xl:max-h-[90%]">
-                    <img src="assets/dog-medium-rectangle.jpg" class="h-full w-auto max-w-full object-contain">
+                  <!-- caliculated the height of the image based on the height of the #carousel-preview -->
+                  <div id="image-container" class="flex-1 max-md:h-[calc(100%-5rem)] md:h-[calc(100%-3.75rem)] xl:max-h-[90%]">
+                    <img src="assets/duck-rectangle.jpg.webp" class="h-full w-auto max-w-full object-contain">
                   </div>
                   <a id="PhotographerIdxl" href="#" class="hidden xl:block w-full text-white text-center h-[5%] text-[2vh]">@Photographer</a>
 
-                <!-- </div> -->
+                 <!-- carousel-preview starts here -->
+                  <!-- caliculated the height of the carousel-preview using h-auto and its value from browser console, by fixing the line-clamp for each screen-size and used the height value to caliculate the space accomodation of the #image-container -->
+                 <div id="carousel-preview" class="max-md:h-[5rem] h-[3.75rem] bg-green-200 xl:hidden p-2">
+                  <!-- set the sizes in rem to make the size of the conatiner responsive to the user's browser default font sizes, essentially making the #image-side layout fool proof!  -->
+                  <p class="text-gray-700 max-md:line-clamp-2 md:line-clamp-1 overflow-hidden text-[1rem] leading-[1.25rem]">
+                    <span class="font-bold">At the Moment: </span>Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsumLorem ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet
+                  </p>
+                  <a href="#" class="text-blue-400 text-[1rem]">Read More</a>
+                </div>
+  
+                 <!-- carousel-preview end here -->
 
 
                 <div id="social-icons" class="hidden max-md:flex w-full absolute top-[100%] justify-evenly items-center">
@@ -149,25 +155,6 @@
                 </div>
               </div>
 
-              <!-- original code -->
-              <!-- <div id="image-side" class="max-xl:w-full w-[60%] bg-black relative h-full">
-                <a id="PhotographerId" href="#" class="hidden max-xl:block w-full absolute top-[-28px] text-center">@Photographer</a>
-                <div id="image-section" class="w-full h-full flex flex-col justify-center items-center"> -->
-                  <!-- here i created #PhotographerIdxl-placeholder to make the image vertically centered even when the user's text size changes -->
-                  <!-- you must render the name of the photographer at top and bottom too, to keep the image centered with dynamic text size change above and below!-->
-                  <!-- <a id="PhotographerIdxl-placeholder" href="#" class="hidden xl:block text-white invisible">@Photographer</a>
-                  <img src="assets/vertical-animal.jpg" class="h-auto max-h-full w-auto max-w-full object-contain flex-1">
-                  <a id="PhotographerIdxl" href="#" class="hidden xl:block w-full text-white text-center">@Photographer</a>
-
-                </div>
-
-
-                <div id="social-icons" class="hidden max-md:flex w-full absolute bottom-[-30px] justify-evenly items-center">
-                  <a href="#" class="">I</a>
-                  <a href="#" class="">F</a>
-                  <a href="#" class="">W</a>
-                </div>
-              </div> -->
               <div id="info-side" class="max-xl:hidden w-[40%] flex flex-col bg-green-300 h-full">
                   <div id="info-carousel" class="h-[80%] w-full relative overflow-hidden">
                     <!-- carousel code start --> 
