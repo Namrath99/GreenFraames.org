@@ -8,7 +8,7 @@
     <title>Tailwind Test</title>
     <link href="../dist/output.css" rel="stylesheet">
 </head>
-<body class="h-screen w-full min-w-[270px] min-h-[350px] flex flex-col bg-red-300 overflow-hidden">
+<body class="h-screen w-full min-w-[270px] min-h-[350px] bg-red-300 overflow-hidden">
     <header class="w-full fixed top-0 bg-green-200 h-[15vh] z-10">
       <!-- in the above header i had to put z-10 for the mobile-menu to overlay on the rest of the body to be visible -->
         <div class="flex w-full md:w-[90%] h-full mx-auto">
@@ -121,11 +121,11 @@
         <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">By viewers</a>
         <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">By Author</a>
     </nav>
-
+  <div id="wrapper" class="h-screen w-full flex flex-col">
     <div id="main" class="w-full flex flex-col flex-auto h-[80vh] pt-[15vh] sm:pt-[20vh]">
         
-        <div class="w-[90%] mx-auto flex-auto flex justify-center items-center pb-[5vh] sm:max-md:pb-0 h-[75vh]">
-            <div id="post-card" class="w-[90%] h-[80%] flex flex-row justify-center items-center">
+        <div class="w-[90%] mx-auto flex-auto flex justify-center items-center pb-[5vh] sm:max-md:pb-0 h-[75vh] border-2 border-white">
+            <div id="post-card" class="w-[90%] h-[80%] flex flex-row justify-center items-center mx-auto">
 
               <div id="image-side" class="max-xl:w-full w-[60%] bg-black relative h-full flex flex-col justify-center items-center">
                 <a id="PhotographerId" href="#" class="hidden max-xl:block w-full absolute bottom-[100%] text-center text-[clamp(.5rem,1rem,5vh)] bg-green-200">By:@Photographer</a>
@@ -202,8 +202,11 @@
             </div>
 
         </div>
+
     </div>
-    <footer class="hidden md:flex fixed w-full bottom-0 bg-green-200 h-[5vh]">
+  </div>
+
+    <footer class="hidden md:flex fixed w-full bottom-0 bg-green-200 h-[5vh] invisible">
         <div class="w-[90%] h-full mx-auto flex">
         <div class="w-1/2 flex h-full justify-center items-center">
           <a href="#" class="m-4 text-[clamp(.5rem,1rem,5vh)]">prev ^</a>
