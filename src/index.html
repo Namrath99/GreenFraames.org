@@ -123,17 +123,17 @@
         <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">By Author</a>
     </nav>
 
-  <div id="wrapper" class="h-screen w-full flex flex-col">
+  <div id="wrapper" class="h-screen w-full flex flex-col overflow-hidden">
     <!-- in the below "main" container, 
      max-sm:pt-[10vh] because the internal nav occupies 5vh at the bottom
      sm:pt-[20vh] from small till medium the internal nav occupies 5vh at the top so required 15vh+5vh=20vh
      md:pt-[19vh] from medium till xl because base 15 + 5 internal-nav -5 footer +4 for photographerID at the top of post!
      xl:pt-[15vh] from xl the base 15vh internal-nav and footer cancels each other, and there is no photographerid outside the box
     -->
-    <div id="main" class="w-full flex flex-col flex-auto h-[80vh]  max-sm:pt-[10vh] sm:pt-[20vh] md:pt-[19vh] xl:pt-[15vh]">
+    <div id="main" class="w-full flex flex-col min-h-screen  max-sm:pt-[10vh] sm:pt-[20vh] md:pt-[19vh] xl:pt-[15vh]">
         
         <!-- <div class="  pb-[5vh] sm:max-md:pb-0 h-[75vh] border-2 border-white"> -->
-            <div id="post-card" class="w-[80%] h-[60vh] flex flex-row justify-center items-center mx-auto border-2 my-auto">
+            <div id="post-card" class="w-[80%] h-[60vh] flex flex-row justify-center items-center mx-auto my-auto">
 
               <div id="image-side" class="max-xl:w-full w-[60%] bg-black relative h-full flex flex-col justify-center items-center">
                 <a id="PhotographerId" href="#" class="hidden max-xl:block w-full absolute bottom-[100%] text-center text-[clamp(.5rem,1rem,3.75vh)] leading-[4vh] bg-green-200 h-[4vh]">By:@Photographer</a>
@@ -211,8 +211,12 @@
             </div>
 
         </div>
-
-    </div>
+        <!-- uncomment the below 2 divs and remove overflow hidden on the wrapper div to see 2 place holders for next two posts -->
+    <!-- <div class="w-full flex flex-col min-h-screen  max-sm:pt-[10vh] sm:pt-[20vh] md:pt-[19vh] xl:pt-[15vh]">
+          </div>
+    <div class="w-full flex flex-col min-h-screen  max-sm:pt-[10vh] sm:pt-[20vh] md:pt-[19vh] xl:pt-[15vh]">
+          </div> -->
+  
   </div>
 
     <footer class="hidden md:flex fixed w-full bottom-0 bg-green-200 h-[5vh]">
