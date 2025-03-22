@@ -8,13 +8,14 @@
     <title>Tailwind Test</title>
     <link href="../dist/output.css" rel="stylesheet">
 </head>
-<body class="h-screen w-full min-w-[270px] min-h-[350px] bg-red-300 overflow-hidden">
+<body class="h-screen w-full min-w-[285px] min-h-[350px] bg-red-300 overflow-hidden">
+  <!-- fixed the min h and w based on window resizing and content fit -->
     <header class="w-full fixed top-0 bg-green-200 h-[15vh] z-10">
       <!-- in the above header i had to put z-10 for the mobile-menu to overlay on the rest of the body to be visible -->
         <div class="flex w-full md:w-[90%] h-full mx-auto">
             <div class="flex w-2/3 md:w-1/2 justify-left sm:justify-left ml-4 md:ml-0 items-center">
                 <img src="assets/Unknown.jpeg" alt="logo" class="h-1/2">
-                <h1 class="font-bold md:text-4xl xl:text-5xl text-gray-800 text-2xl text-[clamp(0.25rem,1.5rem,15vh)]">Green Frames</h1>
+                <h1 class="font-bold md:text-4xl xl:text-5xl text-gray-800 text-2xl text-[clamp(0.25rem,1.5rem,15vh)] leading-none">Green Frames</h1> <!--added leading-none to make the text fit inside header for devices as small as apple watch se 40 mm -->
             </div>
             <!-- nav bar for large screens -->
             <nav class="hidden md:flex flex-row w-1/2 h-1/2 mx-auto justify-evenly items-end my-auto">
@@ -140,7 +141,7 @@
                   <a id="PhotographerIdxl-placeholder" href="#" class="hidden xl:block invisible h-[5%]"></a>
                   <!-- caliculated the height of the image based on the height of the #carousel-preview -->
                   <div id="image-container" class="flex-1 max-md:h-[calc(100%-5rem)] md:h-[calc(100%-3.75rem)] xl:max-h-[90%]">
-                    <img src="assets/duck-rectangle.jpg.webp" class="h-full w-auto max-w-full object-contain">
+                    <img src="assets/vertical-animal.jpg" class="h-full w-auto max-w-full object-contain">
                   </div>
                   <a id="PhotographerIdxl" href="#" class="hidden xl:block w-full text-white text-center h-[5%] text-[2vh]">@Photographer</a>
 
@@ -158,6 +159,7 @@
 
 
                 <div id="social-icons" class="hidden max-md:flex w-full absolute top-[100%] justify-evenly items-center h-[4vh]">
+                  <!-- make the contents inside to have max height of 4vh to fit the box no matter how small the window is -->
                   <a href="#" class="">I</a>
                   <a href="#" class="">F</a>
                   <a href="#" class="">W</a>
