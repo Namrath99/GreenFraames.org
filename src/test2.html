@@ -278,3 +278,614 @@
 
 
 </html>
+<!-- preview to full carousel Test starts here -->
+
+<div id="test-container" class="xl:hidden fixed top-[50vh] left-0 w-full h-[42.5vh] z-30 bg-green-200">
+  <div id="info-carousel" class="w-full h-full relative overflow-hidden">
+    <!-- carousel code start --> 
+     <!-- all the below problems were due to borders that you used to debug the layouts -->
+     <!-- i added w-full in the next line and min-w-full in .carousel-slide (all 3)-->
+      <!-- at first why the width full didnt work for the .carousel-slide elements before min-w-full, even after why does each slide not fit perfectly to full width of carousel-container?, tried to use justify evenly didnt work out! -->
+    <div id="carousel-container" class="w-full h-full flex transition-transform duration-500 ease-in-out ">
+      <!-- implemented dynamic divs which takeup rest of the space left after the text, to contain ainmal emojis! -->
+      <div id="first-slide" class="carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+        <div id="slide1-content" class="min-h-[18vh] max-h-full"> <!--min-h-[18vh]-> 3.5*3+7.5 to leave space for 3 lines and heading at least-->
+          <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Slide 1 Title</span></div><!--made 7vh highest size for the text below to not overlay on this no matter how small the window is resized-->
+          <!--for the p below leading is set to 3.5 to accomodate exactly 10 lines-->
+          <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">Lorem  Lorem ipsum dolor sit sit amet,Loremamet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amdolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet, </p>
+        </div>
+        <div class="flex-auto bg-black"></div> <!-- make sure this container has same bg-color as the slide when done with testing -->
+      </div>
+
+      <div id="second-slide" class="carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+        <div id="slide2-content" class="min-h-[18vh] max-h-full"> <!--min-h-[18vh]-> 3.5*3+7.5 to leave space for 3 lines and heading at least-->
+          <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Slide 2 Title</span></div><!--made 7vh highest size for the text below to not overlay on this no matter how small the window is resized-->
+          <!--for the p below leading is set to 3.5 to accomodate exactly 10 lines-->
+          <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">Lorem  Lorem ipsum dolor sit sit amet,Loremamet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amdolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet, </p>
+        </div>
+        <div class="flex-auto bg-black"></div> <!-- make sure this container has same bg-color as the slide when done with testing -->
+      </div>
+
+      <div id="third-slide" class="carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+        <div id="slide3-content" class="min-h-[18vh] max-h-full"> <!--min-h-[18vh]-> 3.5*3+7.5 to leave space for 3 lines and heading at least-->
+          <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Slide 3 Title</span></div><!--made 7vh highest size for the text below to not overlay on this no matter how small the window is resized-->
+          <!--for the p below leading is set to 3.5 to accomodate exactly 10 lines-->
+          <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">Lorem  Lorem ipsum dolor sit sit amet,Loremamet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amdolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet, </p>
+        </div>
+        <div class="flex-auto bg-black"></div> <!-- make sure this container has same bg-color as the slide when done with testing -->
+      </div>
+
+      
+
+  </div>
+  <button id="prev-slide" class="absolute h-[5vh] left-2 top-[2.5vh] transform -translate-y-1/2 bg-slate-300 text-white  rounded-full focus:outline-none">←</button>
+  <button id="next-slide" class="absolute h-[5vh] right-2 top-[2.5vh] transform -translate-y-1/2 bg-slate-400 text-white  rounded-full focus:outline-none">→</button>
+</div>
+</div>
+
+<!-- preview to full carousel Test ends here -->
+
+<!-- backup code starts here -->
+<!-- npx tailwindcss -i ./src/css/styles.css -o ./dist/output.css --watch -->
+<!-- to watch for changes in all the files in the src folder including js and all html files-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tailwind Test</title>
+    <link href="../dist/output.css" rel="stylesheet">
+</head>
+<body class="h-screen w-full min-w-[270px] min-h-[350px] bg-green-100">
+    <header class="w-full fixed top-0 bg-green-200 h-[15vh] z-10 invisible">
+      <!-- in the above header i had to put z-10 for the mobile-menu to overlay on the rest of the body to be visible -->
+        <div class="flex w-full md:w-[90%] h-full mx-auto">
+            <div class="flex w-2/3 md:w-1/2 justify-left sm:justify-left ml-4 md:ml-0 items-center">
+                <img src="assets/Unknown.jpeg" alt="logo" class="h-1/2">
+                <h1 class="font-bold md:text-4xl xl:text-5xl text-gray-800 text-2xl text-[clamp(0.25rem,1.5rem,15vh)]">Green Frames</h1>
+            </div>
+            <!-- nav bar for large screens -->
+            <nav class="hidden md:flex flex-row w-1/2 h-1/2 mx-auto justify-evenly items-end my-auto">
+                <a href="#" class="hover:text-gray-400 text-center p-1 w-1/6 h-auto">Home</a>
+                <a href="#" class="hover:text-gray-400 text-center p-1 w-1/6 h-auto">About</a>
+                <a href="#" class="hover:text-gray-400 text-center p-1 w-1/6 h-auto">Gallery</a>
+                <a href="#" class="hover:text-gray-400 text-center p-1 w-1/6 h-auto">Contact</a>
+            </nav>
+            <div class="md:hidden relative my-auto flex w-1/3 justify-end">
+              <!-- the below <p> makes the button unclickable between to complete the animations -->
+            <p id="overlay" class="md:hidden block absolute top-0 left-auto mr-4 w-12 h-full z-[-1]"></p>
+            <button id="menu-toggle" class="md:hidden my-auto p-2 mr-4 h-1/3 w-12">|||</button>
+          </div>
+              <!-- nav bar for smaller screens -->
+              <nav id="mobile-menu" class="hidden flex flex-col absolute top-[15vh] right-0 bg-green-200 p-4 w-48 shadow-lg overflow-hidden">
+              <!--elements to make the bricks broken-fall effect -->
+              <a href="#" class="menu-item block px-4 py-2 bg-green-700 opacity-0 transform translate-x-full transition-all duration-300">Home</a>
+                <a href="#" class="menu-item block px-4 py-2 bg-green-700 opacity-0 transform translate-x-full transition-all duration-500">About</a>
+                <a href="#" class="menu-item block px-4 py-2 bg-green-700 opacity-0 transform translate-x-full transition-all duration-700">Gallery</a>
+                <a href="#" class="menu-item block px-4 py-2 bg-green-700 opacity-0 transform translate-x-full transition-all duration-900">Contact</a>
+              <!-- to make the bricks falls one after the other -->
+                <!-- <a class="menu-item transform translate-x-full transition-all ease-linear duration-500 block px-4 py-2 bg-green-700 opacity-0">Home</a>
+                <a class="menu-item transform translate-x-full transition-all ease-linear duration-500 block px-4 py-2 bg-green-700 opacity-0">Home</a>
+                <a class="menu-item transform translate-x-full transition-all ease-linear duration-500 block px-4 py-2 bg-green-700 opacity-0">Home</a>
+                <a class="menu-item transform translate-x-full transition-all ease-linear duration-500 block px-4 py-2 bg-green-700 opacity-0">Home</a> -->
+
+              </nav>
+              <script>
+                // //to make the bricks broken-fall effect
+                document.getElementById("menu-toggle").addEventListener("click", function() {
+                  document.getElementById("overlay").classList.replace("z-[-1]", "z-10");
+                  let menu = document.getElementById("mobile-menu");
+                  let menuItems = document.querySelectorAll(".menu-item");
+              
+                  if (menu.classList.contains("hidden")) {
+                    menu.classList.remove("hidden");
+                    setTimeout(() => {
+                      menuItems.forEach((item, index) => {
+                        setTimeout(() => {
+                          item.classList.remove("opacity-0", "translate-x-full");
+                        }, index * 100);
+                      });
+                    }, 10);
+
+                    // Home → 0ms delay 300ms duration
+                    // About → 100ms delay 500ms duration
+                    // Gallery → 200ms delay 700ms duration
+                    // Contact → 300ms delay 900ms duration
+                  } else {
+                    menuItems.forEach((item, index) => {
+                      setTimeout(() => {
+                        item.classList.add("opacity-0", "translate-x-full");
+                      }, (menuItems.length - index - 1) * 100);
+                    });
+              
+                    setTimeout(() => {
+                      menu.classList.add("hidden");
+                    }, 500);
+                  }
+                  setTimeout(() => {
+                    document.getElementById("overlay").classList.replace("z-10", "z-[-1]");
+                  }, 700);
+                });
+
+              //to make the bricks falls one after the other
+              // document.getElementById("menu-toggle").addEventListener("click", function() {
+              //     document.getElementById("overlay").classList.replace("z-[-1]", "z-10");
+              //     let menu = document.getElementById("mobile-menu");
+              //     let menuItems = document.querySelectorAll(".menu-item");
+              
+              //     if (menu.classList.contains("hidden")) {
+              //       menu.classList.remove("hidden");
+              //       setTimeout(() => {
+              //         menuItems.forEach((item, index) => {
+              //           setTimeout(() => {
+              //             item.classList.remove("opacity-0", "translate-x-full");
+              //           }, index * 250);
+              //         });
+              //       }, 10);
+              //     } else {
+              //       menuItems.forEach((item, index) => {
+              //         setTimeout(() => {
+              //           item.classList.add("opacity-0", "translate-x-full");
+              //         }, (menuItems.length - index - 1) * 100);
+              //       });
+              
+              //       setTimeout(() => {
+              //         menu.classList.add("hidden");
+              //       }, 500);
+              //     }
+              //     setTimeout(() => {
+              //       document.getElementById("overlay").classList.replace("z-10", "z-[-1]");
+              //     }, 1000);
+              //   });
+              </script>
+              
+
+        </div>
+    </header>
+
+    <div id="main1" class="w-full flex flex-col h-[80vh] pt-[15vh] bg-slate-500">
+        <nav id="internal-nav" class="w-[90%] max-sm:w-full flex flex-row max-sm:fixed max-sm:bottom-0 h-[5vh] max-sm:mx-0 items-center mx-auto">
+          <!-- had to mention "max-sm:flex max-sm:items-center max-sm:justify-center" to make the items centered vertically in 100% cases  -->
+            <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">All</a>
+            <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">By viewers</a>
+            <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">By Author</a>
+        </nav>
+        <div class="w-[90%] mx-auto flex-auto flex justify-center items-center pb-[5vh] sm:max-md:pb-0 h-[75vh]">
+            <div id="post-card" class="w-[90%] h-[80%] flex flex-row justify-center items-center">
+
+              <div id="image-side" class="max-xl:w-full w-[60%] bg-black relative h-full flex flex-col justify-center items-center">
+                <a id="PhotographerId" href="#" class="hidden max-xl:block w-full absolute bottom-[100%] text-center text-[clamp(.5rem,1rem,5vh)] bg-green-200">By:@Photographer</a>
+                  <!-- here i created a invisble element #PhotographerIdxl-placeholder to make the image vertically centered even when the user's text size changes -->
+                  <a id="PhotographerIdxl-placeholder" href="#" class="hidden xl:block invisible h-[5%]"></a>
+                  <!-- caliculated the height of the image based on the height of the #carousel-preview -->
+                  <div id="image-container" class="flex-1 max-md:h-[calc(100%-5rem)] md:h-[calc(100%-3.75rem)] xl:max-h-[90%] transition-all duration-1000 ease-in-out">
+                    <!-- added mx-auto to the img below to make it centered horizontally -->
+                    <img src="assets/tiger-square.jpg" class="h-full w-auto max-w-full object-contain mx-auto">
+                  </div>
+
+                  <a id="PhotographerIdxl" href="#" class="hidden xl:block w-full text-white text-center h-[5%] text-[2vh]">@Photographer</a>
+
+                 <!-- carousel-preview starts here -->
+                  <!-- caliculated the height of the carousel-preview using h-auto and its value from browser console, by fixing the line-clamp for each screen-size and used the height value to caliculate the space accomodation of the #image-container -->
+                 <div id="carousel-preview" class="max-md:h-[5rem] h-[3.75rem] bg-green-200 xl:hidden p-2 transition-all duration-1000 ease-in-out">
+                  <!-- set the sizes in rem to make the size of the conatiner responsive to the user's browser default font sizes, essentially making the #image-side layout fool proof!  -->
+                  <p class="text-gray-700 max-md:line-clamp-2 md:line-clamp-1 overflow-hidden text-[1rem] leading-[1.25rem]">
+                    <span class="font-bold">At the Moment: </span>Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsumLorem ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet
+                  </p>
+                  <a id="read-more-link" href="#" class="text-blue-400 text-[1rem]">Read More</a>
+
+                
+
+                </div>
+  
+                 <!-- carousel-preview ends here -->
+                  
+                  <div id="bottom-7.5vh" class="hidden fixed bottom-0 left-0 z-30 h-[7.5vh] flex w-full justify-around items-center bg-slate-500">
+                    <button id="go-back" class="border-2 border-white">Go Back</button>
+                    <button id="" class="border-2 border-white w-1/2">Donate</button>
+                  </div>
+                  
+                  <!-- js for image transformation starts here -->
+                   <script>
+                    document.addEventListener("DOMContentLoaded", () => {
+                    const readMoreLink = document.getElementById("read-more-link");
+                    //for image
+                    const imageContainer = document.getElementById("image-container");
+                    //for carousel
+                    const carousel = document.getElementById("carousel-preview");
+                    //for the bottom-7.5vh
+                    const bottom = document.getElementById("bottom-7.5vh");
+
+                    // const main = document.getElementById("main");
+
+                    readMoreLink.addEventListener("click", (e) => {
+                      e.preventDefault();
+
+                      imageContainer.classList.add(
+                        "fixed", "top-0", "left-0", "w-full", "max-h-[50vh]", "z-30", "bg-black"
+                      );
+
+                      // main.classList.add("blur-sm");
+
+                      // code for carousel transformation from carousal preview to full carousel
+                      carousel.classList.add(
+                        "fixed", "top-[50vh]", "left-0", "w-full", "h-[42.5vh]", "z-30", "bg-green-200"
+                      );
+                      carousel.innerHTML="";
+                      setTimeout(() => {
+                      
+                      },500);
+
+                      //code for bottom 10vh
+                      setTimeout(() => {
+                        bottom10.classList.remove("hidden");
+                      },1000);
+
+                    });
+                  });
+
+
+                   </script>
+                   <!-- js for image transformation ends here -->
+                  <!-- preview to full carousel Test starts here -->
+
+                  <!-- <div id="test-container" class="xl:hidden fixed top-[50vh] left-0 w-full h-[42.5vh] z-30 bg-green-200">
+                    <div id="info-carousel" class="w-full h-full relative overflow-hidden"> -->
+                      <!-- carousel code start --> 
+                       <!-- all the below problems were due to borders that you used to debug the layouts -->
+                       <!-- i added w-full in the next line and min-w-full in .carousel-slide (all 3)-->
+                        <!-- at first why the width full didnt work for the .carousel-slide elements before min-w-full, even after why does each slide not fit perfectly to full width of carousel-container?, tried to use justify evenly didnt work out! -->
+                      <!-- <div id="carousel-container" class="w-full h-full flex transition-transform duration-500 ease-in-out "> -->
+                        <!-- implemented dynamic divs which takeup rest of the space left after the text, to contain ainmal emojis! -->
+                        <!-- <div id="first-slide" class="carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300"> -->
+                          <!-- <div id="slide1-content" class="min-h-[18vh] max-h-full"> min-h-[18vh]-> 3.5*3+7.5 to leave space for 3 lines and heading at least -->
+                            <!-- <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Slide 1 Title</span></div>made 7vh highest size for the text below to not overlay on this no matter how small the window is resized -->
+                            <!--for the p below leading is set to 3.5 to accomodate exactly 10 lines-->
+                            <!-- <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">Lorem  Lorem ipsum dolor sit sit amet,Loremamet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amdolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet, </p>
+                          </div> -->
+                          <!-- <div class="flex-auto bg-black"></div> make sure this container has same bg-color as the slide when done with testing -->
+                        <!-- </div> -->
+
+                        <!-- <div id="second-slide" class="carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300"> -->
+                          <!-- <div id="slide2-content" class="min-h-[18vh] max-h-full"> min-h-[18vh]-> 3.5*3+7.5 to leave space for 3 lines and heading at least -->
+                            <!-- <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Slide 2 Title</span></div>made 7vh highest size for the text below to not overlay on this no matter how small the window is resized -->
+                            <!--for the p below leading is set to 3.5 to accomodate exactly 10 lines-->
+                            <!-- <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">Lorem  Lorem ipsum dolor sit sit amet,Loremamet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amdolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet, </p> -->
+                          <!-- </div> -->
+                          <!-- <div class="flex-auto bg-black"></div> make sure this container has same bg-color as the slide when done with testing -->
+                        <!-- </div> -->
+
+                        <!-- <div id="third-slide" class="carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300"> -->
+                          <!-- <div id="slide3-content" class="min-h-[18vh] max-h-full"> min-h-[18vh]-> 3.5*3+7.5 to leave space for 3 lines and heading at least -->
+                            <!-- <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Slide 3 Title</span></div>made 7vh highest size for the text below to not overlay on this no matter how small the window is resized -->
+                            <!--for the p below leading is set to 3.5 to accomodate exactly 10 lines-->
+                            <!-- <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">Lorem  Lorem ipsum dolor sit sit amet,Loremamet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amdolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet, </p> -->
+                          <!-- </div> -->
+                          <!-- <div class="flex-auto bg-black"></div> make sure this container has same bg-color as the slide when done with testing -->
+                        <!-- </div> -->
+  
+                        
+  
+                    <!-- </div>
+                    <button id="prev-slide" class="absolute h-[5vh] left-2 top-[2.5vh] transform -translate-y-1/2 bg-slate-300 text-white  rounded-full focus:outline-none">←</button>
+                    <button id="next-slide" class="absolute h-[5vh] right-2 top-[2.5vh] transform -translate-y-1/2 bg-slate-400 text-white  rounded-full focus:outline-none">→</button>
+                  </div>
+                  </div> -->
+
+                  <!-- preview to full carousel Test ends here -->
+
+                <div id="social-icons" class="hidden max-md:flex w-full absolute top-[100%] justify-evenly items-center">
+                  <a href="#" class="">I</a>
+                  <a href="#" class="">F</a>
+                  <a href="#" class="">W</a>
+                </div>
+              </div>
+
+              <div id="info-side" class="max-xl:hidden w-[40%] flex flex-col bg-green-300 h-full">
+
+                  <div id="info-carousel" class="h-[80%] w-full relative overflow-hidden">
+                    <!-- carousel code start --> 
+                     <!-- all the below problems were due to borders that you used to debug the layouts -->
+                     <!-- i added w-full in the next line and min-w-full in .carousel-slide (all 3)-->
+                      <!-- at first why the width full didnt work for the .carousel-slide elements before min-w-full, even after why does each slide not fit perfectly to full width of carousel-container?, tried to use justify evenly didnt work out! -->
+                    <div id="carousel-container" class="w-full h-full flex transition-transform duration-500 ease-in-out">
+                      <!-- implemented dynamic divs which takeup rest of the space left after the text, to contain ainmal emojis! -->
+                      <div id="first-slide" class="carousel-slide min-w-full h-auto px-6 flex flex-col">
+                        <div id="slide1-content" class="min-h-[25%] max-h-[80%]">
+                          <h2 class="text-lg font-bold text-center">Slide 1 Title</h2>
+                          <p class="text-gray-700 max-h-[85%] overflow-y-auto">Lorem ipsum dolor sit amet, </p>
+                        </div>
+                        <div class="flex-auto min-h-[20%] bg-black"></div>
+                      </div>
+
+                      <div id="second-slide" class="carousel-slide min-w-full h-auto px-6 flex flex-col">
+                        <div id="slide2-content" class="min-h-[25%] max-h-[80%]">
+                          <h2 class="text-lg font-bold text-center">Slide 2 Title</h2>
+                          <p class="text-gray-700 max-h-[85%] overflow-y-auto">Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet,</p>
+                        </div>
+                        <div class="flex-auto min-h-[20%] bg-black"></div>
+                      </div>
+
+
+                      <div id="third-slide" class="carousel-slide min-w-full h-auto px-6 flex flex-col">
+                        <div id="slide3-content" class="min-h-[25%] max-h-[80%]">
+                          <h2 class="text-lg font-bold text-center">Slide 3 Title</h2>
+                          <p class="text-gray-700 max-h-[85%] overflow-y-auto">Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet, </p>
+                        </div>
+                        <div class="flex-auto min-h-[20%] bg-black"></div>
+                      </div>
+
+                  </div>
+                  <button id="prev-slide" class="absolute h-[5vh] left-2 top-[5%] transform -translate-y-1/2 bg-slate-300 text-white  rounded-full focus:outline-none">←</button>
+                  <button id="next-slide" class="absolute h-[10%] right-2 top-[5%] transform -translate-y-1/2 bg-slate-400 text-white  rounded-full focus:outline-none">→</button>
+                </div>
+                  <!-- carousel code ends here -->
+
+                  <div id="button-section" class="h-[20%] flex justify-center items-center">
+                    <button id="donate-button" class="border-2 border-green-500 px-6 h-1/2 w-1/3 text-center text-xl">Donate</button>
+                  </div>
+              </div>
+            </div>
+
+        </div>
+    </div>
+
+<!-- testing for swipe page starts here -->
+<div id="main" class="w-full flex flex-col h-[80vh] bg-red-400">
+  <nav id="internal-nav" class="w-[90%] max-sm:w-full flex flex-row max-sm:fixed max-sm:bottom-0 h-[5vh] max-sm:mx-0 items-center mx-auto">
+    <!-- had to mention "max-sm:flex max-sm:items-center max-sm:justify-center" to make the items centered vertically in 100% cases  -->
+      <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">All</a>
+      <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">By viewers</a>
+      <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">By Author</a>
+  </nav>
+  <div class="w-[90%] mx-auto flex-auto flex justify-center items-center pb-[5vh] sm:max-md:pb-0 h-[75vh]">
+      <div id="post-card" class="w-[90%] h-[80%] flex flex-row justify-center items-center">
+
+        <div id="image-side" class="max-xl:w-full w-[60%] bg-black relative h-full flex flex-col justify-center items-center">
+          <a id="PhotographerId" href="#" class="hidden max-xl:block w-full absolute bottom-[100%] text-center text-[clamp(.5rem,1rem,5vh)] bg-green-200">By:@Photographer</a>
+            <!-- here i created a invisble element #PhotographerIdxl-placeholder to make the image vertically centered even when the user's text size changes -->
+            <a id="PhotographerIdxl-placeholder" href="#" class="hidden xl:block invisible h-[5%]"></a>
+            <!-- caliculated the height of the image based on the height of the #carousel-preview -->
+            <div id="image-container" class="flex-1 max-md:h-[calc(100%-5rem)] md:h-[calc(100%-3.75rem)] xl:max-h-[90%] transition-all duration-1000 ease-in-out">
+              <!-- added mx-auto to the img below to make it centered horizontally -->
+              <img src="assets/tiger-square.jpg" class="h-full w-auto max-w-full object-contain mx-auto">
+            </div>
+
+            <a id="PhotographerIdxl" href="#" class="hidden xl:block w-full text-white text-center h-[5%] text-[2vh]">@Photographer</a>
+
+           <!-- carousel-preview starts here -->
+            <!-- caliculated the height of the carousel-preview using h-auto and its value from browser console, by fixing the line-clamp for each screen-size and used the height value to caliculate the space accomodation of the #image-container -->
+           <div id="carousel-preview" class="max-md:h-[5rem] h-[3.75rem] bg-green-200 xl:hidden p-2 transition-all duration-1000 ease-in-out">
+            <!-- set the sizes in rem to make the size of the conatiner responsive to the user's browser default font sizes, essentially making the #image-side layout fool proof!  -->
+            <p class="text-gray-700 max-md:line-clamp-2 md:line-clamp-1 overflow-hidden text-[1rem] leading-[1.25rem]">
+              <span class="font-bold">At the Moment: </span>Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsumLorem ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet
+            </p>
+            <a id="read-more-link" href="#" class="text-blue-400 text-[1rem]">Read More</a>
+
+          
+
+          </div>
+
+           <!-- carousel-preview ends here -->
+            
+            <div id="bottom-7.5vh" class="hidden fixed bottom-0 left-0 z-30 h-[7.5vh] flex w-full justify-around items-center bg-slate-500">
+              <button id="go-back" class="border-2 border-white">Go Back</button>
+              <button id="" class="border-2 border-white w-1/2">Donate</button>
+            </div>
+            
+            <!-- js for image transformation starts here -->
+             <script>
+              document.addEventListener("DOMContentLoaded", () => {
+              const readMoreLink = document.getElementById("read-more-link");
+              //for image
+              const imageContainer = document.getElementById("image-container");
+              //for carousel
+              const carousel = document.getElementById("carousel-preview");
+              //for the bottom-7.5vh
+              const bottom = document.getElementById("bottom-7.5vh");
+
+              // const main = document.getElementById("main");
+
+              readMoreLink.addEventListener("click", (e) => {
+                e.preventDefault();
+
+                imageContainer.classList.add(
+                  "fixed", "top-0", "left-0", "w-full", "max-h-[50vh]", "z-30", "bg-black"
+                );
+
+                // main.classList.add("blur-sm");
+
+                // code for carousel transformation from carousal preview to full carousel
+                carousel.classList.add(
+                  "fixed", "top-[50vh]", "left-0", "w-full", "h-[42.5vh]", "z-30", "bg-green-200"
+                );
+                carousel.innerHTML="";
+                setTimeout(() => {
+                
+                },500);
+
+                //code for bottom 10vh
+                setTimeout(() => {
+                  bottom10.classList.remove("hidden");
+                },1000);
+
+              });
+            });
+
+
+             </script>
+             <!-- js for image transformation ends here -->
+            
+          <div id="social-icons" class="hidden max-md:flex w-full absolute top-[100%] justify-evenly items-center">
+            <a href="#" class="">I</a>
+            <a href="#" class="">F</a>
+            <a href="#" class="">W</a>
+          </div>
+        </div>
+
+        <div id="info-side" class="max-xl:hidden w-[40%] flex flex-col bg-green-300 h-full">
+
+            <div id="info-carousel" class="h-[80%] w-full relative overflow-hidden">
+              <!-- carousel code start --> 
+               <!-- all the below problems were due to borders that you used to debug the layouts -->
+               <!-- i added w-full in the next line and min-w-full in .carousel-slide (all 3)-->
+                <!-- at first why the width full didnt work for the .carousel-slide elements before min-w-full, even after why does each slide not fit perfectly to full width of carousel-container?, tried to use justify evenly didnt work out! -->
+              <div id="carousel-container" class="w-full h-full flex transition-transform duration-500 ease-in-out">
+                <!-- implemented dynamic divs which takeup rest of the space left after the text, to contain ainmal emojis! -->
+                <div id="first-slide" class="carousel-slide min-w-full h-auto px-6 flex flex-col">
+                  <div id="slide1-content" class="min-h-[25%] max-h-[80%]">
+                    <h2 class="text-lg font-bold text-center">Slide 1 Title</h2>
+                    <p class="text-gray-700 max-h-[85%] overflow-y-auto">Lorem ipsum dolor sit amet, </p>
+                  </div>
+                  <div class="flex-auto min-h-[20%] bg-black"></div>
+                </div>
+
+                <div id="second-slide" class="carousel-slide min-w-full h-auto px-6 flex flex-col">
+                  <div id="slide2-content" class="min-h-[25%] max-h-[80%]">
+                    <h2 class="text-lg font-bold text-center">Slide 2 Title</h2>
+                    <p class="text-gray-700 max-h-[85%] overflow-y-auto">Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet,</p>
+                  </div>
+                  <div class="flex-auto min-h-[20%] bg-black"></div>
+                </div>
+
+
+                <div id="third-slide" class="carousel-slide min-w-full h-auto px-6 flex flex-col">
+                  <div id="slide3-content" class="min-h-[25%] max-h-[80%]">
+                    <h2 class="text-lg font-bold text-center">Slide 3 Title</h2>
+                    <p class="text-gray-700 max-h-[85%] overflow-y-auto">Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet, </p>
+                  </div>
+                  <div class="flex-auto min-h-[20%] bg-black"></div>
+                </div>
+
+            </div>
+            <button id="prev-slide" class="absolute h-[5vh] left-2 top-[5%] transform -translate-y-1/2 bg-slate-300 text-white  rounded-full focus:outline-none">←</button>
+            <button id="next-slide" class="absolute h-[10%] right-2 top-[5%] transform -translate-y-1/2 bg-slate-400 text-white  rounded-full focus:outline-none">→</button>
+          </div>
+            <!-- carousel code ends here -->
+
+            <div id="button-section" class="h-[20%] flex justify-center items-center">
+              <button id="donate-button" class="border-2 border-green-500 px-6 h-1/2 w-1/3 text-center text-xl">Donate</button>
+            </div>
+        </div>
+      </div>
+
+  </div>
+</div>
+<!-- testing for swipe page ends here -->
+
+    <footer class="hidden md:flex fixed w-full bottom-0 bg-green-200 h-[5vh] invisible">
+        <div class="w-[90%] h-full mx-auto flex">
+        <div class="w-1/2 flex h-full justify-center items-center">
+          <a href="#" class="m-4 text-[clamp(.5rem,1rem,5vh)]">prev ^</a>
+          <a href="#" class="m-4 text-[clamp(.5rem,1rem,5vh)]">next v</a>
+        </div>
+        <div class="w-1/2 flex h-full justify-center items-center">
+            <a href="#" class="m-4">I</a>
+            <a href="#" class="m-4">F</a>
+            <a href="#" class="m-4">W</a>
+        </div>
+        </div>
+    </footer>
+
+    <script>
+      // javascript for the carousel
+      document.addEventListener("DOMContentLoaded", function () {
+    let currentSlide = 0;
+    const slides = document.querySelectorAll(".carousel-slide");
+    const totalSlides = slides.length;
+    const carouselContainer = document.getElementById("carousel-container");
+
+    function updateCarousel() {
+        carouselContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+        // below is the code to lighten or darken prev and next buttons depending on the current position of carousel
+        //if you need to add more slides change the last else to have else if(currentSlide==lastslide), and add else if(currentSlide==lastslide-1){logic} to take care of next button bg color and ofcourse remove the logic related to next slide in else if(currentSlide==1).
+        if(currentSlide==0){
+              document.getElementById("prev-slide").classList.replace("bg-slate-400","bg-slate-300")
+            }else if(currentSlide==1){
+                if(document.getElementById("prev-slide").classList.contains("bg-slate-300")){document.getElementById("prev-slide").classList.replace("bg-slate-300","bg-slate-400")}
+                if(document.getElementById("next-slide").classList.contains("bg-slate-300")){document.getElementById("next-slide").classList.replace("bg-slate-300","bg-slate-400")}                
+            }else{ //for the last slide i.e, currentSlide==2,
+              document.getElementById("next-slide").classList.replace("bg-slate-400","bg-slate-300")
+            }
+    }
+
+    document.getElementById("prev-slide").addEventListener("click", function () {
+        if (currentSlide > 0) {
+            currentSlide--;
+            updateCarousel();
+        }
+    });
+
+    document.getElementById("next-slide").addEventListener("click", function () {
+        if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+            updateCarousel();
+        }
+    });
+
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "ArrowLeft" && currentSlide > 0) {
+            currentSlide--;
+        } else if (event.key === "ArrowRight" && currentSlide < totalSlides - 1) {
+            currentSlide++;
+        }
+        updateCarousel();
+    });
+});
+
+    </script>
+
+<!-- mobile full screen mode layout starts here -->
+
+<!-- Mobile Fullscreen View -->
+<!-- <div id="mobile-fullscreen" class="hidden fixed top-0 left-0 w-full h-screen bg-green-100 z-30 max-xl:flex flex-col"> -->
+  
+  <!-- Top 50%: Image -->
+  <!-- <div class="w-full h-[50vh] bg-black flex items-center justify-center">
+    <img id="fullscreen-image" src="assets/duck-rectangle.jpg.webp" class="max-h-full max-w-full object-contain">
+  </div> -->
+
+  <!-- Bottom 50%: Carousel (40vh) + Buttons (10vh) -->
+  <!-- <div class="w-full h-[50vh] bg-green-300 flex flex-col"> -->
+    
+    <!-- Carousel Area (40vh) -->
+    <!-- <div class="relative h-[40vh] w-full overflow-hidden"> -->
+      <!-- Slide title & nav buttons -->
+      <!-- <div class="absolute top-0 w-full flex justify-between items-center px-4 py-2 z-10">
+        <button id="mobile-prev" class="text-xl text-white bg-slate-300 px-2 py-1 rounded-full">←</button>
+        <h2 id="mobile-slide-title" class="text-center text-white font-bold text-lg">Slide 1 Title</h2>
+        <button id="mobile-next" class="text-xl text-white bg-slate-400 px-2 py-1 rounded-full">→</button>
+      </div> -->
+
+      <!-- Carousel Slides -->
+      <!-- <div id="mobile-carousel-container" class="h-full pt-10 flex transition-transform duration-500 ease-in-out">
+        <div class="carousel-slide min-w-full h-auto px-4">
+          <p class="text-gray-800 text-sm overflow-y-auto">Slide 1 content here...</p>
+        </div>
+        <div class="carousel-slide min-w-full h-auto px-4">
+          <p class="text-gray-800 text-sm overflow-y-auto">Slide 2 content here...</p>
+        </div>
+        <div class="carousel-slide min-w-full h-auto px-4">
+          <p class="text-gray-800 text-sm overflow-y-auto">Slide 3 content here...</p>
+        </div>
+      </div>
+    </div> -->
+
+    <!-- Buttons Area (10vh) -->
+    <!-- <div class="h-[10vh] w-full px-4 flex justify-between items-center">
+      <button id="close-fullscreen" class="bg-red-400 text-white px-4 py-2 rounded-md">Go Back</button>
+      <button class="bg-green-600 text-white px-4 py-2 rounded-md">Donate</button>
+    </div>
+
+  </div>
+</div> -->
+
+ 
+<!-- mobile full screen mode layout ends here -->
+
+</body>
+
+
+</html>
+
+<!-- backup code ends here  -->

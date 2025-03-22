@@ -8,8 +8,8 @@
     <title>Tailwind Test</title>
     <link href="../dist/output.css" rel="stylesheet">
 </head>
-<body class="h-screen w-full min-w-[270px] min-h-[350px] flex flex-col bg-green-100">
-    <header class="w-full sticky top-0 bg-green-200 h-[15vh] z-10">
+<body class="h-screen w-full min-w-[270px] min-h-[350px] flex flex-col bg-red-300 overflow-hidden">
+    <header class="w-full fixed top-0 bg-green-200 h-[15vh] z-10">
       <!-- in the above header i had to put z-10 for the mobile-menu to overlay on the rest of the body to be visible -->
         <div class="flex w-full md:w-[90%] h-full mx-auto">
             <div class="flex w-2/3 md:w-1/2 justify-left sm:justify-left ml-4 md:ml-0 items-center">
@@ -115,13 +115,15 @@
         </div>
     </header>
 
-    <div id="main" class="w-full flex flex-col flex-auto h-[80vh]">
-        <nav id="internal-nav" class="w-[90%] max-sm:w-full flex flex-row max-sm:fixed max-sm:bottom-0 h-[5vh] max-sm:mx-0 items-center mx-auto">
-          <!-- had to mention "max-sm:flex max-sm:items-center max-sm:justify-center" to make the items centered vertically in 100% cases  -->
-            <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">All</a>
-            <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">By viewers</a>
-            <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">By Author</a>
-        </nav>
+    <nav id="internal-nav" class="w-[90%] max-sm:w-full flex flex-row fixed max-sm:bottom-0 sm:top-[15vh] h-[5vh] max-sm:mx-0 items-center mx-[5%]">
+      <!-- had to mention "max-sm:flex max-sm:items-center max-sm:justify-center" to make the items centered vertically in 100% cases  -->
+        <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">All</a>
+        <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">By viewers</a>
+        <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">By Author</a>
+    </nav>
+
+    <div id="main" class="w-full flex flex-col flex-auto h-[80vh] pt-[15vh] sm:pt-[20vh]">
+        
         <div class="w-[90%] mx-auto flex-auto flex justify-center items-center pb-[5vh] sm:max-md:pb-0 h-[75vh]">
             <div id="post-card" class="w-[90%] h-[80%] flex flex-row justify-center items-center">
 
