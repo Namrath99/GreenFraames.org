@@ -115,20 +115,27 @@
         </div>
     </header>
 
-    <nav id="internal-nav" class="w-[90%] max-sm:w-full flex flex-row fixed max-sm:bottom-0 sm:top-[15vh] h-[5vh] max-sm:mx-0 items-center mx-[5%]">
+    <nav id="internal-nav" class="w-[90%] max-sm:w-full flex flex-row fixed max-sm:bottom-0 sm:top-[15vh] h-[5vh] max-sm:mx-0 items-center mx-[5%] z-10">
       <!-- had to mention "max-sm:flex max-sm:items-center max-sm:justify-center" to make the items centered vertically in 100% cases  -->
         <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">All</a>
         <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">By viewers</a>
         <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">By Author</a>
     </nav>
+
   <div id="wrapper" class="h-screen w-full flex flex-col">
-    <div id="main" class="w-full flex flex-col flex-auto h-[80vh] pt-[15vh] sm:pt-[20vh]">
+    <!-- in the below "main" container, 
+     max-sm:pt-[10vh] because the internal nav occupies 5vh at the bottom
+     sm:pt-[20vh] from small till medium the internal nav occupies 5vh at the top so required 15vh+5vh=20vh
+     md:pt-[19vh] from medium till xl because base 15 + 5 internal-nav -5 footer +4 for photographerID at the top of post!
+     xl:pt-[15vh] from xl the base 15vh internal-nav and footer cancels each other, and there is no photographerid outside the box
+    -->
+    <div id="main" class="w-full flex flex-col flex-auto h-[80vh]  max-sm:pt-[10vh] sm:pt-[20vh] md:pt-[19vh] xl:pt-[15vh]">
         
-        <div class="w-[90%] mx-auto flex-auto flex justify-center items-center pb-[5vh] sm:max-md:pb-0 h-[75vh] border-2 border-white">
-            <div id="post-card" class="w-[90%] h-[80%] flex flex-row justify-center items-center mx-auto">
+        <!-- <div class="  pb-[5vh] sm:max-md:pb-0 h-[75vh] border-2 border-white"> -->
+            <div id="post-card" class="w-[80%] h-[60vh] flex flex-row justify-center items-center mx-auto border-2 my-auto">
 
               <div id="image-side" class="max-xl:w-full w-[60%] bg-black relative h-full flex flex-col justify-center items-center">
-                <a id="PhotographerId" href="#" class="hidden max-xl:block w-full absolute bottom-[100%] text-center text-[clamp(.5rem,1rem,5vh)] bg-green-200">By:@Photographer</a>
+                <a id="PhotographerId" href="#" class="hidden max-xl:block w-full absolute bottom-[100%] text-center text-[clamp(.5rem,1rem,3.75vh)] leading-[4vh] bg-green-200 h-[4vh]">By:@Photographer</a>
                   <!-- here i created a invisble element #PhotographerIdxl-placeholder to make the image vertically centered even when the user's text size changes -->
                   <a id="PhotographerIdxl-placeholder" href="#" class="hidden xl:block invisible h-[5%]"></a>
                   <!-- caliculated the height of the image based on the height of the #carousel-preview -->
@@ -141,7 +148,7 @@
                   <!-- caliculated the height of the carousel-preview using h-auto and its value from browser console, by fixing the line-clamp for each screen-size and used the height value to caliculate the space accomodation of the #image-container -->
                  <div id="carousel-preview" class="max-md:h-[5rem] h-[3.75rem] bg-green-200 xl:hidden p-2">
                   <!-- set the sizes in rem to make the size of the conatiner responsive to the user's browser default font sizes, essentially making the #image-side layout fool proof!  -->
-                  <p class="text-gray-700 max-md:line-clamp-2 md:line-clamp-1 overflow-hidden text-[1rem] leading-[1.25rem]">
+                  <p class="text-gray-700 max-md:line-clamp-2 md:line-clamp-1 overflow-hidden text-[clamp(.5rem,1rem,1.25rem)] leading-[1.25rem]">
                     <span class="font-bold">At the Moment: </span>Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsumLorem ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet
                   </p>
                   <a href="#" class="text-blue-400 text-[1rem]">Read More</a>
@@ -150,7 +157,7 @@
                  <!-- carousel-preview end here -->
 
 
-                <div id="social-icons" class="hidden max-md:flex w-full absolute top-[100%] justify-evenly items-center">
+                <div id="social-icons" class="hidden max-md:flex w-full absolute top-[100%] justify-evenly items-center h-[4vh]">
                   <a href="#" class="">I</a>
                   <a href="#" class="">F</a>
                   <a href="#" class="">W</a>
@@ -206,7 +213,7 @@
     </div>
   </div>
 
-    <footer class="hidden md:flex fixed w-full bottom-0 bg-green-200 h-[5vh] invisible">
+    <footer class="hidden md:flex fixed w-full bottom-0 bg-green-200 h-[5vh]">
         <div class="w-[90%] h-full mx-auto flex">
         <div class="w-1/2 flex h-full justify-center items-center">
           <a href="#" class="m-4 text-[clamp(.5rem,1rem,5vh)]">prev ^</a>
