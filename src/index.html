@@ -8,7 +8,7 @@
     <title>Tailwind Test</title>
     <link href="../dist/output.css" rel="stylesheet">
 </head>
-<body class="h-screen w-full min-w-[285px] min-h-[350px] bg-red-300 overflow-hidden">
+<body class="h-screen w-full min-w-[285px] min-h-[350px] bg-red-300">
   <!-- fixed the min h and w based on window resizing and content fit -->
     <header class="w-full fixed top-0 bg-green-200 h-[15vh] z-10">
       <!-- in the above header i had to put z-10 for the mobile-menu to overlay on the rest of the body to be visible -->
@@ -123,7 +123,7 @@
         <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">By Author</a>
     </nav>
 
-  <div id="wrapper" class="h-screen w-full flex flex-col overflow-hidden">
+  <div id="wrapper" class="h-screen w-full flex flex-col">
     <!-- in the below "main" container, 
      max-sm:pt-[10vh] because the internal nav occupies 5vh at the bottom
      sm:pt-[20vh] from small till medium the internal nav occupies 5vh at the top so required 15vh+5vh=20vh
@@ -140,8 +140,8 @@
                   <!-- here i created a invisble element #PhotographerIdxl-placeholder to make the image vertically centered even when the user's text size changes -->
                   <a id="PhotographerIdxl-placeholder" href="#" class="hidden xl:block invisible h-[5%]"></a>
                   <!-- caliculated the height of the image based on the height of the #carousel-preview -->
-                  <div id="image-container" class="flex-1 max-md:h-[calc(100%-5rem)] md:h-[calc(100%-3.75rem)] xl:max-h-[90%]">
-                    <img src="assets/vertical-animal.jpg" class="h-full w-auto max-w-full object-contain">
+                  <div id="image-container" class="flex-1 max-md:h-[calc(100%-5rem)] md:h-[calc(100%-3.75rem)] xl:max-h-[90%] relative top-0 transition-all duration-700 ease-in-out">
+                    <img src="assets/vertical-animal.jpg" class="h-full w-auto max-w-full object-contain mx-auto">
                   </div>
                   <a id="PhotographerIdxl" href="#" class="hidden xl:block w-full text-white text-center h-[5%] text-[2vh]">@Photographer</a>
 
@@ -152,11 +152,58 @@
                   <p class="text-gray-700 max-md:line-clamp-2 md:line-clamp-1 overflow-hidden text-[clamp(.5rem,1rem,1.25rem)] leading-[1.25rem]">
                     <span class="font-bold">At the Moment: </span>Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsumLorem ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet
                   </p>
-                  <a href="#" class="text-blue-400 text-[1rem]">Read More</a>
+                  <a id="read-more-link" class="text-blue-400 text-[1rem]">Read More</a>
                 </div>
-  
+                
+                <!-- transition test element -->
+                 <!--  -->
+                <!-- <div id="box" class="hidden relative transition-all duration-700 bg-blue-500 top-0 h-20 w-20 z-50 top-[-35vh] top-[-25vh] top-[-34vh] w-screen h-[50vh] z-30 bg-black"></div> -->
+
                  <!-- carousel-preview end here -->
 
+                 <!-- js for image transformation starts here -->
+                 <script>
+                  document.addEventListener("DOMContentLoaded", () => {
+                  const readMoreLink = document.getElementById("read-more-link");
+                  //for image
+                  const imageContainer = document.getElementById("image-container");
+                  //for carousel
+                  // const carousel = document.getElementById("carousel-preview");
+                  //for the bottom-7.5vh
+                  // const bottom = document.getElementById("bottom-7.5vh");
+
+                  // const main = document.getElementById("main");
+
+                  readMoreLink.addEventListener("click", (e) => {
+                    e.preventDefault();
+
+                    imageContainer.classList.add(
+                       "xl:top-[0]","xl:w-full","max-sm:top-[-25vh]", "w-screen", "max-h-[50vh]", "top-[-30vh]", "z-30", "bg-black"
+                       //at the time of production you must either safelist them or mention these classes in a hidden element for tailwind maintain these classes while purging
+                    );
+
+                    // main.classList.add("blur-sm");
+
+                    // code for carousel transformation from carousal preview to full carousel
+                    //carousel.classList.add(
+                      //"fixed", "top-[50vh]", "left-0", "w-full", "h-[42.5vh]", "z-30", "bg-green-200"
+                    //);
+                   // carousel.innerHTML="";
+                    //setTimeout(() => {
+                    
+                   // },500);
+
+                    //code for bottom 10vh
+                    // setTimeout(() => {
+                    //   bottom10.classList.remove("hidden");
+                    // },1000);
+
+                  });
+                });
+
+
+                 </script>
+                 <!-- js for image transformation ends here -->
 
                 <div id="social-icons" class="hidden max-md:flex w-full absolute top-[100%] justify-evenly items-center h-[4vh]">
                   <!-- make the contents inside to have max height of 4vh to fit the box no matter how small the window is -->
