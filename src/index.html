@@ -8,14 +8,14 @@
     <title>Tailwind Test</title>
     <link href="../dist/output.css" rel="stylesheet">
 </head>
-<body class="h-screen w-full min-w-[285px] min-h-[350px] bg-red-300">
+<body class="h-screen w-full min-w-[350px] min-h-[350px] bg-red-300">
   <!-- fixed the min h and w based on window resizing and content fit -->
-    <header class="w-full fixed top-0 bg-green-200 h-[15vh] z-10">
+    <header class="w-full fixed top-0 bg-green-200 h-[10vh] xl:h-[15vh] z-10">
       <!-- in the above header i had to put z-10 for the mobile-menu to overlay on the rest of the body to be visible -->
         <div class="flex w-full md:w-[90%] h-full mx-auto">
             <div class="flex w-2/3 md:w-1/2 justify-left sm:justify-left ml-4 md:ml-0 items-center">
                 <img src="assets/Unknown.jpeg" alt="logo" class="h-1/2">
-                <h1 class="font-bold md:text-4xl xl:text-5xl text-gray-800 text-2xl text-[clamp(0.25rem,1.5rem,15vh)] leading-none">Green Frames</h1> <!--added leading-none to make the text fit inside header for devices as small as apple watch se 40 mm -->
+                <h1 class="font-bold text-gray-800 text-[clamp(0.5rem,1.5rem,10vh)] md:text-3xl lg:text-4xl leading-none">Green Frames</h1> <!--added leading-none to make the text fit inside header for devices as small as apple watch se 40 mm -->
             </div>
             <!-- nav bar for large screens -->
             <nav class="hidden md:flex flex-row w-1/2 h-1/2 mx-auto justify-evenly items-end my-auto">
@@ -24,13 +24,13 @@
                 <a href="#" class="hover:text-gray-400 text-center p-1 w-1/6 h-auto">Gallery</a>
                 <a href="#" class="hover:text-gray-400 text-center p-1 w-1/6 h-auto">Contact</a>
             </nav>
-            <div class="md:hidden relative my-auto flex w-1/3 justify-end">
+            <div class="md:hidden relative my-auto flex w-1/3 justify-end h-1/2">
               <!-- the below <p> makes the button unclickable between to complete the animations -->
             <p id="overlay" class="md:hidden block absolute top-0 left-auto mr-4 w-12 h-full z-[-1]"></p>
-            <button id="menu-toggle" class="md:hidden my-auto p-2 mr-4 h-1/3 w-12">|||</button>
+            <button id="menu-toggle" class="md:hidden my-auto mr-4 h-full w-12 text-[clamp(0.25rem,1rem,5vh)] leading-[5vh]">|||</button> <!--text-[clamp(0.25rem,1rem,5vh)] leading-[5vh] set these temporarily to make the text inside responsive to vertical resizing, don't need this if not using text-->
           </div>
               <!-- nav bar for smaller screens -->
-              <nav id="mobile-menu" class="hidden flex flex-col absolute top-[15vh] right-0 bg-green-200 p-4 w-48 shadow-lg overflow-hidden">
+              <nav id="mobile-menu" class="hidden flex flex-col absolute top-[10vh] right-0 bg-green-200 p-4 w-48 shadow-lg overflow-hidden">
               <!--elements to make the bricks broken-fall effect -->
               <a href="#" class="menu-item block px-4 py-2 bg-green-700 opacity-0 transform translate-x-full transition-all duration-300">Home</a>
                 <a href="#" class="menu-item block px-4 py-2 bg-green-700 opacity-0 transform translate-x-full transition-all duration-500">About</a>
@@ -116,7 +116,7 @@
         </div>
     </header>
 
-    <nav id="internal-nav" class="w-[90%] max-sm:w-full flex flex-row fixed max-sm:bottom-0 sm:top-[15vh] h-[5vh] max-sm:mx-0 items-center mx-[5%] z-10">
+    <nav id="internal-nav" class="w-[90%] max-sm:w-full flex flex-row fixed max-sm:bottom-0 sm:top-[10vh] xl:top-[15vh] h-[5vh] max-sm:mx-0 items-center mx-[5%] z-5">
       <!-- had to mention "max-sm:flex max-sm:items-center max-sm:justify-center" to make the items centered vertically in 100% cases  -->
         <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">All</a>
         <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">By viewers</a>
@@ -125,29 +125,29 @@
 
   <div id="wrapper" class="h-screen w-full flex flex-col">
     <!-- in the below "main" container, 
-     max-sm:pt-[10vh] because the internal nav occupies 5vh at the bottom
-     sm:pt-[20vh] from small till medium the internal nav occupies 5vh at the top so required 15vh+5vh=20vh
-     md:pt-[19vh] from medium till xl because base 15 + 5 internal-nav -5 footer +4 for photographerID at the top of post!
+     max-sm:pt-[5vh] because the internal nav occupies 5vh at the bottom and header 10vh
+     sm:pt-[15vh] from small till medium the internal nav occupies 5vh at the top so required 10vh+5vh=15vh 
+     md:pt-[14vh] from medium till xl because base 10 + 5 internal-nav -5 footer +4 for photographerID at the top of post!
      xl:pt-[15vh] from xl the base 15vh internal-nav and footer cancels each other, and there is no photographerid outside the box
     -->
-    <div id="main" class="w-full flex flex-col min-h-screen  max-sm:pt-[10vh] sm:pt-[20vh] md:pt-[19vh] xl:pt-[15vh]">
+    <div id="main" class="w-full flex flex-col min-h-screen  max-sm:pt-[5vh] sm:pt-[15vh] md:pt-[14vh] xl:pt-[15vh]">
         
         <!-- <div class="  pb-[5vh] sm:max-md:pb-0 h-[75vh] border-2 border-white"> -->
-            <div id="post-card" class="w-[80%] h-[60vh] flex flex-row justify-center items-center mx-auto my-auto">
+            <div id="post-card" class="w-[80%] h-[70vh] xl:h-[65vh] flex flex-row justify-center items-center mx-auto my-auto">
 
               <div id="image-side" class="max-xl:w-full w-[60%] bg-black relative h-full flex flex-col justify-center items-center">
                 <a id="PhotographerId" href="#" class="hidden max-xl:block w-full absolute bottom-[100%] text-center text-[clamp(.5rem,1rem,3.75vh)] leading-[4vh] bg-green-200 h-[4vh]">By:@Photographer</a>
                   <!-- here i created a invisble element #PhotographerIdxl-placeholder to make the image vertically centered even when the user's text size changes -->
-                  <a id="PhotographerIdxl-placeholder" href="#" class="hidden xl:block invisible h-[5%]"></a>
+                  <a id="PhotographerIdxl-placeholder" href="#" class="hidden xl:block invisible h-[2.5vh]"></a>
                   <!-- caliculated the height of the image based on the height of the #carousel-preview -->
-                  <div id="image-container" class="flex-1 max-md:h-[calc(100%-5rem)] md:h-[calc(100%-3.75rem)] xl:max-h-[90%] relative top-0 transition-all duration-700 ease-in-out">
-                    <img src="assets/vertical-animal.jpg" class="h-full w-auto max-w-full object-contain mx-auto">
+                  <div id="image-container" class="max-md:h-[calc(100%-5rem)] md:h-[calc(100%-3.75rem)] xl:h-[60vh] relative top-0 transition-all duration-700 ease-in-out">
+                    <img src="assets/duck-rectangle.jpg.webp" class="h-full w-auto max-w-full object-contain mx-auto">
                   </div>
-                  <a id="PhotographerIdxl" href="#" class="hidden xl:block w-full text-white text-center h-[5%] text-[2vh]">@Photographer</a>
+                  <a id="PhotographerIdxl" href="#" class="hidden xl:block w-full text-white text-center h-[2.5vh] text-[1.5vh] leading-[2.5vh]">By: @Photographer</a>
 
                  <!-- carousel-preview starts here -->
                   <!-- caliculated the height of the carousel-preview using h-auto and its value from browser console, by fixing the line-clamp for each screen-size and used the height value to caliculate the space accomodation of the #image-container -->
-                 <div id="carousel-preview" class="max-md:h-[5rem] h-[3.75rem] bg-green-200 xl:hidden p-2">
+                 <div id="carousel-preview" class="max-md:h-[5rem] h-[3.75rem] bg-green-200 xl:hidden p-2 relative top-0 transition-all duration-700 ease-in-out">
                   <!-- set the sizes in rem to make the size of the conatiner responsive to the user's browser default font sizes, essentially making the #image-side layout fool proof!  -->
                   <p class="text-gray-700 max-md:line-clamp-2 md:line-clamp-1 overflow-hidden text-[clamp(.5rem,1rem,1.25rem)] leading-[1.25rem]">
                     <span class="font-bold">At the Moment: </span>Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsumLorem ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet
@@ -168,7 +168,7 @@
                   //for image
                   const imageContainer = document.getElementById("image-container");
                   //for carousel
-                  // const carousel = document.getElementById("carousel-preview");
+                  const carousel = document.getElementById("carousel-preview");
                   //for the bottom-7.5vh
                   // const bottom = document.getElementById("bottom-7.5vh");
 
@@ -178,20 +178,20 @@
                     e.preventDefault();
 
                     imageContainer.classList.add(
-                       "xl:top-[0]","xl:w-full","max-sm:top-[-25vh]", "w-screen", "max-h-[50vh]", "top-[-30vh]", "z-30", "bg-black"
+                       "xl:top-[0]","xl:w-full","max-sm:top-[-22.5vh]", "w-screen", "!h-[50vh]", "top-[-30vh]", "z-30", "bg-black"
                        //at the time of production you must either safelist them or mention these classes in a hidden element for tailwind maintain these classes while purging
                     );
 
                     // main.classList.add("blur-sm");
 
                     // code for carousel transformation from carousal preview to full carousel
-                    //carousel.classList.add(
-                      //"fixed", "top-[50vh]", "left-0", "w-full", "h-[42.5vh]", "z-30", "bg-green-200"
-                    //);
-                   // carousel.innerHTML="";
-                    //setTimeout(() => {
+                    carousel.classList.add(
+                      "top-[5vh]", "w-screen", "h-[42.5vh]", "z-30", "bg-green-200"
+                    );
+                  //  carousel.innerHTML="";
+                  //   setTimeout(() => {
                     
-                   // },500);
+                  //  },500);
 
                     //code for bottom 10vh
                     // setTimeout(() => {
@@ -214,30 +214,30 @@
               </div>
 
               <div id="info-side" class="max-xl:hidden w-[40%] flex flex-col bg-green-300 h-full">
-                  <div id="info-carousel" class="h-[80%] w-full relative overflow-hidden">
+                  <!-- <div id="info-carousel" class="h-[80%] w-full relative overflow-hidden"> -->
                     <!-- carousel code start --> 
                      <!-- all the below problems were due to borders that you used to debug the layouts -->
                      <!-- i added w-full in the next line and min-w-full in .carousel-slide (all 3)-->
                       <!-- at first why the width full didnt work for the .carousel-slide elements before min-w-full, even after why does each slide not fit perfectly to full width of carousel-container?, tried to use justify evenly didnt work out! -->
-                    <div id="carousel-container" class="w-full h-full flex transition-transform duration-500 ease-in-out">
+                    <!-- <div id="carousel-container" class="w-full h-full flex transition-transform duration-500 ease-in-out"> -->
                       <!-- implemented dynamic divs which takeup rest of the space left after the text, to contain ainmal emojis! -->
-                      <div id="first-slide" class="carousel-slide min-w-full h-auto px-6 flex flex-col">
+                      <!-- <div id="first-slide" class="carousel-slide min-w-full h-auto px-6 flex flex-col">
                         <div id="slide1-content" class="min-h-[25%] max-h-[80%]">
                           <h2 class="text-lg font-bold text-center">Slide 1 Title</h2>
                           <p class="text-gray-700 max-h-[85%] overflow-y-auto">Lorem ipsum dolor sit amet, </p>
                         </div>
                         <div class="flex-auto min-h-[20%] bg-black"></div>
-                      </div>
+                      </div> -->
 
-                      <div id="second-slide" class="carousel-slide min-w-full h-auto px-6 flex flex-col">
+                      <!-- <div id="second-slide" class="carousel-slide min-w-full h-auto px-6 flex flex-col">
                         <div id="slide2-content" class="min-h-[25%] max-h-[80%]">
                           <h2 class="text-lg font-bold text-center">Slide 2 Title</h2>
                           <p class="text-gray-700 max-h-[85%] overflow-y-auto">Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet,</p>
                         </div>
                         <div class="flex-auto min-h-[20%] bg-black"></div>
-                      </div>
+                      </div> -->
 
-
+<!-- 
                       <div id="third-slide" class="carousel-slide min-w-full h-auto px-6 flex flex-col">
                         <div id="slide3-content" class="min-h-[25%] max-h-[80%]">
                           <h2 class="text-lg font-bold text-center">Slide 3 Title</h2>
@@ -249,15 +249,15 @@
                   </div>
                   <button id="prev-slide" class="absolute h-[5vh] left-2 top-[5%] transform -translate-y-1/2 bg-slate-300 text-white  rounded-full focus:outline-none">←</button>
                   <button id="next-slide" class="absolute h-[10%] right-2 top-[5%] transform -translate-y-1/2 bg-slate-400 text-white  rounded-full focus:outline-none">→</button>
-                </div>
+                </div> -->
                   <!-- carousel code ends here -->
-                  <div id="button-section" class="h-[20%] flex justify-center items-center">
+                  <!-- <div id="button-section" class="h-[20%] flex justify-center items-center">
                     <button id="donate-button" class="border-2 border-green-500 px-6 h-1/2 w-1/3 text-center text-xl">Donate</button>
                   </div>
               </div>
             </div>
 
-        </div>
+        </div> -->
         <!-- uncomment the below 2 divs and remove overflow hidden on the wrapper div to see 2 place holders for next two posts -->
     <!-- <div class="w-full flex flex-col min-h-screen  max-sm:pt-[10vh] sm:pt-[20vh] md:pt-[19vh] xl:pt-[15vh]">
           </div>
