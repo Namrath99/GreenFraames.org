@@ -140,19 +140,19 @@
                   <!-- here i created a invisble element #PhotographerIdxl-placeholder to make the image vertically centered even when the user's text size changes -->
                   <a id="PhotographerIdxl-placeholder" href="#" class="hidden xl:block invisible h-[2.5vh]"></a>
                   <!-- caliculated the height of the image based on the height of the #carousel-preview -->
-                  <div id="image-container" class="max-md:h-[calc(100%-5rem)] md:h-[calc(100%-3.75rem)] xl:h-[60vh] relative top-0 transition-all duration-700 ease-in-out">
+                  <div id="image-container" class="max-md:min-h-[60vh] md:h-[63.5vh] xl:h-[60vh] relative top-0 transition-all duration-700 ease-in-out">
                     <img src="assets/duck-rectangle.jpg.webp" class="h-full w-auto max-w-full object-contain mx-auto">
                   </div>
                   <a id="PhotographerIdxl" href="#" class="hidden xl:block w-full text-white text-center h-[2.5vh] text-[1.5vh] leading-[2.5vh]">By: @Photographer</a>
 
                  <!-- carousel-preview starts here -->
                   <!-- caliculated the height of the carousel-preview using h-auto and its value from browser console, by fixing the line-clamp for each screen-size and used the height value to caliculate the space accomodation of the #image-container -->
-                 <div id="carousel-preview" class="max-md:h-[5rem] h-[3.75rem] bg-green-200 xl:hidden p-2 relative top-0 transition-all duration-700 ease-in-out">
+                 <div id="carousel-preview" class="max-md:h-[10vh] h-[6.5vh] bg-green-200 xl:hidden px-2 py-[1vh] md:pb-0 flex flex-col relative top-0 transition-all duration-700 ease-in-out">
                   <!-- set the sizes in rem to make the size of the conatiner responsive to the user's browser default font sizes, essentially making the #image-side layout fool proof!  -->
-                  <p class="text-gray-700 max-md:line-clamp-2 md:line-clamp-1 overflow-hidden text-[clamp(.5rem,1rem,1.25rem)] leading-[1.25rem]">
+                  <p class="text-gray-700 max-md:line-clamp-2 md:line-clamp-1 overflow-hidden text-[clamp(.25rem,1rem,2.5vh)] leading-[2.5vh]">
                     <span class="font-bold">At the Moment: </span>Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsumLorem ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet
                   </p>
-                  <a id="read-more-link" class="text-blue-400 text-[1rem]">Read More</a>
+                  <a id="read-more-link" class="text-blue-400 text-[clamp(.25rem,1rem,2.5vh)] h-[3vh]">Full info</a>
                 </div>
                 
                 <!-- transition test element -->
