@@ -67,4 +67,62 @@
       </script>
 </body>      
   </html>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const readMoreLink = document.getElementById("read-more-link");
+      const imageContainer = document.getElementById("image-container");
+      const carousel = document.getElementById("carousel-preview");
+      const bottom = document.getElementById("bottom-7.5vh");
+    
+      readMoreLink.addEventListener("click", (e) => {
+        e.preventDefault();
+    
+        imageContainer.classList.add(
+          "xl:top-[0]", "xl:w-full", "max-sm:top-[-17.5vh]", "max-md:top-[-22.5vh]", "md:top-[-22vh]", "w-screen", "max-xl:!h-[50vh]", "z-30", "bg-black", "touch-auto"
+        );
+    
+        carousel.classList.add(
+          "!max-sm:top-[32.5vh]", "!max-md:top-[27.5vh]", "!md:top-[28vh]", "w-screen", "!h-[42.5vh]", "z-30", "bg-green-200"
+        );
+    
+        setTimeout(() => {
+          carousel.innerHTML = `
+            <div id="info-carousel" class="w-full h-full relative overflow-hidden">
+              <div id="carousel-container" class="w-full h-full flex transition-transform duration-500 ease-in-out">
+                <div id="first-slide" class="carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+                  <div id="slide1-content" class="min-h-[18vh] max-h-full">
+                    <div class="font-bold h-[7.5vh] text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Slide 1 Title</span></div>
+                    <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">Lorem ipsum dolor sit amet...</p>
+                  </div>
+                  <div class="flex-auto bg-black"></div>
+                </div>
+                <div id="second-slide" class="carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+                  <div id="slide2-content" class="min-h-[18vh] max-h-full">
+                    <div class="font-bold h-[7.5vh] text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Slide 2 Title</span></div>
+                    <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">Lorem ipsum dolor sit amet...</p>
+                  </div>
+                  <div class="flex-auto bg-black"></div>
+                </div>
+                <div id="third-slide" class="carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+                  <div id="slide3-content" class="min-h-[18vh] max-h-full">
+                    <div class="font-bold h-[7.5vh] text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Slide 3 Title</span></div>
+                    <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">Lorem ipsum dolor sit amet...</p>
+                  </div>
+                  <div class="flex-auto bg-black"></div>
+                </div>
+              </div>
+              <button id="prev-slide" class="absolute h-[5vh] left-2 top-[2.5vh] transform -translate-y-1/2 bg-slate-300 text-white rounded-full focus:outline-none">←</button>
+              <button id="next-slide" class="absolute h-[5vh] right-2 top-[2.5vh] transform -translate-y-1/2 bg-slate-400 text-white rounded-full focus:outline-none">→</button>
+            </div>
+          `;
+          initializeCarousel();
+        }, 1000);
+    
+        setTimeout(() => {
+          bottom.classList.remove("hidden");
+        }, 1000);
+      });
+    });
+    </script>
   

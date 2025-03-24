@@ -130,7 +130,7 @@
      md:pt-[14vh] from medium till xl because base 10 + 5 internal-nav -5 footer +4 for photographerID at the top of post!
      xl:pt-[15vh] from xl the base 15vh internal-nav and footer cancels each other, and there is no photographerid outside the box
     -->
-    <div id="main" class="w-full flex flex-col min-h-screen  max-sm:pt-[5vh] sm:pt-[15vh] md:pt-[14vh] xl:pt-[15vh]">
+    <div id="main" class="w-full flex flex-col h-screen  max-sm:pt-[5vh] sm:pt-[15vh] md:pt-[14vh] xl:pt-[15vh]">
         
         <!-- <div class="  pb-[5vh] sm:max-md:pb-0 h-[75vh] border-2 border-white"> -->
             <div id="post-card" class="w-[80%] h-[70vh] xl:h-[65vh] flex flex-row justify-center items-center mx-auto my-auto">
@@ -140,25 +140,33 @@
                   <!-- here i created a invisble element #PhotographerIdxl-placeholder to make the image vertically centered even when the user's text size changes -->
                   <a id="PhotographerIdxl-placeholder" href="#" class="hidden xl:block invisible h-[2.5vh]"></a>
                   <!-- caliculated the height of the image based on the height of the #carousel-preview -->
-                  <div id="image-container" class="max-md:min-h-[60vh] md:h-[63.5vh] xl:h-[60vh] relative top-0 transition-all duration-700 ease-in-out">
-                    <img src="assets/duck-rectangle.jpg.webp" class="h-full w-auto max-w-full object-contain mx-auto">
+                  <div id="image-container" class="max-md:h-[60vh] md:h-[63.5vh] xl:h-[60vh] max-xl:absolute top-0 transition-all duration-700 ease-in-out border-2 border-white">
+                    <img src="assets/vertical-animal.jpg" class="h-full w-auto max-w-full object-contain mx-auto">
                   </div>
                   <a id="PhotographerIdxl" href="#" class="hidden xl:block w-full text-white text-center h-[2.5vh] text-[1.5vh] leading-[2.5vh]">By: @Photographer</a>
 
                  <!-- carousel-preview starts here -->
                   <!-- caliculated the height of the carousel-preview using h-auto and its value from browser console, by fixing the line-clamp for each screen-size and used the height value to caliculate the space accomodation of the #image-container -->
-                 <div id="carousel-preview" class="max-md:h-[10vh] h-[6.5vh] bg-green-200 xl:hidden px-2 py-[1vh] md:pb-0 flex flex-col relative top-0 transition-all duration-700 ease-in-out">
+                 <div id="carousel-preview" class="max-md:h-[10vh] h-[6.5vh] bg-green-200 xl:hidden absolute max-md:top-[60vh] md:top-[63.5vh] transition-all duration-700 ease-in-out">
                   <!-- set the sizes in rem to make the size of the conatiner responsive to the user's browser default font sizes, essentially making the #image-side layout fool proof!  -->
+                  <div id="just-a-wrapper" class="h-full w-full px-2 py-[1vh] md:pb-0 flex flex-col">
                   <p class="text-gray-700 max-md:line-clamp-2 md:line-clamp-1 overflow-hidden text-[clamp(.25rem,1rem,2.5vh)] leading-[2.5vh]">
                     <span class="font-bold">At the Moment: </span>Lorem ipsum dolor sit amet, Lorem ipsum dolor sit amet, Lorem ipsumLorem ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet ipsum dolor sit amet, Lorem ipsum dolor sit amet
                   </p>
-                  <a id="read-more-link" class="text-blue-400 text-[clamp(.25rem,1rem,2.5vh)] h-[3vh]">Full info</a>
+                  <a id="read-more-link" class="text-blue-400 text-[clamp(.05rem,1rem,2.5vh)] h-[3vh]">Full info</a>
                 </div>
+                  <!-- <div id="full-carousel-content" class="hidden h-full w-full"></div> -->
+
+                </div>
+
+                
                 
                 <!-- transition test element -->
                  <!--  -->
-                <!-- <div id="box" class="hidden relative transition-all duration-700 bg-blue-500 top-0 h-20 w-20 z-50 top-[-35vh] top-[-25vh] top-[-34vh] w-screen h-[50vh] z-30 bg-black"></div> -->
-
+                <!-- <div id="box" class="hidden relative transition-all duration-700 bg-blue-500 top-0 h-20 w-20 z-50 top-[-35vh] top-[-25vh] top-[-34vh] w-screen h-[50vh] z-30 bg-black top-[-27.5vh] !h-[42.5vh] "></div> -->
+                <div class="hidden xl:top-[0] xl:w-full max-sm:top-[-17.5vh] max-md:top-[-22.5vh] md:top-[-22vh] w-screen !h-[42.5vh] max-xl:!h-[50vh] z-30 bg-black touch-auto max-sm:top-[32.5vh] max-md:top-[27.5vh] md:top-[28vh] bg-green-200 opacity-0 opacity-100"></div>
+              
+                
                  <!-- carousel-preview end here -->
 
                  <!-- js for image transformation starts here -->
@@ -169,36 +177,113 @@
                   const imageContainer = document.getElementById("image-container");
                   //for carousel
                   const carousel = document.getElementById("carousel-preview");
+                  // const fullCarousel = document.getElementById("full-carousel-content");
                   //for the bottom-7.5vh
-                  // const bottom = document.getElementById("bottom-7.5vh");
-
+                  const bottom = document.getElementById("bottom-7.5vh");
+                  const previewContent= document.getElementById("just-a-wrapper");
                   // const main = document.getElementById("main");
 
                   readMoreLink.addEventListener("click", (e) => {
                     e.preventDefault();
 
                     imageContainer.classList.add(
-                       "xl:top-[0]","xl:w-full","max-sm:top-[-22.5vh]", "w-screen", "!h-[50vh]", "top-[-30vh]", "z-30", "bg-black"
+                       "xl:top-[0]","xl:w-full","max-sm:top-[-17.5vh]","max-md:top-[-22.5vh]","md:top-[-22vh]", "w-screen", "max-xl:!h-[50vh]", "z-30", "bg-black"
                        //at the time of production you must either safelist them or mention these classes in a hidden element for tailwind maintain these classes while purging
                     );
 
                     // main.classList.add("blur-sm");
 
                     // code for carousel transformation from carousal preview to full carousel
+                    carousel.classList.remove("max-sm:top-[60vh]", "md:top-[63.5vh]");
+                    // carousel.classList.add("top-0");
                     carousel.classList.add(
-                      "top-[5vh]", "w-screen", "h-[42.5vh]", "z-30", "bg-green-200"
-                    );
-                  //  carousel.innerHTML="";
-                  //   setTimeout(() => {
+                      "max-sm:top-[32.5vh]", "sm:top-[27.5vh]", "md:top-[28vh]", "w-screen", "!h-[42.5vh]", "z-30"
+                    ); //why 32.5? understood! its because the carousel element is absolutely positioned 60 or 63.5vh from the top of the relative parent container 
                     
-                  //  },500);
+                    previewContent.classList.add("hidden");
+                    // Array.from(carousel.children).forEach(child => {
+                    //   child.classList.toggle("hidden");
+                    // });
 
-                    //code for bottom 10vh
-                    // setTimeout(() => {
-                    //   bottom10.classList.remove("hidden");
-                    // },1000);
+                    const fullCarouselHtml =`<div id="info-carousel" class="w-full h-full relative overflow-hidden transition-all duration-700 ease-in-out opacity-0">
+                    <!-- carousel code start --> 
+                     <!-- all the below problems were due to borders that you used to debug the layouts -->
+                     <!-- i added w-full in the next line and min-w-full in .carousel-slide (all 3)-->
+                      <!-- at first why the width full didnt work for the .carousel-slide elements before min-w-full, even after why does each slide not fit perfectly to full width of carousel-container?, tried to use justify evenly didnt work out! -->
+                    <div id="carousel-container" class="w-full h-full flex transition-transform duration-500 ease-in-out ">
+                      <!-- implemented dynamic divs which takeup rest of the space left after the text, to contain ainmal emojis! -->
+                      <div id="first-slide" class="carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+                        <div id="slide1-content" class="min-h-[18vh] max-h-full"> <!--min-h-[18vh]-> 3.5*3+7.5 to leave space for 3 lines and heading at least-->
+                          <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Slide 1 Title</span></div><!--made 7vh highest size for the text below to not overlay on this no matter how small the window is resized-->
+                          <!--for the p below leading is set to 3.5 to accomodate exactly 10 lines-->
+                          <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">Lorem  Lorem ipsum dolor sit sit amet,Loremamet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amdolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet, </p>
+                        </div>
+                        <div class="flex-auto bg-black"></div> <!-- make sure this container has same bg-color as the slide when done with testing -->
+                      </div>
+                
+                      <div id="second-slide" class="carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+                        <div id="slide2-content" class="min-h-[18vh] max-h-full"> <!--min-h-[18vh]-> 3.5*3+7.5 to leave space for 3 lines and heading at least-->
+                          <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Slide 2 Title</span></div><!--made 7vh highest size for the text below to not overlay on this no matter how small the window is resized-->
+                          <!--for the p below leading is set to 3.5 to accomodate exactly 10 lines-->
+                          <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">Lorem  Lorem ipsum dolor sit sit amet,Loremamet,Lorem ipsum dolor </p>
+                        </div>
+                        <div class="flex-auto bg-black"></div> <!-- make sure this container has same bg-color as the slide when done with testing -->
+                      </div>
+                
+                      <div id="third-slide" class="carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+                        <div id="slide3-content" class="min-h-[18vh] max-h-full"> <!--min-h-[18vh]-> 3.5*3+7.5 to leave space for 3 lines and heading at least-->
+                          <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Slide 3 Title</span></div><!--made 7vh highest size for the text below to not overlay on this no matter how small the window is resized-->
+                          <!--for the p below leading is set to 3.5 to accomodate exactly 10 lines-->
+                          <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">Lorem  Lorem ipsum dolor sit sit amet,Loremamet,Lorem Lorem ipsum dolor sit sit amet,Loremamet,Lorem Lorem ipsum dolor sit sit amet,Loremamet,Lorem  Lorem ipsum dolor sit sit amet,Loremamet,Lorem </p>
+                        </div>
+                        <div class="flex-auto bg-black"></div> <!-- make sure this container has same bg-color as the slide when done with testing -->
+                      </div>
+                
+                  </div>
+                  <button id="prev-slide" class="absolute h-[5vh] left-2 top-[2.5vh] transform -translate-y-1/2 bg-slate-300 text-white  rounded-full focus:outline-none">←</button>
+                  <button id="next-slide" class="absolute h-[5vh] right-2 top-[2.5vh] transform -translate-y-1/2 bg-slate-400 text-white  rounded-full focus:outline-none">→</button>
+                </div>`;
+
+                const wrapper = document.createElement("div");
+                wrapper.innerHTML = fullCarouselHtml.trim();
+                const fullCarouselElement = wrapper.firstChild;
+
+                carousel.appendChild(fullCarouselElement);
+                initializeCarousel();
+                requestAnimationFrame(() => {      // Step 2: wait 1 frame (browser paints it)
+                      fullCarouselElement.classList.replace("opacity-0", "opacity-100"); // Step 3: fade in
+                    });
+
+                    //code for bottom-7.5vh
+                    bottom.classList.toggle("hidden"); //has to be here to make the bottom visible part of page non interactive
+                    setTimeout(() => {
+                    // Step 1: show it (now it's display: flex)
+                    requestAnimationFrame(() => {      // Step 2: wait 1 frame (browser paints it)
+                      bottom.classList.replace("opacity-0", "opacity-100"); // Step 3: fade in
+                    });
+                  },1000);
+
 
                   });
+                
+                  document.getElementById("go-back").addEventListener("click", () => {
+                    imageContainer.classList.remove(
+                    "xl:top-[0]", "xl:w-full", "max-sm:top-[-17.5vh]", "max-md:top-[-22.5vh]", 
+                    "md:top-[-22vh]", "w-screen", "max-xl:!h-[50vh]", "z-30", "bg-black"
+                  );
+                  
+                  carousel.removeChild(carousel.children[1]);
+                  previewContent.classList.remove("hidden");
+                  
+
+                  carousel.classList.add("max-sm:top-[60vh]", "md:top-[63.5vh]");
+                  carousel.classList.remove("max-sm:top-[32.5vh]", "sm:top-[27.5vh]", "md:top-[28vh]", "w-screen", "!h-[42.5vh]", "z-30");
+                  bottom.classList.toggle("hidden");
+                    // Step 2: wait 1 frame (browser paints it)
+                      bottom.classList.replace("opacity-100", "opacity-0"); // Step 3: fade in
+                    
+                  });
+                
                 });
 
 
@@ -264,7 +349,15 @@
     <div class="w-full flex flex-col min-h-screen  max-sm:pt-[10vh] sm:pt-[20vh] md:pt-[19vh] xl:pt-[15vh]">
           </div> -->
   
-  </div>
+              </div>
+            </div>
+            <!-- bottom 7.5vh for full screen mode -->
+            <div id="bottom-7.5vh" class="hidden fixed bottom-0 left-0 z-30 h-[7.5vh] flex w-full justify-around items-center bg-slate-500 transition-all duration-1000 ease-in-out xl:hidden opacity-0">
+              <button id="go-back" class="border-2 border-white">Go Back</button>
+              <button id="" class="border-2 border-white w-1/2">Donate</button>
+            </div>
+    </div> 
+  </div>       
 
     <footer class="hidden md:flex fixed w-full bottom-0 bg-green-200 h-[5vh]">
         <div class="w-[90%] h-full mx-auto flex">
@@ -280,53 +373,57 @@
         </div>
     </footer>
 
-    <script>
-      // javascript for the carousel
-      document.addEventListener("DOMContentLoaded", function () {
-    let currentSlide = 0;
-    const slides = document.querySelectorAll(".carousel-slide");
-    const totalSlides = slides.length;
-    const carouselContainer = document.getElementById("carousel-container");
-
-    function updateCarousel() {
-        carouselContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
-        // below is the code to lighten or darken prev and next buttons depending on the current position of carousel
-        //if you need to add more slides change the last else to have else if(currentSlide==lastslide), and add else if(currentSlide==lastslide-1){logic} to take care of next button bg color and ofcourse remove the logic related to next slide in else if(currentSlide==1).
-        if(currentSlide==0){
-              document.getElementById("prev-slide").classList.replace("bg-slate-400","bg-slate-300")
-            }else if(currentSlide==1){
-                if(document.getElementById("prev-slide").classList.contains("bg-slate-300")){document.getElementById("prev-slide").classList.replace("bg-slate-300","bg-slate-400")}
-                if(document.getElementById("next-slide").classList.contains("bg-slate-300")){document.getElementById("next-slide").classList.replace("bg-slate-300","bg-slate-400")}                
-            }else{ //for the last slide i.e, currentSlide==2,
-              document.getElementById("next-slide").classList.replace("bg-slate-400","bg-slate-300")
+        <script>
+          // javascript for the carousel
+          function initializeCarousel() {
+        let currentSlide = 0;
+        const slides = document.querySelectorAll(".carousel-slide");
+        const totalSlides = slides.length;
+        const carouselContainer = document.getElementById("carousel-container");
+    
+        function updateCarousel() {
+            carouselContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+            // below is the code to lighten or darken prev and next buttons depending on the current position of carousel
+            //if you need to add more slides change the last else to have else if(currentSlide==lastslide), and add else if(currentSlide==lastslide-1){logic} to take care of next button bg color and ofcourse remove the logic related to next slide in else if(currentSlide==1).
+            if(currentSlide==0){
+                  document.getElementById("prev-slide").classList.replace("bg-slate-400","bg-slate-300")
+                  // document.getElementById("carousel-container").style.height =`${document.getElementById("first-slide").offsetHeight}px`;
+                }else if(currentSlide==1){
+                    if(document.getElementById("prev-slide").classList.contains("bg-slate-300")){document.getElementById("prev-slide").classList.replace("bg-slate-300","bg-slate-400")}
+                    if(document.getElementById("next-slide").classList.contains("bg-slate-300")){document.getElementById("next-slide").classList.replace("bg-slate-300","bg-slate-400")}
+                    // document.getElementById("carousel-container").style.height =`${document.getElementById("second-slide").offsetHeight}px`;
+                    
+                }else{ //for the last slide i.e, currentSlide==2,
+                  document.getElementById("next-slide").classList.replace("bg-slate-400","bg-slate-300")
+                  // document.getElementById("carousel-container").style.height =`${document.getElementById("third-slide").offsetHeight}px`;
+                }
+        }
+    
+        document.getElementById("prev-slide").addEventListener("click", function () {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateCarousel();
             }
+        });
+    
+        document.getElementById("next-slide").addEventListener("click", function () {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+                updateCarousel();
+            }
+        });
+    
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "ArrowLeft" && currentSlide > 0) {
+                currentSlide--;
+            } else if (event.key === "ArrowRight" && currentSlide < totalSlides - 1) {
+                currentSlide++;
+            }
+            updateCarousel();
+        });
     }
-
-    document.getElementById("prev-slide").addEventListener("click", function () {
-        if (currentSlide > 0) {
-            currentSlide--;
-            updateCarousel();
-        }
-    });
-
-    document.getElementById("next-slide").addEventListener("click", function () {
-        if (currentSlide < totalSlides - 1) {
-            currentSlide++;
-            updateCarousel();
-        }
-    });
-
-    document.addEventListener("keydown", function (event) {
-        if (event.key === "ArrowLeft" && currentSlide > 0) {
-            currentSlide--;
-        } else if (event.key === "ArrowRight" && currentSlide < totalSlides - 1) {
-            currentSlide++;
-        }
-        updateCarousel();
-    });
-});
-
-    </script>
+    
+        </script>
 
 </body>
 

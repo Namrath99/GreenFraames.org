@@ -14,4 +14,34 @@
     /* border: 1px solid white;
     box-sizing: border-box; */
  }
+/* 
+ @layer utilities {
+    .image-expanded {
+      @apply xl:top-0 xl:w-full max-sm:top-[-17.5vh] max-md:top-[-22.5vh] md:top-[-22vh] w-screen h-[50vh] z-30 bg-black;
+    }
+  
+    .carousel-expanded {
+      @apply xl:top-0 xl:w-full max-sm:top-[-27.5vh] max-md:top-[-32.5vh] md:top-[-35.5vh] w-screen min-h-[42.5vh] z-30 bg-black;
+    }
+  }
+   */
+
+   /* @layer utilities {
+    .image-expanded {
+      @apply z-30 max-sm:top-[-22.5vh] max-md:top-[-27.5vh] md:top-[-28.75vh] xl:top-0;
+      @apply h-[50vh];
+    }
+  }
+@layer utilities {
+  .carousel-expanded{
+    @apply  w-screen h-[42.5vh] z-50 bg-black;
+}
+} */
+
+/* @layer utilities {
+  .carousel-expanded {
+    @apply !max-sm:top-[32.5vh] !max-md:top-[27.5vh] !md:top-[28vh] w-screen !h-[42.5vh] z-30 bg-green-200;
+  }
+} */
+
   
