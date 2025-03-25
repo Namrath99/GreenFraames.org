@@ -194,10 +194,10 @@
                     // main.classList.add("blur-sm");
 
                     // code for carousel transformation from carousal preview to full carousel
-                    carousel.classList.remove("max-sm:top-[60vh]", "md:top-[63.5vh]");
+                    carousel.classList.remove("max-sm:top-[60vh]", "md:top-[63.5vh]","xl:hidden");
                     // carousel.classList.add("top-0");
                     carousel.classList.add(
-                      "max-sm:top-[32.5vh]", "sm:top-[27.5vh]", "md:top-[28vh]", "w-screen", "!h-[42.5vh]", "z-30"
+                      "max-sm:top-[32.5vh]", "sm:top-[27.5vh]", "md:top-[28vh]", "w-screen", "!h-[42.5vh]", "z-30", "xl:w-[66.67%]", "xl:!h-full","xl:top-0","xl:left-[100%]"
                     ); //why 32.5? understood! its because the carousel element is absolutely positioned 60 or 63.5vh from the top of the relative parent container 
                     
                     previewContent.classList.add("hidden");
@@ -212,7 +212,7 @@
                       <!-- at first why the width full didnt work for the .carousel-slide elements before min-w-full, even after why does each slide not fit perfectly to full width of carousel-container?, tried to use justify evenly didnt work out! -->
                     <div id="carousel-container" class="w-full h-full flex transition-transform duration-500 ease-in-out ">
                       <!-- implemented dynamic divs which takeup rest of the space left after the text, to contain ainmal emojis! -->
-                      <div id="first-slide" class="carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+                      <div id="first-slide" class="carousel-slide min-w-full max-h-full px-6 flex flex-col bg-green-300">
                         <div id="slide1-content" class="min-h-[18vh] max-h-full"> <!--min-h-[18vh]-> 3.5*3+7.5 to leave space for 3 lines and heading at least-->
                           <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Slide 1 Title</span></div><!--made 7vh highest size for the text below to not overlay on this no matter how small the window is resized-->
                           <!--for the p below leading is set to 3.5 to accomodate exactly 10 lines-->
@@ -276,8 +276,8 @@
                   previewContent.classList.remove("hidden");
                   
 
-                  carousel.classList.add("max-sm:top-[60vh]", "md:top-[63.5vh]");
-                  carousel.classList.remove("max-sm:top-[32.5vh]", "sm:top-[27.5vh]", "md:top-[28vh]", "w-screen", "!h-[42.5vh]", "z-30");
+                  carousel.classList.add("max-sm:top-[60vh]", "md:top-[63.5vh]");//see if the current order of removal and adding is the best one! and check for any descrepancies related to the newly added xl: logic
+                  carousel.classList.remove("max-sm:top-[32.5vh]", "sm:top-[27.5vh]", "md:top-[28vh]", "w-screen", "!h-[42.5vh]", "z-30","xl:w-[66.67%]", "xl:!h-full","xl:top-0","xl:left-[100%]");
                   bottom.classList.toggle("hidden");
                     // Step 2: wait 1 frame (browser paints it)
                       bottom.classList.replace("opacity-100", "opacity-0"); // Step 3: fade in
@@ -299,6 +299,55 @@
               </div>
 
               <div id="info-side" class="max-xl:hidden w-[40%] flex flex-col bg-green-300 h-full">
+
+                <!-- test carousel logic here! -->
+                <div id="info-carousel" class="w-full h-[85%] relative overflow-hidden transition-all duration-700 ease-in-out">
+                  <!-- carousel code start --> 
+                   <!-- all the below problems were due to borders that you used to debug the layouts -->
+                   <!-- i added w-full in the next line and min-w-full in .carousel-slide (all 3)-->
+                    <!-- at first why the width full didnt work for the .carousel-slide elements before min-w-full, even after why does each slide not fit perfectly to full width of carousel-container?, tried to use justify evenly didnt work out! -->
+                  <div id="carousel-container" class="w-full h-full flex transition-transform duration-500 ease-in-out ">
+                    <!-- implemented dynamic divs which takeup rest of the space left after the text, to contain ainmal emojis! -->
+                    <div id="first-slide" class="carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+                      <div id="slide1-content" class="min-h-[18vh] max-h-full"> <!--min-h-[18vh]-> 3.5*3+7.5 to leave space for 3 lines and heading at least-->
+                        <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Slide 1 Title</span></div><!--made 7vh highest size for the text below to not overlay on this no matter how small the window is resized-->
+                        <!--for the p below leading is set to 3.5 to accomodate exactly 10 lines-->
+                        <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">Lorem  Lorem ipsum dolor sit sit amet,Loremamet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amdolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet, </p>
+                      </div>
+                      <div class="flex-auto bg-black"></div> <!-- make sure this container has same bg-color as the slide when done with testing -->
+                    </div>
+              
+                    <div id="second-slide" class="carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+                      <div id="slide2-content" class="min-h-[18vh] max-h-full"> <!--min-h-[18vh]-> 3.5*3+7.5 to leave space for 3 lines and heading at least-->
+                        <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Slide 2 Title</span></div><!--made 7vh highest size for the text below to not overlay on this no matter how small the window is resized-->
+                        <!--for the p below leading is set to 3.5 to accomodate exactly 10 lines-->
+                        <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">Lorem  Lorem ipsum dolor sit sit amet,Loremamet,Lorem ipsum dolor </p>
+                      </div>
+                      <div class="flex-auto bg-black"></div> <!-- make sure this container has same bg-color as the slide when done with testing -->
+                    </div>
+              
+                    <div id="third-slide" class="carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+                      <div id="slide3-content" class="min-h-[18vh] max-h-full"> <!--min-h-[18vh]-> 3.5*3+7.5 to leave space for 3 lines and heading at least-->
+                        <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Slide 3 Title</span></div><!--made 7vh highest size for the text below to not overlay on this no matter how small the window is resized-->
+                        <!--for the p below leading is set to 3.5 to accomodate exactly 10 lines-->
+                        <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">Lorem  Lorem ipsum dolor sit sit amet,Loremamet,Lorem Lorem ipsum dolor sit sit amet,Loremamet,Lorem Lorem ipsum dolor sit sit amet,Loremamet,Lorem  Lorem ipsum dolor sit sit amet,Loremamet,Lorem </p>
+                      </div>
+                      <div class="flex-auto bg-black"></div> <!-- make sure this container has same bg-color as the slide when done with testing -->
+                    </div>
+              
+                </div>
+                <button id="prev-slide" class="absolute h-[5vh] left-2 top-[2.5vh] transform -translate-y-1/2 bg-slate-300 text-white  rounded-full focus:outline-none">←</button>
+                <button id="next-slide" class="absolute h-[5vh] right-2 top-[2.5vh] transform -translate-y-1/2 bg-slate-400 text-white  rounded-full focus:outline-none">→</button>
+              </div>
+
+              <div id="button-section" class="h-[15%] flex justify-center items-center">
+                <button id="donate-button" class="border-2 border-green-500 px-6 h-1/2 w-1/3 text-center text-xl">Donate</button>
+              </div>
+
+              </div>
+            </div>
+
+                <!-- original carousel logic below -->
                   <!-- <div id="info-carousel" class="h-[80%] w-full relative overflow-hidden"> -->
                     <!-- carousel code start --> 
                      <!-- all the below problems were due to borders that you used to debug the layouts -->
@@ -349,11 +398,11 @@
     <div class="w-full flex flex-col min-h-screen  max-sm:pt-[10vh] sm:pt-[20vh] md:pt-[19vh] xl:pt-[15vh]">
           </div> -->
   
-              </div>
-            </div>
+              <!-- </div>
+            </div> -->
             <!-- bottom 7.5vh for full screen mode -->
-            <div id="bottom-7.5vh" class="hidden fixed bottom-0 left-0 z-30 h-[7.5vh] flex w-full justify-around items-center bg-slate-500 transition-all duration-1000 ease-in-out xl:hidden opacity-0">
-              <button id="go-back" class="border-2 border-white">Go Back</button>
+            <div id="bottom-7.5vh" class="hidden fixed bottom-0 left-0 z-30 h-[7.5vh] flex w-full justify-around items-center bg-slate-500 transition-all duration-1000 ease-in-out  opacity-0 xl:hidden"><!--xl:bottom-[15vh] xl:w-[32vw] xl:left-[58%] for ipad screen rotation scenario, after completing the layout for desktop carousel decide on this! can make the element xl:absolute but add 100vh from bottom to accomodate for the prepared for next post scenario-->
+              <button id="go-back" class="border-2 border-white xl:hidden">Go Back</button>
               <button id="" class="border-2 border-white w-1/2">Donate</button>
             </div>
     </div> 
