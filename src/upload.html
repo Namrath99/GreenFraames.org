@@ -1,0 +1,154 @@
+<!-- got from another folder kept for reference -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Upload to Green Frames Gallery</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+    }
+    h2 {
+      color: #333;
+    }
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      display: inline-block;
+      text-align: left;
+      max-width: 400px;
+    }
+    label {
+      font-weight: bold;
+      margin-top: 10px;
+      display: block;
+    }
+    input, select, button, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    textarea {
+      resize: vertical;
+    }
+    button {
+      background: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 15px;
+    }
+    button:hover {
+      background: #218838;
+    }
+    #upload-status {
+      margin-top: 10px;
+      font-weight: bold;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>🌿 Upload Image to Green Frames Gallery</h2>
+
+  <form id="upload-form">
+    <label for="fileInput">Select Image:</label>
+    <input type="file" id="fileInput" accept="image/*" required>
+
+    <label for="titleInput">Title (Post Title):</label>
+    <input type="text" id="titleInput" placeholder="Enter title" required>
+
+    <label for="momentInput">At the Moment:</label>
+    <input type="text" id="momentInput" placeholder="Short caption or observation" required>
+
+    <label for="factsInput">Interesting Facts:</label>
+    <textarea id="factsInput" placeholder="Enter facts about this scene/animal" rows="2" required></textarea>
+
+    <label for="atrocitiesInput">Atrocities:</label>
+    <textarea id="atrocitiesInput" placeholder="Mention any related issue (poaching, deforestation etc.)" rows="2" required></textarea>
+
+    <label for="donationInput">Donation Site:</label>
+    <input type="url" id="donationInput" placeholder="Paste link to support this cause (optional)">
+
+    <label for="categorySelect">Select Category:</label>
+    <select id="categorySelect" required>
+      <option value="">-- Choose One --</option>
+      <option value="flora">Flora</option>
+      <option value="fauna">Fauna</option>
+    </select>
+
+    <label for="photographerInput">Photographer Display Name:</label>
+    <input type="text" id="photographerInput" placeholder="@yourhandle" required>
+
+    <label for="socialInput">Photographer Social Link:</label>
+    <input type="url" id="socialInput" placeholder="https://instagram.com/yourprofile" required>
+
+    <button type="submit">Upload</button>
+  </form>
+
+  <p id="upload-status"></p>
+
+  <script>
+    const cloudName = "dumtyosqg";
+    const uploadPreset = "green_frames_upload";
+
+    document.getElementById("upload-form").addEventListener("submit", async function(event) {
+      event.preventDefault();
+
+      const file = document.getElementById("fileInput").files[0];
+      const title = document.getElementById("titleInput").value.trim();
+      const moment = document.getElementById("momentInput").value.trim();
+      const facts = document.getElementById("factsInput").value.trim();
+      const atrocities = document.getElementById("atrocitiesInput").value.trim();
+      const donation = document.getElementById("donationInput").value.trim();
+      const category = document.getElementById("categorySelect").value;
+      const photographer = document.getElementById("photographerInput").value.trim();
+      const social = document.getElementById("socialInput").value.trim();
+
+      if (!file || !title || !moment || !facts || !atrocities || !category || !photographer || !social) {
+        alert("Please fill in all required fields.");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", uploadPreset);
+      formData.append("folder", "gallery");
+      formData.append("tags", `gallery,${category}`);
+      formData.append(
+        "context",
+        `caption=${title}|moment=${moment}|facts=${facts}|atrocities=${atrocities}|donation=${donation}|photographer=${photographer}|social=${social}|approved=true`
+      );
+
+      document.getElementById("upload-status").textContent = "Uploading...";
+
+      try {
+        const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+          method: "POST",
+          body: formData
+        });
+
+        if (!response.ok) throw new Error("Upload failed");
+
+        document.getElementById("upload-status").textContent = "✅ Image uploaded successfully!";
+      } catch (error) {
+        console.error("Upload failed:", error);
+        document.getElementById("upload-status").textContent = "❌ Upload failed. Please try again.";
+      }
+    });
+  </script>
+
+</body>
+</html>

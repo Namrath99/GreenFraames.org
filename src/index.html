@@ -119,18 +119,18 @@
     <nav id="internal-nav" class="w-[90%] max-sm:w-full flex flex-row fixed max-sm:bottom-0 sm:top-[10vh] xl:top-[15vh] h-[5vh] max-sm:mx-0 items-center mx-[5%] z-5">
       <!-- had to mention "max-sm:flex max-sm:items-center max-sm:justify-center" to make the items centered vertically in 100% cases  -->
         <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">All</a>
-        <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">By viewers</a>
-        <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">By Author</a>
+        <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">Flora</a>
+        <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">Fauna</a>
     </nav>
 
-  <div id="wrapper" class="h-screen w-full flex flex-col">
+  <div id="wrapper" class="min-h-screen w-full flex flex-col overflow-auto">
     <!-- in the below "main" container, 
      max-sm:pt-[5vh] because the internal nav occupies 5vh at the bottom and header 10vh
      sm:pt-[15vh] from small till medium the internal nav occupies 5vh at the top so required 10vh+5vh=15vh 
      md:pt-[14vh] from medium till xl because base 10 + 5 internal-nav -5 footer +4 for photographerID at the top of post!
      xl:pt-[15vh] from xl the base 15vh internal-nav and footer cancels each other, and there is no photographerid outside the box
     -->
-    <div id="main" class="w-full flex flex-col h-screen  max-sm:pt-[5vh] sm:pt-[15vh] md:pt-[14vh] xl:pt-[15vh]">
+    <div id="main" class="w-full flex flex-col !h-screen  max-sm:pt-[5vh] sm:pt-[15vh] md:pt-[14vh] xl:pt-[15vh]">
         
         <!-- <div class="  pb-[5vh] sm:max-md:pb-0 h-[75vh] border-2 border-white"> -->
             <div id="post-card" class="w-[80%] h-[70vh] xl:h-[65vh] flex flex-row justify-center items-center mx-auto my-auto">
@@ -406,6 +406,77 @@
               <button id="" class="border-2 border-white w-1/2">Donate</button>
             </div>
     </div> 
+    <!-- clone-1 -->
+    <div class="w-full flex flex-col h-screen max-sm:pt-[5vh] sm:pt-[15vh] md:pt-[14vh] xl:pt-[15vh] bg-green-100">
+      <div class="w-[80%] h-[70vh] xl:h-[65vh] flex flex-row justify-center items-center mx-auto my-auto post-card">
+        
+        <div class="max-xl:w-full w-[60%] bg-black relative h-full flex flex-col justify-center items-center">
+          <img src="assets/vertical-nature.jpg" class="h-full w-auto max-w-full object-contain mx-auto" alt="Nature">
+          <div class="max-md:h-[10vh] h-[6.5vh] bg-green-200 xl:hidden absolute max-md:top-[60vh] md:top-[63.5vh] w-full flex items-center justify-center px-4 text-[clamp(.25rem,1rem,2.5vh)] leading-[2.5vh]">
+            <p><span class="font-bold">Post 2: </span>This is a sample post about nature.</p>
+          </div>
+        </div>
+    
+        <div class="max-xl:hidden w-[40%] flex flex-col bg-green-300 h-full">
+          <div class="w-full h-[85%] relative overflow-hidden transition-all duration-700 ease-in-out">
+            <div class="w-full h-full flex transition-transform duration-500 ease-in-out">
+              <div class="carousel-slide min-w-full max-h-full px-6 flex flex-col bg-green-200">
+                <div class="min-h-[18vh] max-h-full">
+                  <div class="font-bold h-[7.5vh] text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center">
+                    <span>Green Slide 1</span>
+                  </div>
+                  <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">
+                    Leaves rustle in the forest, wind hums in harmony. Earth breathes peace.
+                  </p>
+                </div>
+                <div class="flex-auto bg-black"></div>
+              </div>
+            </div>
+          </div>
+          <div class="h-[15%] flex justify-center items-center">
+            <button class="border-2 border-green-500 px-6 h-1/2 w-1/3 text-center text-xl">Donate</button>
+          </div>
+        </div>
+    
+      </div>
+    </div>
+    <!-- clone-2 -->
+    <div class="w-full flex flex-col h-screen max-sm:pt-[5vh] sm:pt-[15vh] md:pt-[14vh] xl:pt-[15vh] bg-orange-100">
+      <div class="w-[80%] h-[70vh] xl:h-[65vh] flex flex-row justify-center items-center mx-auto my-auto post-card">
+        
+        <div class="max-xl:w-full w-[60%] bg-black relative h-full flex flex-col justify-center items-center">
+          <img src="assets/vertical-animal-2.jpg" class="h-full w-auto max-w-full object-contain mx-auto" alt="Wildlife">
+          <div class="max-md:h-[10vh] h-[6.5vh] bg-orange-200 xl:hidden absolute max-md:top-[60vh] md:top-[63.5vh] w-full flex items-center justify-center px-4 text-[clamp(.25rem,1rem,2.5vh)] leading-[2.5vh]">
+            <p><span class="font-bold">Post 3: </span>Respecting wildlife starts with seeing them.</p>
+          </div>
+        </div>
+    
+        <div class="max-xl:hidden w-[40%] flex flex-col bg-orange-300 h-full">
+          <div class="w-full h-[85%] relative overflow-hidden transition-all duration-700 ease-in-out">
+            <div class="w-full h-full flex transition-transform duration-500 ease-in-out">
+              <div class="carousel-slide min-w-full max-h-full px-6 flex flex-col bg-orange-200">
+                <div class="min-h-[18vh] max-h-full">
+                  <div class="font-bold h-[7.5vh] text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center">
+                    <span>Orange Slide 1</span>
+                  </div>
+                  <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">
+                    Wildlife deserves our space, our silence, and our respect. 🌱🦉
+                  </p>
+                </div>
+                <div class="flex-auto bg-black"></div>
+              </div>
+            </div>
+          </div>
+          <div class="h-[15%] flex justify-center items-center">
+            <button class="border-2 border-orange-500 px-6 h-1/2 w-1/3 text-center text-xl">Donate</button>
+          </div>
+        </div>
+    
+      </div>
+    </div>
+    
+
+    
   </div>       
 
     <footer class="hidden md:flex fixed w-full bottom-0 bg-green-200 h-[5vh]">
