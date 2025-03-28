@@ -46,8 +46,17 @@
 
 @layer utilities {
   .snap-always {
-    scroll-snap-stop: always;
+    scroll-snap-stop: always !important;
   }
+}
+
+#wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+#wrapper {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 

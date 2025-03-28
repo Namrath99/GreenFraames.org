@@ -135,8 +135,8 @@
     <footer class="hidden md:flex fixed w-full bottom-0 bg-green-200 h-[5vh]">
         <div class="w-[90%] h-full mx-auto flex">
         <div class="w-1/2 flex h-full justify-center items-center">
-          <a href="#" class="m-4 text-[clamp(.5rem,1rem,5vh)]">prev ^</a>
-          <a href="#" class="m-4 text-[clamp(.5rem,1rem,5vh)]">next v</a>
+          <a id="prev-post" href="#" class="m-4 text-[clamp(.5rem,1rem,5vh)]">prev ^</a>
+          <a id="next-post" href="#" class="m-4 text-[clamp(.5rem,1rem,5vh)]">next v</a>
         </div>
         <div class="w-1/2 flex h-full justify-center items-center">
             <a href="#" class="m-4">I</a>
@@ -158,6 +158,9 @@
 
 <script>
     const allposts = [];
+    let generatePostHTML; // global
+    const wrapper = document.getElementById("wrapper");
+
 
 async function fetchGalleryPosts() {
   const cloudName = "dumtyosqg";
@@ -200,93 +203,121 @@ async function fetchGalleryPosts() {
   }
 }
 
-async function init() {
-    await fetchGalleryPosts();
-const wrapper = document.getElementById("wrapper");
-wrapper.innerHTML = "";
-for (let index = 0; index < 5; index++) {
-    const postHTML =`<div class="main w-full flex flex-col h-screen  max-sm:pt-[5vh] sm:pt-[15vh] md:pt-[14vh] xl:pt-[15vh] snap-start snap-always">
+function generateMobilePost(post) {
+  return `<div class="main w-full flex flex-col h-screen  max-sm:pt-[5vh] sm:pt-[15vh] md:pt-[14vh] xl:pt-[19vh] snap-start snap-always">  
+  <div class="post-card w-[80%] h-[70vh] flex flex-row justify-center items-center mx-auto my-auto">
+    <div class="image-side w-full  bg-black relative h-full flex flex-col justify-center items-center">
+      <a href="#" class="PhotographerId block w-full absolute bottom-[100%] text-center text-[clamp(.5rem,1rem,3.75vh)] leading-[4vh] bg-green-200 h-[4vh]">By: ${post.photographer}</a>
+        <div class="image-container max-md:h-[60vh] md:h-[63.5vh] absolute top-0 transition-all duration-700 ease-in-out border-2 border-white">
+          <img src="https://res.cloudinary.com/dumtyosqg/image/upload/${post.id}" alt="something went wrong!" class="h-full w-auto max-w-full object-contain mx-auto">
+        </div>
+    <div class="carousel-preview max-md:h-[10vh] h-[6.5vh] bg-green-200 absolute max-md:top-[60vh] md:top-[63.5vh] transition-all duration-700 ease-in-out w-full">
+        <div class="just-a-wrapper h-full w-full px-2 py-[1vh] md:pb-0 flex flex-col">
+        <p class="text-gray-700 max-md:line-clamp-2 md:line-clamp-1 overflow-hidden text-[clamp(.25rem,1rem,2.5vh)] leading-[2.5vh]">
+          <span class="font-bold">At the Moment: </span><span>${post.atTheMoment}</span>
+        </p>
+        <a class="read-more-link text-blue-400 text-[clamp(.05rem,1rem,2.5vh)] h-[3vh]">Full info</a>
+        </div>
+    </div>
+      <div class="social-icons hidden max-md:flex w-full absolute top-[100%] justify-evenly items-center h-[4vh]">
+        <a href="#" class="">I</a>
+        <a href="#" class="">F</a>
+        <a href="#" class="">W</a>
+      </div>
+    </div>
+  </div>
+</div>`;
+}
+
+function generateDesktopPost(post) {
+  return `<div class="main w-full flex flex-col h-screen pt-[15vh] snap-start snap-always min-w-[950px]">
         
     
-        <div class="post-card w-[80%] h-[70vh] xl:h-[65vh] flex flex-row justify-center items-center mx-auto my-auto">
+  <div class="post-card w-[80%] h-[65vh] flex flex-row justify-center items-center mx-auto my-auto">
 
-          <div class="image-side max-xl:w-full w-[60%] bg-black relative h-full flex flex-col justify-center items-center">
-            <a href="#" class="PhotographerId hidden max-xl:block w-full absolute bottom-[100%] text-center text-[clamp(.5rem,1rem,3.75vh)] leading-[4vh] bg-green-200 h-[4vh]">By: ${allposts[index].photographer}</a>
-              <a href="#" class="PhotographerIdxl-placeholder hidden xl:block invisible h-[2.5vh]"></a>
-              <div class="image-container max-md:h-[60vh] md:h-[63.5vh] xl:h-[60vh] max-xl:absolute top-0 transition-all duration-700 ease-in-out border-2 border-white">
-                <img src="https://res.cloudinary.com/dumtyosqg/image/upload/${allposts[index].id}" alt="something went wrong!" class="h-full w-auto max-w-full object-contain mx-auto">
-              </div>
-              <a href="#" class="PhotographerIdxl hidden xl:block w-full text-white text-center h-[2.5vh] text-[1.5vh] leading-[2.5vh]">By: ${allposts[index].photographer}</a>
-
-             <div class="carousel-preview max-md:h-[10vh] h-[6.5vh] bg-green-200 xl:hidden absolute max-md:top-[60vh] md:top-[63.5vh] transition-all duration-700 ease-in-out">
-              <div class="just-a-wrapper h-full w-full px-2 py-[1vh] md:pb-0 flex flex-col">
-              <p class="text-gray-700 max-md:line-clamp-2 md:line-clamp-1 overflow-hidden text-[clamp(.25rem,1rem,2.5vh)] leading-[2.5vh]">
-                <span class="font-bold">At the Moment: </span><span>${allposts[index].atTheMoment}</span>
-              </p>
-              <a class="read-more-link text-blue-400 text-[clamp(.05rem,1rem,2.5vh)] h-[3vh]">Full info</a>
-            </div>
-
-            </div>
-             
-
-            <div class="social-icons hidden max-md:flex w-full absolute top-[100%] justify-evenly items-center h-[4vh]">
-              <a href="#" class="">I</a>
-              <a href="#" class="">F</a>
-              <a href="#" class="">W</a>
-            </div>
-          </div>
-
-          <div class="info-side max-xl:hidden w-[40%] flex flex-col bg-green-300 h-full">
-
-            <div class="info-carousel w-full h-[85%] relative overflow-hidden transition-all duration-700 ease-in-out">
-               <div class="carousel-container w-full h-full flex transition-transform duration-500 ease-in-out ">
-                <div class="first-slide carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
-                  <div class="slide1-content min-h-[18vh] max-h-full"> 
-                    <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>At The Moment</span></div>
-                    <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${allposts[index].atTheMoment}</p>
-                  </div>
-                  <div class="flex-auto bg-black"></div> 
-                </div>
-          
-                <div class="second-slide carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
-                  <div class="slide2-content min-h-[18vh] max-h-full"> 
-                    <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Facts</span></div>
-                    
-                    <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${allposts[index].facts}</p>
-                  </div>
-                  <div class="flex-auto bg-black"></div> 
-                </div>
-          
-                <div class="third-slide carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
-                  <div class="slide3-content min-h-[18vh] max-h-full"> 
-                    <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Atrocities</span></div><!--made 7vh highest size for the text below to not overlay on this no matter how small the window is resized-->
-                    
-                    <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${allposts[index].atrocities}</p>
-                  </div>
-                  <div class="flex-auto bg-black"></div> 
-                </div>
-          
-            </div>
-            <button class="prev-slide absolute h-[5vh] left-2 top-[2.5vh] transform -translate-y-1/2 bg-slate-300 text-white  rounded-full focus:outline-none">←</button>
-            <button class="next-slide absolute h-[5vh] right-2 top-[2.5vh] transform -translate-y-1/2 bg-slate-400 text-white  rounded-full focus:outline-none">→</button>
-          </div>
-
-          <div class="button-section h-[15%] flex justify-center items-center">
-            <button class="donate-button border-2 border-green-500 px-6 h-1/2 w-1/3 text-center text-xl">Donate</button>
-          </div>
-
-          </div>
+    <div class="image-side w-[60%] bg-black relative h-full flex flex-col justify-center items-center">
+        <a href="#" class="PhotographerIdxl-placeholder block invisible h-[2.5vh]"></a>
+        <div class="image-container h-[60vh]">
+          <img src="https://res.cloudinary.com/dumtyosqg/image/upload/${post.id}" alt="something went wrong!" class="h-full w-auto max-w-full object-contain mx-auto">
         </div>
+        <a href="#" class="PhotographerIdxl block w-full text-white text-center h-[2.5vh] text-[1.5vh] leading-[2.5vh]">By: ${post.photographer}</a>
+    </div>
 
-            
+    <div class="info-side w-[40%] flex flex-col bg-green-300 h-full">
+
+      <div class="info-carousel w-full h-[85%] relative overflow-hidden transition-all duration-700 ease-in-out">
+         <div class="carousel-container w-full h-full flex transition-transform duration-500 ease-in-out ">
+          <div class="first-slide carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+            <div class="slide1-content min-h-[18vh] max-h-full"> 
+              <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>At The Moment</span></div>
+              <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${post.atTheMoment}</p>
+            </div>
+            <div class="flex-auto bg-black"></div> 
+          </div>
+    
+          <div class="second-slide carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+            <div class="slide2-content min-h-[18vh] max-h-full"> 
+              <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Facts</span></div>
+              
+              <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${post.facts}</p>
+            </div>
+            <div class="flex-auto bg-black"></div> 
+          </div>
+    
+          <div class="third-slide carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+            <div class="slide3-content min-h-[18vh] max-h-full"> 
+              <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Atrocities</span></div><!--made 7vh highest size for the text below to not overlay on this no matter how small the window is resized-->
+              
+              <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${post.atrocities}</p>
+            </div>
+            <div class="flex-auto bg-black"></div> 
+          </div>
+    
+      </div>
+      <button class="prev-slide absolute h-[5vh] left-2 top-[2.5vh] transform -translate-y-1/2 bg-slate-300 text-white  rounded-full focus:outline-none">←</button>
+      <button class="next-slide absolute h-[5vh] right-2 top-[2.5vh] transform -translate-y-1/2 bg-slate-400 text-white  rounded-full focus:outline-none">→</button>
+    </div>
+
+    <div class="button-section h-[15%] flex justify-center items-center">
+      <button class="donate-button border-2 border-green-500 px-3 h-1/2 w-1/3 text-center text-lg">Donate</button>
+    </div>
+
+    </div>
+  </div>
+
+      
 </div>`;
-wrapper.insertAdjacentHTML("beforeend", postHTML);
 }
 
+async function init() {
+  const isMobile = window.innerWidth < 1280;
+  generatePostHTML = isMobile ? generateMobilePost : generateDesktopPost;
 
+  await fetchGalleryPosts();
+  fetch5posts(); // Load the first 5 posts on page load
 }
+
+// let currentPostIndex = 0;
+
+function fetch5posts() {
+  const start = wrapper.querySelectorAll('.main').length;
+
+  for (let i = 0; i < 5 && start + i < allposts.length; i++) {
+    const post = allposts[start + i];
+    const postHTML = generatePostHTML(post);
+    wrapper.insertAdjacentHTML("beforeend", postHTML);
+  }
+}
+
 init();
 
+document.getElementById("next-post").addEventListener("click", () => {
+      wrapper.scrollBy({ top: window.innerHeight, behavior: "smooth" });
+    });
+
+    document.getElementById("prev-post").addEventListener("click", () => {
+      wrapper.scrollBy({ top: -window.innerHeight, behavior: "smooth" });
+    });
 
 
 
