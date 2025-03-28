@@ -44,4 +44,11 @@
   }
 } */
 
+@layer utilities {
+  .snap-always {
+    scroll-snap-stop: always;
+  }
+}
+
+
   
