@@ -160,6 +160,7 @@
     const allposts = [];
     let generatePostHTML; // global
     const wrapper = document.getElementById("wrapper");
+    let lastIndex = 0; // ← keep track of last fetched index
 
 
 async function fetchGalleryPosts() {
@@ -203,8 +204,8 @@ async function fetchGalleryPosts() {
   }
 }
 
-function generateMobilePost(post) {
-  return `<div class="main w-full flex flex-col h-screen  max-sm:pt-[5vh] sm:pt-[15vh] md:pt-[14vh] xl:pt-[19vh] snap-start snap-always">  
+function generateMobilePost(post, index) {
+  return `<div data-index="${index}" class="main w-full flex flex-col h-screen  max-sm:pt-[5vh] sm:pt-[15vh] md:pt-[14vh] xl:pt-[19vh] snap-start snap-always">  
   <div class="post-card w-[80%] h-[70vh] flex flex-row justify-center items-center mx-auto my-auto">
     <div class="image-side w-full  bg-black relative h-full flex flex-col justify-center items-center">
       <a href="#" class="PhotographerId block w-full absolute bottom-[100%] text-center text-[clamp(.5rem,1rem,3.75vh)] leading-[4vh] bg-green-200 h-[4vh]">By: ${post.photographer}</a>
@@ -229,8 +230,8 @@ function generateMobilePost(post) {
 </div>`;
 }
 
-function generateDesktopPost(post) {
-  return `<div class="main w-full flex flex-col h-screen pt-[15vh] snap-start snap-always min-w-[950px]">
+function generateDesktopPost(post, index) {
+  return `<div data-index="${index}" class="main w-full flex flex-col h-screen pt-[15vh] snap-start snap-always min-w-[950px]">
         
     
   <div class="post-card w-[80%] h-[65vh] flex flex-row justify-center items-center mx-auto my-auto">
@@ -296,20 +297,39 @@ async function init() {
   await fetchGalleryPosts();
   fetch5posts(); // Load the first 5 posts on page load
 }
+init();
 
 // let currentPostIndex = 0;
 
 function fetch5posts() {
-  const start = wrapper.querySelectorAll('.main').length;
-
-  for (let i = 0; i < 5 && start + i < allposts.length; i++) {
-    const post = allposts[start + i];
-    const postHTML = generatePostHTML(post);
-    wrapper.insertAdjacentHTML("beforeend", postHTML);
-  }
+  for (let i = lastIndex; i < lastIndex + 5 && i < allposts.length; i++) {
+        const post = allposts[i];
+        const postHTML = generatePostHTML(post, i); // use i directly
+        wrapper.insertAdjacentHTML("beforeend", postHTML);
+      }
+      lastIndex += 5; // update last index
+      observePosts();
 }
 
-init();
+function observePosts() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const index = entry.target.getAttribute('data-index');
+        console.log(`👀 Current visible post: ${index}`);
+      }
+    });
+  }, {
+    root: wrapper,
+    threshold: 0.6
+  });
+
+  const posts = document.querySelectorAll('.main');
+  posts.forEach(post => observer.observe(post));
+}
+
+
+
 
 document.getElementById("next-post").addEventListener("click", () => {
       wrapper.scrollBy({ top: window.innerHeight, behavior: "smooth" });
