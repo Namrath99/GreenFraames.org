@@ -285,3 +285,1170 @@
     </div>
   </div>
 </div>
+
+<!-- my original script for home.html -->
+<script>
+  const allposts = [];
+  let generatePostHTML; // global
+  const wrapper = document.getElementById("wrapper");
+  let lastIndex = 0; // ← keep track of last fetched index
+
+
+async function fetchGalleryPosts() {
+const cloudName = "dumtyosqg";
+const tag = "gallery";
+const url = `https://res.cloudinary.com/${cloudName}/image/list/${tag}.json`;
+
+try {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error("Failed to fetch JSON");
+
+  const data = await res.json();
+  const resources = data.resources || [];
+
+  const filteredPosts = resources
+    .filter(asset => asset.asset_folder === "gallery")
+    .map(asset => {
+      const ctx = asset.context?.custom || {};
+      return {
+        id: asset.public_id,
+        assetId: asset.asset_id,
+        url: asset.secure_url,
+        caption: ctx.caption || "",
+        alt: ctx.alt || "",
+        atrocities: ctx.atrocities || "",
+        facts: ctx.facts || "",
+        atTheMoment: ctx["at-the-moment"] || ctx["moment"] || "",
+        donation: ctx.donation || "",
+        photographer: ctx["photographer-name"] || ctx.photographer || "",
+        social: ctx["photographer-link"] || ctx.social || "",
+        approved: ctx.approved ?? "true", // <-- fallback if not present
+        createdAt: asset.created_at,
+        tags: asset.tags || []
+      };
+    });
+
+  allposts.push(...filteredPosts);
+  console.log(`[✅ Total Posts Loaded: ${allposts.length}]`, allposts);
+} catch (err) {
+  console.error("❌ Error fetching gallery:", err);
+}
+}
+
+function generateMobilePost(post, index) {
+return `<div data-index="${index}" class="main w-full flex flex-col h-screen  max-sm:pt-[5vh] sm:pt-[15vh] md:pt-[14vh] xl:pt-[19vh] snap-start snap-always">  
+<div class="post-card w-[80%] h-[70vh] flex flex-row justify-center items-center mx-auto my-auto">
+  <div class="image-side w-full  bg-black relative h-full flex flex-col justify-center items-center">
+    <a href="#" class="PhotographerId block w-full absolute bottom-[100%] text-center text-[clamp(.5rem,1rem,3.75vh)] leading-[4vh] bg-green-200 h-[4vh]">By: ${post.photographer}</a>
+      <div class="image-container max-md:h-[60vh] md:h-[63.5vh] absolute top-0 transition-all duration-700 ease-in-out border-2 border-white">
+        <img src="https://res.cloudinary.com/dumtyosqg/image/upload/${post.id}" alt="something went wrong!" class="h-full w-auto max-w-full object-contain mx-auto">
+      </div>
+  <div class="carousel-preview max-md:h-[10vh] h-[6.5vh] bg-green-200 absolute max-md:top-[60vh] md:top-[63.5vh] transition-all duration-700 ease-in-out w-full">
+      <div class="just-a-wrapper h-full w-full px-2 py-[1vh] md:pb-0 flex flex-col">
+      <p class="text-gray-700 max-md:line-clamp-2 md:line-clamp-1 overflow-hidden text-[clamp(.25rem,1rem,2.5vh)] leading-[2.5vh]">
+        <span class="font-bold">At the Moment: </span><span>${post.atTheMoment}</span>
+      </p>
+      <a class="read-more-link text-blue-400 text-[clamp(.05rem,1rem,2.5vh)] h-[3vh]">Full info</a>
+      </div>
+  </div>
+    <div class="social-icons hidden max-md:flex w-full absolute top-[100%] justify-evenly items-center h-[4vh]">
+      <a href="#" class="">I</a>
+      <a href="#" class="">F</a>
+      <a href="#" class="">W</a>
+    </div>
+  </div>
+</div>
+</div>`;
+}
+
+function generateDesktopPost(post, index) {
+return `<div data-index="${index}" class="main w-full flex flex-col h-screen pt-[15vh] snap-start snap-always min-w-[950px]">
+      
+  
+<div class="post-card w-[80%] h-[65vh] flex flex-row justify-center items-center mx-auto my-auto">
+
+  <div class="image-side w-[60%] bg-black relative h-full flex flex-col justify-center items-center">
+      <a href="#" class="PhotographerIdxl-placeholder block invisible h-[2.5vh]"></a>
+      <div class="image-container h-[60vh]">
+        <img src="https://res.cloudinary.com/dumtyosqg/image/upload/${post.id}" alt="something went wrong!" class="h-full w-auto max-w-full object-contain mx-auto">
+      </div>
+      <a href="#" class="PhotographerIdxl block w-full text-white text-center h-[2.5vh] text-[1.5vh] leading-[2.5vh]">By: ${post.photographer}</a>
+  </div>
+
+  <div class="info-side w-[40%] flex flex-col bg-green-300 h-full">
+
+    <div class="info-carousel w-full h-[85%] relative overflow-hidden transition-all duration-700 ease-in-out">
+       <div class="carousel-container w-full h-full flex transition-transform duration-500 ease-in-out ">
+        <div class="first-slide carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+          <div class="slide1-content min-h-[18vh] max-h-full"> 
+            <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>At The Moment</span></div>
+            <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${post.atTheMoment}</p>
+          </div>
+          <div class="flex-auto bg-black"></div> 
+        </div>
+  
+        <div class="second-slide carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+          <div class="slide2-content min-h-[18vh] max-h-full"> 
+            <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Facts</span></div>
+            
+            <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${post.facts}</p>
+          </div>
+          <div class="flex-auto bg-black"></div> 
+        </div>
+  
+        <div class="third-slide carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+          <div class="slide3-content min-h-[18vh] max-h-full"> 
+            <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Atrocities</span></div><!--made 7vh highest size for the text below to not overlay on this no matter how small the window is resized-->
+            
+            <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${post.atrocities}</p>
+          </div>
+          <div class="flex-auto bg-black"></div> 
+        </div>
+  
+    </div>
+    <button class="prev-slide absolute h-[5vh] left-2 top-[2.5vh] transform -translate-y-1/2 bg-slate-300 text-white  rounded-full focus:outline-none">←</button>
+    <button class="next-slide absolute h-[5vh] right-2 top-[2.5vh] transform -translate-y-1/2 bg-slate-400 text-white  rounded-full focus:outline-none">→</button>
+  </div>
+
+  <div class="button-section h-[15%] flex justify-center items-center">
+    <button class="donate-button border-2 border-green-500 px-3 h-1/2 w-1/3 text-center text-lg">Donate</button>
+  </div>
+
+  </div>
+</div>
+
+    
+</div>`;
+}
+
+async function init() {
+const isMobile = window.innerWidth < 1280;
+generatePostHTML = isMobile ? generateMobilePost : generateDesktopPost;
+
+await fetchGalleryPosts();
+fetch5posts(); // Load the first 5 posts on page load
+}
+init();
+
+// let currentPostIndex = 0;
+
+function fetch5posts() {
+for (let i = lastIndex; i < lastIndex + 5 && i < allposts.length; i++) {
+      const post = allposts[i];
+      const postHTML = generatePostHTML(post, i); // use i directly
+      wrapper.insertAdjacentHTML("beforeend", postHTML);
+    }
+    lastIndex += 5; // update last index
+    observePosts();
+}
+
+function observePosts() {
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const index = entry.target.getAttribute('data-index');
+      console.log(`👀 Current visible post: ${index}`);
+    }
+  });
+}, {
+  root: wrapper,
+  threshold: 0.6
+});
+
+const posts = document.querySelectorAll('.main');
+posts.forEach(post => observer.observe(post));
+}
+
+
+
+
+document.getElementById("next-post").addEventListener("click", () => {
+    wrapper.scrollBy({ top: window.innerHeight, behavior: "smooth" });
+  });
+
+  document.getElementById("prev-post").addEventListener("click", () => {
+    wrapper.scrollBy({ top: -window.innerHeight, behavior: "smooth" });
+  });
+
+
+
+
+</script>
+
+<!-- my logic starts here  -->
+ <script>
+function function1() {
+  const currentpostat = currentpost; // Snapshot at trigger time
+
+  if(currentpost=3 + n*5 (n=0,1,2,3...) ){
+    lazyLoadFuturePosts(currentpostat)
+  .then(() => {
+    // Then clean up old posts
+    return removeOldPosts(currentpostat);
+  })
+  .then(() => {
+    console.log(`✅ Finished post load and cleanup for post ${currentpostat}`);
+  })
+  .catch((err) => {
+    console.warn(`⚠️ Skipped or aborted actions for post ${currentpostat}:`, err);
+  });
+  }
+
+}
+function lazyLoadFuturePosts(currentpostat) {
+  return new Promise((resolve, reject) => {
+    fetchPosts(currentpostat + 2, currentpostat + 6, currentpostat, resolve, reject);
+  });
+}
+
+removeOldPosts(currentpostat){
+
+}
+function fetchPosts(start, end, currentpostat, resolve, reject) {
+  console.log(`📦 Fetching posts from ${start} to ${end}`);
+
+  for (let i = start; i <= end && i < allposts.length; i++) {
+    if (currentpostat > currentpost) {
+      console.log(`⛔ Aborting fetch: currentpostat (${currentpostat}) > currentpost (${currentpost})`);
+      if (reject) reject("Aborted fetch due to scroll back");
+      return;
+    }
+
+    const postHTML = gen(allposts[i], i);
+    wrapper.insertAdjacentHTML("beforeend", postHTML);
+    if (i > maxLoadedIndex) maxLoadedIndex = i;
+
+    const newPost = document.querySelector(`.main[data-index="${i}"]`);
+    if (newPost && postObserver) {
+      postObserver.observe(newPost);
+      console.log(`📡 Observing new post ${i}`);
+    }
+  }
+
+  if (resolve) resolve(); // ✅ Done inserting posts
+}
+
+
+</script>
+<!--perfecting the 
+| When Current Post = 3 + n*5 (n=0,1,2,3...)          |
+| ➤ if not exists, Lazy load posts (3+ n*5 +2 to 3+ n*5 +6)    |
+| ➤Keeping the post containers,if posts exists, Remove Posts 0 to 3=n*5-3 where n>0 from their respective containers   |
+logic -->
+<script>
+
+  // Animation state for intro screen
+  let animationDone = false;
+  const allposts = [];
+  // Lazy loading tracking state
+  let maxLoadedIndex = -1; // Highest post index that has ever been fully loaded
+  
+  async function fetchGalleryPosts() {
+  const cloudName = "dumtyosqg";
+  const tag = "gallery";
+  const url = `https://res.cloudinary.com/${cloudName}/image/list/${tag}.json`;
+  
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Failed to fetch JSON");
+  
+    const data = await res.json();
+    const resources = data.resources || [];
+  
+    const filteredPosts = resources
+      .filter(asset => asset.asset_folder === "gallery")
+      .map(asset => {
+        const ctx = asset.context?.custom || {};
+        return {
+          id: asset.public_id,
+          assetId: asset.asset_id,
+          url: asset.secure_url,
+          caption: ctx.caption || "",
+          alt: ctx.alt || "",
+          atrocities: ctx.atrocities || "",
+          facts: ctx.facts || "",
+          atTheMoment: ctx["at-the-moment"] || ctx["moment"] || "",
+          donation: ctx.donation || "",
+          photographer: ctx["photographer-name"] || ctx.photographer || "",
+          social: ctx["photographer-link"] || ctx.social || "",
+          approved: ctx.approved ?? "true", // <-- fallback if not present
+          createdAt: asset.created_at,
+          tags: asset.tags || []
+        };
+      });
+  
+    allposts.push(...filteredPosts);
+    console.log(`[✅ Total Posts Loaded: ${allposts.length}]`, allposts);
+  } catch (err) {
+    console.error("❌ Error fetching gallery:", err);
+  }
+  }
+  
+  function generateMobilePost(post, index) {
+  return `<div data-index="${index}" class="main w-full flex flex-col h-screen  max-sm:pt-[5vh] sm:pt-[15vh] md:pt-[14vh] xl:pt-[19vh] snap-start snap-always">  
+  <div class="post-card w-[80%] h-[70vh] flex flex-row justify-center items-center mx-auto my-auto">
+    <div class="image-side w-full  bg-black relative h-full flex flex-col justify-center items-center">
+      <a href="#" class="PhotographerId block w-full absolute bottom-[100%] text-center text-[clamp(.5rem,1rem,3.75vh)] leading-[4vh] bg-green-200 h-[4vh]">By: ${post.photographer}</a>
+        <div class="image-container max-md:h-[60vh] md:h-[63.5vh] absolute top-0 transition-all duration-700 ease-in-out border-2 border-white">
+          <img src="https://res.cloudinary.com/dumtyosqg/image/upload/${post.id}" loading="lazy" alt="something went wrong!" class="h-full w-auto max-w-full object-contain mx-auto">
+        </div>
+    <div class="carousel-preview max-md:h-[10vh] h-[6.5vh] bg-green-200 absolute max-md:top-[60vh] md:top-[63.5vh] transition-all duration-700 ease-in-out w-full">
+        <div class="just-a-wrapper h-full w-full px-2 py-[1vh] md:pb-0 flex flex-col">
+        <p class="text-gray-700 max-md:line-clamp-2 md:line-clamp-1 overflow-hidden text-[clamp(.25rem,1rem,2.5vh)] leading-[2.5vh]">
+          <span class="font-bold">At the Moment: </span><span>${post.atTheMoment}</span>
+        </p>
+        <a class="read-more-link text-blue-400 text-[clamp(.05rem,1rem,2.5vh)] h-[3vh]">Full info</a>
+        </div>
+    </div>
+      <div class="social-icons hidden max-md:flex w-full absolute top-[100%] justify-evenly items-center h-[4vh]">
+        <a href="#" class="">I</a>
+        <a href="#" class="">F</a>
+        <a href="#" class="">W</a>
+      </div>
+    </div>
+  </div>
+  </div>`;
+  }
+  
+  function generateDesktopPost(post, index) {
+  return `<div data-index="${index}" class="main w-full flex flex-col h-screen pt-[15vh] snap-start snap-always min-w-[950px]">
+        
+    
+  <div class="post-card w-[80%] h-[65vh] flex flex-row justify-center items-center mx-auto my-auto">
+  
+    <div class="image-side w-[60%] bg-black relative h-full flex flex-col justify-center items-center">
+        <a href="#" class="PhotographerIdxl-placeholder block invisible h-[2.5vh]"></a>
+        <div class="image-container h-[60vh]">
+          <img src="https://res.cloudinary.com/dumtyosqg/image/upload/${post.id}" loading="lazy" alt="something went wrong!" class="h-full w-auto max-w-full object-contain mx-auto">
+        </div>
+        <a href="#" class="PhotographerIdxl block w-full text-white text-center h-[2.5vh] text-[1.5vh] leading-[2.5vh]">By: ${post.photographer}</a>
+    </div>
+  
+    <div class="info-side w-[40%] flex flex-col bg-green-300 h-full">
+  
+      <div class="info-carousel w-full h-[85%] relative overflow-hidden transition-all duration-700 ease-in-out">
+         <div class="carousel-container w-full h-full flex transition-transform duration-500 ease-in-out ">
+          <div class="first-slide carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+            <div class="slide1-content min-h-[18vh] max-h-full"> 
+              <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>At The Moment</span></div>
+              <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${post.atTheMoment}</p>
+            </div>
+            <div class="flex-auto bg-black"></div> 
+          </div>
+    
+          <div class="second-slide carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+            <div class="slide2-content min-h-[18vh] max-h-full"> 
+              <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Facts</span></div>
+              
+              <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${post.facts}</p>
+            </div>
+            <div class="flex-auto bg-black"></div> 
+          </div>
+    
+          <div class="third-slide carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+            <div class="slide3-content min-h-[18vh] max-h-full"> 
+              <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Atrocities</span></div><!--made 7vh highest size for the text below to not overlay on this no matter how small the window is resized-->
+              
+              <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${post.atrocities}</p>
+            </div>
+            <div class="flex-auto bg-black"></div> 
+          </div>
+    
+      </div>
+      <button class="prev-slide absolute h-[5vh] left-2 top-[2.5vh] transform -translate-y-1/2 bg-slate-300 text-white  rounded-full focus:outline-none">←</button>
+      <button class="next-slide absolute h-[5vh] right-2 top-[2.5vh] transform -translate-y-1/2 bg-slate-400 text-white  rounded-full focus:outline-none">→</button>
+    </div>
+  
+    <div class="button-section h-[15%] flex justify-center items-center">
+      <button class="donate-button border-2 border-green-500 px-3 h-1/2 w-1/3 text-center text-lg">Donate</button>
+    </div>
+  
+    </div>
+  </div>
+  
+      
+  </div>`;
+  }
+  
+  // Start app: Show animation, fetch posts, and manage visibility
+  async function startAppFlow() {
+    showLoadingAnimation();
+
+    const isMobile = window.innerWidth < 1280;
+    generatePostHTML = isMobile ? generateMobilePost : generateDesktopPost;
+    await fetchGalleryPosts();
+    fetchPosts(0, 4); // Lazy load posts 0–4 initially
+  
+    // Always hide the animation screen after exactly 5 seconds
+    setTimeout(() => {
+      hideLoadingAnimation();
+      observePostNavigation(); // Start tracking navigation
+    }, 2000);
+  }
+  
+  // Show full-screen animation overlay (optional element to add visually)
+  function showLoadingAnimation() {
+    console.log("⏳ Showing 5-sec animation screen...");
+    // You can make a loading screen visible here (e.g., remove hidden class)
+  }
+  
+  // Hide full-screen animation overlay
+  function hideLoadingAnimation() {
+    console.log("✅ Hiding animation screen");
+    animationDone = true;
+    // You can hide the loading screen here (e.g., add hidden class)
+  }
+  
+  // Fetch and render a set of posts from index `start` to `end`
+  function fetchPosts(start, end, currentpostat, resolve, reject) {
+  console.log(`📦 Fetching posts from ${start} to ${end}`);
+
+  for (let i = start; i <= end && i < allposts.length; i++) {
+    if (currentpostat > currentpost) {
+      console.log(`⛔ Aborting fetch: currentpostat (${currentpostat}) > currentpost (${currentpost})`);
+      if (reject) reject("Aborted fetch due to scroll back");
+      return;
+    }
+
+    const postHTML = generatePostHTML(allposts[i], i);
+    wrapper.insertAdjacentHTML("beforeend", postHTML);
+    if (i > maxLoadedIndex) maxLoadedIndex = i;
+
+    const newPost = document.querySelector(`.main[data-index="${i}"]`);
+    if (newPost && postObserver) {
+      postObserver.observe(newPost);
+      console.log(`📡 Observing new post ${i}`);
+    }
+  }
+
+  if (resolve) resolve(); // done loading
+}
+
+  
+  
+  let postObserver = null;
+  let currentPost=0;
+  
+  // Observer to track currently visible post and trigger logic
+  function observePostNavigation() {
+  
+    postObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const currentPostAt = parseInt(entry.target.getAttribute("data-index"));
+          if (currentPostAt !== currentPost) {
+            console.log(`👀 Viewing Post: ${currentPostAt}`);
+            currentpost = currentPostAt;
+          }
+          if ((currentpostat - 3) % 5 === 0) {
+            lazyLoadFuturePosts(currentpostat)
+              .then(() => removeOldPosts(currentpostat)) // clean up phase (empty for now)
+              .then(() => {
+                console.log(`✅ Finished loading & cleanup for post ${currentpostat}`);
+              })
+              .catch(err => {
+                console.warn(`⚠️ Skipped or aborted at post ${currentpostat}:`, err);
+              });
+          }
+
+
+        }
+      });
+    }, {
+      root: wrapper,
+      threshold: 0.6
+    });
+  
+    // Initial observe for first 5 posts
+    document.querySelectorAll('.main').forEach(post => postObserver.observe(post));
+  }
+
+  function lazyLoadFuturePosts(currentpostat) {
+  return new Promise((resolve, reject) => {
+    fetchPosts(currentpostat + 2, currentpostat + 6, currentpostat, resolve, reject);
+  });
+}
+function removeOldPosts(currentpostat) {
+  if (currentpostat > currentpost) {
+    console.log("⛔ Aborted cleanup: user went back");
+    return;
+  }
+
+  // Placeholder: add actual cleanup logic if needed
+  console.log("🧹 Cleanup placeholder (nothing removed)");
+}
+
+
+  
+  
+  
+  // 🔁 Begin the application logic
+  startAppFlow();
+  
+  document.getElementById("next-post").addEventListener("click", () => {
+      wrapper.scrollBy({ top: window.innerHeight, behavior: "smooth" });
+    });
+  
+    document.getElementById("prev-post").addEventListener("click", () => {
+      wrapper.scrollBy({ top: -window.innerHeight, behavior: "smooth" });
+    });
+  
+  
+  //to use in console for testing post removal from container
+  function clearPostChildren(index) {
+    const el = document.querySelector(`.main[data-index='${index}']`);
+    if (el) {
+      console.log(`🧼 Clearing children of post ${index}`);
+      el.innerHTML = "";
+      // clearedPosts.add(index);
+    } else {
+      console.warn(`⚠️ Post ${index} not found in DOM`);
+    }
+  }
+  
+  
+  </script>
+<!-- storing the chatgpt "full code" here  -->
+<script>
+
+  // Animation state for intro screen
+  let animationDone = false;
+  const allposts = [];
+  // Lazy loading tracking state
+  let maxLoadedIndex = -1; // Highest post index that has ever been fully loaded
+  let progressiveLoadTimeouts = [];
+  
+  async function fetchGalleryPosts() {
+  const cloudName = "dumtyosqg";
+  const tag = "gallery";
+  const url = `https://res.cloudinary.com/${cloudName}/image/list/${tag}.json`;
+  
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Failed to fetch JSON");
+  
+    const data = await res.json();
+    const resources = data.resources || [];
+  
+    const filteredPosts = resources
+      .filter(asset => asset.asset_folder === "gallery")
+      .map(asset => {
+        const ctx = asset.context?.custom || {};
+        return {
+          id: asset.public_id,
+          assetId: asset.asset_id,
+          url: asset.secure_url,
+          caption: ctx.caption || "",
+          alt: ctx.alt || "",
+          atrocities: ctx.atrocities || "",
+          facts: ctx.facts || "",
+          atTheMoment: ctx["at-the-moment"] || ctx["moment"] || "",
+          donation: ctx.donation || "",
+          photographer: ctx["photographer-name"] || ctx.photographer || "",
+          social: ctx["photographer-link"] || ctx.social || "",
+          approved: ctx.approved ?? "true", // <-- fallback if not present
+          createdAt: asset.created_at,
+          tags: asset.tags || []
+        };
+      });
+  
+    allposts.push(...filteredPosts);
+    console.log(`[✅ Total Posts Loaded: ${allposts.length}]`, allposts);
+  } catch (err) {
+    console.error("❌ Error fetching gallery:", err);
+  }
+  }
+  
+  function generateMobilePost(post, index, lazy) {
+  return `<div data-index="${index}" class="main w-full flex flex-col h-screen  max-sm:pt-[5vh] sm:pt-[15vh] md:pt-[14vh] xl:pt-[19vh] snap-start snap-always">  
+  <div class="post-card w-[80%] h-[70vh] flex flex-row justify-center items-center mx-auto my-auto">
+    <div class="image-side w-full  bg-black relative h-full flex flex-col justify-center items-center">
+      <a href="#" class="PhotographerId block w-full absolute bottom-[100%] text-center text-[clamp(.5rem,1rem,3.75vh)] leading-[4vh] bg-green-200 h-[4vh]">By: ${post.photographer}</a>
+        <div class="image-container max-md:h-[60vh] md:h-[63.5vh] absolute top-0 transition-all duration-700 ease-in-out border-2 border-white">
+          <img src="https://res.cloudinary.com/dumtyosqg/image/upload/${post.id}" loading="lazy" alt="something went wrong!" class="h-full w-auto max-w-full object-contain mx-auto">
+        </div>
+    <div class="carousel-preview max-md:h-[10vh] h-[6.5vh] bg-green-200 absolute max-md:top-[60vh] md:top-[63.5vh] transition-all duration-700 ease-in-out w-full">
+        <div class="just-a-wrapper h-full w-full px-2 py-[1vh] md:pb-0 flex flex-col">
+        <p class="text-gray-700 max-md:line-clamp-2 md:line-clamp-1 overflow-hidden text-[clamp(.25rem,1rem,2.5vh)] leading-[2.5vh]">
+          <span class="font-bold">At the Moment: </span><span>${post.atTheMoment}</span>
+        </p>
+        <a class="read-more-link text-blue-400 text-[clamp(.05rem,1rem,2.5vh)] h-[3vh]">Full info</a>
+        </div>
+    </div>
+      <div class="social-icons hidden max-md:flex w-full absolute top-[100%] justify-evenly items-center h-[4vh]">
+        <a href="#" class="">I</a>
+        <a href="#" class="">F</a>
+        <a href="#" class="">W</a>
+      </div>
+    </div>
+  </div>
+  </div>`;
+  }
+  
+  function generateDesktopPost(post, index, lazy) {
+  return `<div data-index="${index}" class="main w-full flex flex-col h-screen pt-[15vh] snap-start snap-always min-w-[950px]">
+        
+    
+  <div class="post-card w-[80%] h-[65vh] flex flex-row justify-center items-center mx-auto my-auto">
+  
+    <div class="image-side w-[60%] bg-black relative h-full flex flex-col justify-center items-center">
+        <a href="#" class="PhotographerIdxl-placeholder block invisible h-[2.5vh]"></a>
+        <div class="image-container h-[60vh]">
+          <img src="https://res.cloudinary.com/dumtyosqg/image/upload/${post.id}" loading="lazy" alt="something went wrong!" class="h-full w-auto max-w-full object-contain mx-auto">
+        </div>
+        <a href="#" class="PhotographerIdxl block w-full text-white text-center h-[2.5vh] text-[1.5vh] leading-[2.5vh]">By: ${post.photographer}</a>
+    </div>
+  
+    <div class="info-side w-[40%] flex flex-col bg-green-300 h-full">
+  
+      <div class="info-carousel w-full h-[85%] relative overflow-hidden transition-all duration-700 ease-in-out">
+         <div class="carousel-container w-full h-full flex transition-transform duration-500 ease-in-out ">
+          <div class="first-slide carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+            <div class="slide1-content min-h-[18vh] max-h-full"> 
+              <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>At The Moment</span></div>
+              <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${post.atTheMoment}</p>
+            </div>
+            <div class="flex-auto bg-black"></div> 
+          </div>
+    
+          <div class="second-slide carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+            <div class="slide2-content min-h-[18vh] max-h-full"> 
+              <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Facts</span></div>
+              
+              <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${post.facts}</p>
+            </div>
+            <div class="flex-auto bg-black"></div> 
+          </div>
+    
+          <div class="third-slide carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+            <div class="slide3-content min-h-[18vh] max-h-full"> 
+              <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Atrocities</span></div><!--made 7vh highest size for the text below to not overlay on this no matter how small the window is resized-->
+              
+              <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${post.atrocities}</p>
+            </div>
+            <div class="flex-auto bg-black"></div> 
+          </div>
+    
+      </div>
+      <button class="prev-slide absolute h-[5vh] left-2 top-[2.5vh] transform -translate-y-1/2 bg-slate-300 text-white  rounded-full focus:outline-none">←</button>
+      <button class="next-slide absolute h-[5vh] right-2 top-[2.5vh] transform -translate-y-1/2 bg-slate-400 text-white  rounded-full focus:outline-none">→</button>
+    </div>
+  
+    <div class="button-section h-[15%] flex justify-center items-center">
+      <button class="donate-button border-2 border-green-500 px-3 h-1/2 w-1/3 text-center text-lg">Donate</button>
+    </div>
+  
+    </div>
+  </div>
+  
+      
+  </div>`;
+  }
+  
+  // Start app: Show animation, fetch posts, and manage visibility
+  async function startAppFlow() {
+    showLoadingAnimation();
+    await fetchGalleryPosts();
+    fetchPosts(0, 4, true); // Lazy load posts 0–4 initially
+  
+    // Always hide the animation screen after exactly 5 seconds
+    setTimeout(() => {
+      hideLoadingAnimation();
+      startProgressiveImageLoad(0, 4); // Begin progressive lazy removal
+      observePostNavigation(); // Start tracking navigation
+    }, 2000);
+  }
+  
+  // Show full-screen animation overlay (optional element to add visually)
+  function showLoadingAnimation() {
+    console.log("⏳ Showing 5-sec animation screen...");
+    // You can make a loading screen visible here (e.g., remove hidden class)
+  }
+  
+  // Hide full-screen animation overlay
+  function hideLoadingAnimation() {
+    console.log("✅ Hiding animation screen");
+    animationDone = true;
+    // You can hide the loading screen here (e.g., add hidden class)
+  }
+  
+  // Helper to wait for a specific image to fully load
+  function waitForImage(index, callback) {
+    const img = document.querySelector(`.main[data-index='${index}'] img`);
+    if (!img) return;
+    if (img.complete) return callback();
+    img.addEventListener("load", callback);
+  }
+  
+  // Fetch and render a set of posts from index `start` to `end`
+  function fetchPosts(start, end, lazy = true) {
+    console.log(`📦 Fetching posts from ${start} to ${end}`);
+    const isMobile = window.innerWidth < 1280;
+    const gen = isMobile ? generateMobilePost : generateDesktopPost;
+  
+    for (let i = start; i <= end && i < allposts.length; i++) {
+      const postHTML = gen(allposts[i], i, lazy);
+      wrapper.insertAdjacentHTML("beforeend", postHTML);
+      if (i > maxLoadedIndex) maxLoadedIndex = i;
+  
+      const newPost = document.querySelector(`.main[data-index="${i}"]`);
+    if (newPost && postObserver) {
+    postObserver.observe(newPost);
+    console.log(`📡 Observing new post ${i}`);
+  }
+  
+    }
+  }
+  
+  // Lazy loading remover: progressively removes lazy from image loading
+  function startProgressiveImageLoad(start, end) {
+    console.log(`🌀 Starting progressive removal of lazy from ${start} to ${end}`);
+    let delay = 500;
+    for (let i = start; i <= end; i++) {
+      const img = document.querySelector(`.main[data-index='${i}'] img`);
+      if (img && img.loading === "lazy") {
+        const timeout = setTimeout(() => {
+          img.removeAttribute("loading");
+          console.log(`⚡ Lazy removed from image ${i}`);
+        }, delay);
+        progressiveLoadTimeouts.push(timeout);
+        delay += 300;
+      }
+    }
+  }
+  
+  // Cancel any ongoing progressive image loading
+  function cancelProgressiveImageLoad() {
+    console.log("🛑 Cancelling progressive image load");
+    progressiveLoadTimeouts.forEach(clearTimeout);
+    progressiveLoadTimeouts = [];
+  }
+  
+  let postObserver = null;
+  
+  // Observer to track currently visible post and trigger logic
+  function observePostNavigation() {
+    let currentIndex = 0;
+  
+    postObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const newIndex = parseInt(entry.target.getAttribute("data-index"));
+          if (newIndex !== currentIndex) {
+            console.log(`👀 Viewing Post: ${newIndex}`);
+            currentIndex = newIndex;
+            handlePostNavigation(currentIndex);
+          }
+        }
+      });
+    }, {
+      root: wrapper,
+      threshold: 0.6
+    });
+  
+    // Initial observe for first 5 posts
+    document.querySelectorAll('.main').forEach(post => postObserver.observe(post));
+  }
+  
+  
+  // Main logic to handle what happens as the user navigates post-by-post
+  function handlePostNavigation(current) {
+    const n = Math.floor((current - 3) / 5);
+  
+    // CASE 1 — When current = 3 + 5n
+    if ((current - 3) % 5 === 0 && current >= 3) {
+      const start = current + 2;
+      const end = current + 6;
+      console.log(`🧠 CASE 1: Load posts ${start}–${end}`);
+      if (!document.querySelector(`.main[data-index='${start}']`)) {
+        fetchPosts(start, end, true);
+      }
+  
+      if (n > 0) {
+        const removeStart = 0;
+        const removeEnd = current - 3;
+        for (let i = removeStart; i <= removeEnd; i++) {
+          const el = document.querySelector(`.main[data-index='${i}']`);
+          if (el) {
+            console.log(`🧹 Removing post ${i}`);
+            el.remove();
+          }
+        }
+      }
+    }
+  
+    // CASE 2 — When current = 4 + 5n
+    if ((current - 4) % 5 === 0 && current >= 4) {
+      const start = current + 1;
+      const end = current + 5;
+      waitForImage(current, () => {
+        console.log(`🌿 CASE 2: Progressive load images ${start}–${end}`);
+        startProgressiveImageLoad(start, end);
+      });
+    }
+  
+    // CASE 3 — When current = 3 + 5n and maxLoadedIndex >= current + 2
+    if ((current - 3) % 5 === 0 && current + 2 <= maxLoadedIndex) {
+      // ⏳ Delay this logic slightly to allow post 4/9/etc. to be observed
+      setTimeout(() => {
+        const cancelStart = current + 2;
+        const cancelEnd = current + 6;
+        console.log(`💣 CASE 3: Cancel progressive load ${cancelStart}–${cancelEnd}`);
+        cancelProgressiveImageLoad();
+  
+        // remove posts after current+6
+        for (let i = cancelEnd + 1; i <= maxLoadedIndex; i++) {
+    const el = document.querySelector(`.main[data-index='${i}']`);
+    if (el) {
+      console.log(`🗑️ Clearing children of post ${i}`);
+      while (el.firstChild) {
+        el.removeChild(el.firstChild);
+      }
+    }
+  }
+  
+  
+        // refill 5 old posts if they were removed
+        if (current >= 8) {
+          const refillStart = current - 8;
+          const refillEnd = current - 4;
+          console.log(`♻️ Refill posts ${refillStart}–${refillEnd}`);
+          fetchPosts(refillStart, refillEnd, true);
+        }
+      }, 400); // Delay in ms
+    }
+  }
+  
+  
+  // 🔁 Begin the application logic
+  startAppFlow();
+  
+  document.getElementById("next-post").addEventListener("click", () => {
+      wrapper.scrollBy({ top: window.innerHeight, behavior: "smooth" });
+    });
+  
+    document.getElementById("prev-post").addEventListener("click", () => {
+      wrapper.scrollBy({ top: -window.innerHeight, behavior: "smooth" });
+    });
+  
+  
+  //to use in console for testing post removal from container
+  function clearPostChildren(index) {
+    const el = document.querySelector(`.main[data-index='${index}']`);
+    if (el) {
+      console.log(`🧼 Clearing children of post ${index}`);
+      el.innerHTML = "";
+      clearedPosts.add(index);
+    } else {
+      console.warn(`⚠️ Post ${index} not found in DOM`);
+    }
+  }
+  
+  
+  </script>
+<!--stable code after implementing the 
+| When Current Post = 3 + n*5 (n=0,1,2,3...)          |
+| ➤ if not exists, Lazy load posts (3+ n*5 +2 to 3+ n*5 +6)    |
+| ➤Keeping the post containers,if posts exists, Remove Posts 0 to 3=n*5-3 where n>0 from their respective containers   |
+logic -->
+<script>
+
+  // Animation state for intro screen
+  let animationDone = false;
+  const allposts = [];
+  let generatePostHTML; // global
+  const wrapper = document.getElementById("wrapper");
+  // Lazy loading tracking state
+  let maxLoadedIndex = -1; // Highest post index that has ever been fully loaded
+  let currentPost=0;
+  let previousPost=0;
+  
+  async function fetchGalleryPosts() {
+  const cloudName = "dumtyosqg";
+  const tag = "gallery";
+  const url = `https://res.cloudinary.com/${cloudName}/image/list/${tag}.json`;
+  
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Failed to fetch JSON");
+  
+    const data = await res.json();
+    const resources = data.resources || [];
+  
+    const filteredPosts = resources
+      .filter(asset => asset.asset_folder === "gallery")
+      .map(asset => {
+        const ctx = asset.context?.custom || {};
+        return {
+          id: asset.public_id,
+          assetId: asset.asset_id,
+          url: asset.secure_url,
+          caption: ctx.caption || "",
+          alt: ctx.alt || "",
+          atrocities: ctx.atrocities || "",
+          facts: ctx.facts || "",
+          atTheMoment: ctx["at-the-moment"] || ctx["moment"] || "",
+          donation: ctx.donation || "",
+          photographer: ctx["photographer-name"] || ctx.photographer || "",
+          social: ctx["photographer-link"] || ctx.social || "",
+          approved: ctx.approved ?? "true", // <-- fallback if not present
+          createdAt: asset.created_at,
+          tags: asset.tags || []
+        };
+      });
+  
+    allposts.push(...filteredPosts);
+    console.log(`[✅ Total Posts Loaded: ${allposts.length}]`, allposts);
+  } catch (err) {
+    console.error("❌ Error fetching gallery:", err);
+  }
+  }
+  
+  function generateMobilePost(post, index) {
+  return `<div data-index="${index}" class="main w-full flex flex-col h-screen  max-sm:pt-[5vh] sm:pt-[15vh] md:pt-[14vh] xl:pt-[19vh] snap-start snap-always">  
+  <div class="post-card w-[80%] h-[70vh] flex flex-row justify-center items-center mx-auto my-auto">
+    <div class="image-side w-full  bg-black relative h-full flex flex-col justify-center items-center">
+      <a href="#" class="PhotographerId block w-full absolute bottom-[100%] text-center text-[clamp(.5rem,1rem,3.75vh)] leading-[4vh] bg-green-200 h-[4vh]">By: ${post.photographer}</a>
+        <div class="image-container max-md:h-[60vh] md:h-[63.5vh] absolute top-0 transition-all duration-700 ease-in-out border-2 border-white">
+          <img src="https://res.cloudinary.com/dumtyosqg/image/upload/${post.id}" loading="lazy" alt="something went wrong!" class="h-full w-auto max-w-full object-contain mx-auto">
+        </div>
+    <div class="carousel-preview max-md:h-[10vh] h-[6.5vh] bg-green-200 absolute max-md:top-[60vh] md:top-[63.5vh] transition-all duration-700 ease-in-out w-full">
+        <div class="just-a-wrapper h-full w-full px-2 py-[1vh] md:pb-0 flex flex-col">
+        <p class="text-gray-700 max-md:line-clamp-2 md:line-clamp-1 overflow-hidden text-[clamp(.25rem,1rem,2.5vh)] leading-[2.5vh]">
+          <span class="font-bold">At the Moment: </span><span>${post.atTheMoment}</span>
+        </p>
+        <a class="read-more-link text-blue-400 text-[clamp(.05rem,1rem,2.5vh)] h-[3vh]">Full info</a>
+        </div>
+    </div>
+      <div class="social-icons hidden max-md:flex w-full absolute top-[100%] justify-evenly items-center h-[4vh]">
+        <a href="#" class="">I</a>
+        <a href="#" class="">F</a>
+        <a href="#" class="">W</a>
+      </div>
+    </div>
+  </div>
+  </div>`;
+  }
+  
+  function generateDesktopPost(post, index) {
+  return `<div data-index="${index}" class="main w-full flex flex-col h-screen pt-[15vh] snap-start snap-always min-w-[950px]">
+        
+    
+  <div class="post-card w-[80%] h-[65vh] flex flex-row justify-center items-center mx-auto my-auto">
+  
+    <div class="image-side w-[60%] bg-black relative h-full flex flex-col justify-center items-center">
+        <a href="#" class="PhotographerIdxl-placeholder block invisible h-[2.5vh]"></a>
+        <div class="image-container h-[60vh]">
+          <img src="https://res.cloudinary.com/dumtyosqg/image/upload/${post.id}" loading="lazy" alt="something went wrong!" class="h-full w-auto max-w-full object-contain mx-auto">
+        </div>
+        <a href="#" class="PhotographerIdxl block w-full text-white text-center h-[2.5vh] text-[1.5vh] leading-[2.5vh]">By: ${post.photographer}</a>
+    </div>
+  
+    <div class="info-side w-[40%] flex flex-col bg-green-300 h-full">
+  
+      <div class="info-carousel w-full h-[85%] relative overflow-hidden transition-all duration-700 ease-in-out">
+         <div class="carousel-container w-full h-full flex transition-transform duration-500 ease-in-out ">
+          <div class="first-slide carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+            <div class="slide1-content min-h-[18vh] max-h-full"> 
+              <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>At The Moment</span></div>
+              <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${post.atTheMoment}</p>
+            </div>
+            <div class="flex-auto bg-black"></div> 
+          </div>
+    
+          <div class="second-slide carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+            <div class="slide2-content min-h-[18vh] max-h-full"> 
+              <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Facts</span></div>
+              
+              <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${post.facts}</p>
+            </div>
+            <div class="flex-auto bg-black"></div> 
+          </div>
+    
+          <div class="third-slide carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+            <div class="slide3-content min-h-[18vh] max-h-full"> 
+              <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Atrocities</span></div><!--made 7vh highest size for the text below to not overlay on this no matter how small the window is resized-->
+              
+              <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${post.atrocities}</p>
+            </div>
+            <div class="flex-auto bg-black"></div> 
+          </div>
+    
+      </div>
+      <button class="prev-slide absolute h-[5vh] left-2 top-[2.5vh] transform -translate-y-1/2 bg-slate-300 text-white  rounded-full focus:outline-none">←</button>
+      <button class="next-slide absolute h-[5vh] right-2 top-[2.5vh] transform -translate-y-1/2 bg-slate-400 text-white  rounded-full focus:outline-none">→</button>
+    </div>
+  
+    <div class="button-section h-[15%] flex justify-center items-center">
+      <button class="donate-button border-2 border-green-500 px-3 h-1/2 w-1/3 text-center text-lg">Donate</button>
+    </div>
+  
+    </div>
+  </div>
+  
+      
+  </div>`;
+  }
+  
+  // Start app: Show animation, fetch posts, and manage visibility
+  async function startAppFlow() {
+    showLoadingAnimation();
+
+    const isMobile = window.innerWidth < 1280;
+    generatePostHTML = isMobile ? generateMobilePost : generateDesktopPost;
+    await fetchGalleryPosts();
+    fetchPosts(0, 4); // Lazy load posts 0–4 initially
+  
+    // Always hide the animation screen after exactly 5 seconds
+    setTimeout(() => {
+      hideLoadingAnimation();
+      observePostNavigation(); // Start tracking navigation
+    }, 2000);
+  }
+  
+  // Show full-screen animation overlay (optional element to add visually)
+  function showLoadingAnimation() {
+    console.log("⏳ Showing 5-sec animation screen...");
+    // You can make a loading screen visible here (e.g., remove hidden class)
+  }
+  
+  // Hide full-screen animation overlay
+  function hideLoadingAnimation() {
+    console.log("✅ Hiding animation screen");
+    animationDone = true;
+    // You can hide the loading screen here (e.g., add hidden class)
+  }
+  
+  // Fetch and render a set of posts from index `start` to `end`
+  function fetchPosts(start, end, currentpostat=null, resolve = () => {}, reject = () => {}) {
+  console.log(`📦 Trying to Fetch posts from ${start} to ${end}`);
+
+  for (let i = start; i <= end && i < allposts.length; i++) {
+    if (currentpostat != null && currentpostat > currentPost) {
+      console.log(`⛔ Aborting fetch: currentpostat (${currentpostat}) > currentpost (${currentPost})`);
+      reject("Aborted fetch due to scroll back");
+      return;
+    }
+
+    if(!wrapper.children[i+1]){/* i+1 because the first child is bottom-7.5vh, checking if the post exists before creating it*/
+    const postHTML = generatePostHTML(allposts[i], i);
+    wrapper.insertAdjacentHTML("beforeend", postHTML);
+    if (i > maxLoadedIndex) maxLoadedIndex = i;
+
+    const newPost = document.querySelector(`.main[data-index="${i}"]`);
+    if (newPost && postObserver) {
+      postObserver.observe(newPost);
+      console.log(`📡 Observing new post ${i}`);
+    }
+  }
+  else{
+    console.log(`Post ${i} already exists`);
+  }
+}
+
+  resolve(); // done loading
+}
+
+  
+  
+  let postObserver = null;
+ 
+  
+  // Observer to track currently visible post and trigger logic
+  function observePostNavigation() {
+  
+    postObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const currentPostAt = parseInt(entry.target.getAttribute("data-index"));
+          if (currentPostAt !== currentPost) {
+            console.log(`👀 Viewing Post: ${currentPostAt}`);
+            previousPost= currentPost;
+            currentPost = currentPostAt;
+          }
+          if ((currentPostAt - 3) % 5 === 0&& previousPost<currentPostAt) {
+            lazyLoadFuturePosts(currentPostAt)
+              .then(() => {if(currentPostAt>3)removeOldPosts(currentPostAt)}) // clean up phase (empty for now)
+              .then(() => {
+                console.log(`✅ Finished loading & cleanup for post ${currentPostAt}`);
+              })
+              .catch(err => {
+                console.warn(`⚠️ Skipped or aborted at post ${currentPostAt}:`, err);
+              });
+          }
+
+
+        }
+      });
+    }, {
+      root: wrapper,
+      threshold: 0.6
+    });
+  
+    // Initial observe for first 5 posts
+    document.querySelectorAll('.main').forEach(post => postObserver.observe(post));
+  }
+
+  function lazyLoadFuturePosts(currentpostat) {
+  return new Promise((resolve, reject) => {
+    // if(previousPost<currentpostat){
+      fetchPosts(currentpostat + 2, currentpostat + 6, currentpostat, resolve, reject);
+    // }else{resolve()}
+  });
+}
+function removeOldPosts(currentpostat) {
+  let i = 0;
+  const limit = currentpostat - 3;
+
+  function runCleanupStep() {
+    if (currentpostat > currentPost) {
+      console.log("⛔ Aborted cleanup: user went back");
+      return;
+    }
+
+    if (i >= limit) {
+      console.log("✅ Finished cleanup.");
+      return;
+    }
+
+    clearPostChildren(i);
+    console.log(`🧹 Cleanup: ${i}th post is removed from container`);
+    i++;
+
+    setTimeout(runCleanupStep, 1000);
+  }
+
+  runCleanupStep();
+}
+
+
+
+  
+  
+  
+  // 🔁 Begin the application logic
+  startAppFlow();
+  
+  document.getElementById("next-post").addEventListener("click", () => {
+      wrapper.scrollBy({ top: window.innerHeight, behavior: "smooth" });
+    });
+  
+    document.getElementById("prev-post").addEventListener("click", () => {
+      wrapper.scrollBy({ top: -window.innerHeight, behavior: "smooth" });
+    });
+  
+  
+  //to use in console for testing post removal from container
+  function clearPostChildren(index) {
+    const el = document.querySelector(`.main[data-index='${index}']`);
+    if (el) {
+      console.log(`🧼 Clearing children of post ${index}`);
+      el.innerHTML = "";
+      // clearedPosts.add(index);
+    } else {
+      console.warn(`⚠️ Post ${index} not found in DOM`);
+    }
+  }
+  
+  
+  </script>

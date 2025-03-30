@@ -155,168 +155,244 @@
   
 
 </body>
-
 <script>
-    const allposts = [];
-    let generatePostHTML; // global
-    const wrapper = document.getElementById("wrapper");
-    let lastIndex = 0; // ← keep track of last fetched index
 
+// Animation state for intro screen
+let animationDone = false;
+const allposts = [];
+let generatePostHTML; // global
+const wrapper = document.getElementById("wrapper");
+// Lazy loading tracking state
+let maxLoadedIndex = -1; // Highest post index that has ever been fully loaded
+let currentPost=0;
+let previousPost=-1;
+let killProgressiveLoad = false;
 
 async function fetchGalleryPosts() {
-  const cloudName = "dumtyosqg";
-  const tag = "gallery";
-  const url = `https://res.cloudinary.com/${cloudName}/image/list/${tag}.json`;
+const cloudName = "dumtyosqg";
+const tag = "gallery";
+const url = `https://res.cloudinary.com/${cloudName}/image/list/${tag}.json`;
 
-  try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error("Failed to fetch JSON");
+try {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error("Failed to fetch JSON");
 
-    const data = await res.json();
-    const resources = data.resources || [];
+  const data = await res.json();
+  const resources = data.resources || [];
 
-    const filteredPosts = resources
-      .filter(asset => asset.asset_folder === "gallery")
-      .map(asset => {
-        const ctx = asset.context?.custom || {};
-        return {
-          id: asset.public_id,
-          assetId: asset.asset_id,
-          url: asset.secure_url,
-          caption: ctx.caption || "",
-          alt: ctx.alt || "",
-          atrocities: ctx.atrocities || "",
-          facts: ctx.facts || "",
-          atTheMoment: ctx["at-the-moment"] || ctx["moment"] || "",
-          donation: ctx.donation || "",
-          photographer: ctx["photographer-name"] || ctx.photographer || "",
-          social: ctx["photographer-link"] || ctx.social || "",
-          approved: ctx.approved ?? "true", // <-- fallback if not present
-          createdAt: asset.created_at,
-          tags: asset.tags || []
-        };
-      });
+  const filteredPosts = resources
+    .filter(asset => asset.asset_folder === "gallery")
+    .map(asset => {
+      const ctx = asset.context?.custom || {};
+      return {
+        id: asset.public_id,
+        assetId: asset.asset_id,
+        url: asset.secure_url,
+        caption: ctx.caption || "",
+        alt: ctx.alt || "",
+        atrocities: ctx.atrocities || "",
+        facts: ctx.facts || "",
+        atTheMoment: ctx["at-the-moment"] || ctx["moment"] || "",
+        donation: ctx.donation || "",
+        photographer: ctx["photographer-name"] || ctx.photographer || "",
+        social: ctx["photographer-link"] || ctx.social || "",
+        approved: ctx.approved ?? "true", // <-- fallback if not present
+        createdAt: asset.created_at,
+        tags: asset.tags || []
+      };
+    });
 
-    allposts.push(...filteredPosts);
-    console.log(`[✅ Total Posts Loaded: ${allposts.length}]`, allposts);
-  } catch (err) {
-    console.error("❌ Error fetching gallery:", err);
-  }
+  allposts.push(...filteredPosts);
+  console.log(`[✅ Total Posts Loaded: ${allposts.length}]`, allposts);
+} catch (err) {
+  console.error("❌ Error fetching gallery:", err);
+}
 }
 
 function generateMobilePost(post, index) {
-  return `<div data-index="${index}" class="main w-full flex flex-col h-screen  max-sm:pt-[5vh] sm:pt-[15vh] md:pt-[14vh] xl:pt-[19vh] snap-start snap-always">  
-  <div class="post-card w-[80%] h-[70vh] flex flex-row justify-center items-center mx-auto my-auto">
-    <div class="image-side w-full  bg-black relative h-full flex flex-col justify-center items-center">
-      <a href="#" class="PhotographerId block w-full absolute bottom-[100%] text-center text-[clamp(.5rem,1rem,3.75vh)] leading-[4vh] bg-green-200 h-[4vh]">By: ${post.photographer}</a>
-        <div class="image-container max-md:h-[60vh] md:h-[63.5vh] absolute top-0 transition-all duration-700 ease-in-out border-2 border-white">
-          <img src="https://res.cloudinary.com/dumtyosqg/image/upload/${post.id}" alt="something went wrong!" class="h-full w-auto max-w-full object-contain mx-auto">
-        </div>
-    <div class="carousel-preview max-md:h-[10vh] h-[6.5vh] bg-green-200 absolute max-md:top-[60vh] md:top-[63.5vh] transition-all duration-700 ease-in-out w-full">
-        <div class="just-a-wrapper h-full w-full px-2 py-[1vh] md:pb-0 flex flex-col">
-        <p class="text-gray-700 max-md:line-clamp-2 md:line-clamp-1 overflow-hidden text-[clamp(.25rem,1rem,2.5vh)] leading-[2.5vh]">
-          <span class="font-bold">At the Moment: </span><span>${post.atTheMoment}</span>
-        </p>
-        <a class="read-more-link text-blue-400 text-[clamp(.05rem,1rem,2.5vh)] h-[3vh]">Full info</a>
-        </div>
-    </div>
-      <div class="social-icons hidden max-md:flex w-full absolute top-[100%] justify-evenly items-center h-[4vh]">
-        <a href="#" class="">I</a>
-        <a href="#" class="">F</a>
-        <a href="#" class="">W</a>
+return `<div data-index="${index}" class="main w-full flex flex-col h-screen  max-sm:pt-[5vh] sm:pt-[15vh] md:pt-[14vh] xl:pt-[19vh] snap-start snap-always">  
+<div class="post-card w-[80%] h-[70vh] flex flex-row justify-center items-center mx-auto my-auto">
+  <div class="image-side w-full  bg-black relative h-full flex flex-col justify-center items-center">
+    <a href="#" class="PhotographerId block w-full absolute bottom-[100%] text-center text-[clamp(.5rem,1rem,3.75vh)] leading-[4vh] bg-green-200 h-[4vh]">By: ${post.photographer}</a>
+      <div class="image-container max-md:h-[60vh] md:h-[63.5vh] absolute top-0 transition-all duration-700 ease-in-out border-2 border-white">
+        <img src="https://res.cloudinary.com/dumtyosqg/image/upload/${post.id}" loading="lazy" alt="something went wrong!" class="h-full w-auto max-w-full object-contain mx-auto">
       </div>
+  <div class="carousel-preview max-md:h-[10vh] h-[6.5vh] bg-green-200 absolute max-md:top-[60vh] md:top-[63.5vh] transition-all duration-700 ease-in-out w-full">
+      <div class="just-a-wrapper h-full w-full px-2 py-[1vh] md:pb-0 flex flex-col">
+      <p class="text-gray-700 max-md:line-clamp-2 md:line-clamp-1 overflow-hidden text-[clamp(.25rem,1rem,2.5vh)] leading-[2.5vh]">
+        <span class="font-bold">At the Moment: </span><span>${post.atTheMoment}</span>
+      </p>
+      <a class="read-more-link text-blue-400 text-[clamp(.05rem,1rem,2.5vh)] h-[3vh]">Full info</a>
+      </div>
+  </div>
+    <div class="social-icons hidden max-md:flex w-full absolute top-[100%] justify-evenly items-center h-[4vh]">
+      <a href="#" class="">I</a>
+      <a href="#" class="">F</a>
+      <a href="#" class="">W</a>
     </div>
   </div>
+</div>
 </div>`;
 }
 
 function generateDesktopPost(post, index) {
-  return `<div data-index="${index}" class="main w-full flex flex-col h-screen pt-[15vh] snap-start snap-always min-w-[950px]">
-        
-    
-  <div class="post-card w-[80%] h-[65vh] flex flex-row justify-center items-center mx-auto my-auto">
+return `<div data-index="${index}" class="main w-full flex flex-col h-screen pt-[15vh] snap-start snap-always min-w-[950px]">
+      
+  
+<div class="post-card w-[80%] h-[65vh] flex flex-row justify-center items-center mx-auto my-auto">
 
-    <div class="image-side w-[60%] bg-black relative h-full flex flex-col justify-center items-center">
-        <a href="#" class="PhotographerIdxl-placeholder block invisible h-[2.5vh]"></a>
-        <div class="image-container h-[60vh]">
-          <img src="https://res.cloudinary.com/dumtyosqg/image/upload/${post.id}" alt="something went wrong!" class="h-full w-auto max-w-full object-contain mx-auto">
-        </div>
-        <a href="#" class="PhotographerIdxl block w-full text-white text-center h-[2.5vh] text-[1.5vh] leading-[2.5vh]">By: ${post.photographer}</a>
-    </div>
-
-    <div class="info-side w-[40%] flex flex-col bg-green-300 h-full">
-
-      <div class="info-carousel w-full h-[85%] relative overflow-hidden transition-all duration-700 ease-in-out">
-         <div class="carousel-container w-full h-full flex transition-transform duration-500 ease-in-out ">
-          <div class="first-slide carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
-            <div class="slide1-content min-h-[18vh] max-h-full"> 
-              <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>At The Moment</span></div>
-              <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${post.atTheMoment}</p>
-            </div>
-            <div class="flex-auto bg-black"></div> 
-          </div>
-    
-          <div class="second-slide carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
-            <div class="slide2-content min-h-[18vh] max-h-full"> 
-              <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Facts</span></div>
-              
-              <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${post.facts}</p>
-            </div>
-            <div class="flex-auto bg-black"></div> 
-          </div>
-    
-          <div class="third-slide carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
-            <div class="slide3-content min-h-[18vh] max-h-full"> 
-              <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Atrocities</span></div><!--made 7vh highest size for the text below to not overlay on this no matter how small the window is resized-->
-              
-              <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${post.atrocities}</p>
-            </div>
-            <div class="flex-auto bg-black"></div> 
-          </div>
-    
+  <div class="image-side w-[60%] bg-black relative h-full flex flex-col justify-center items-center">
+      <a href="#" class="PhotographerIdxl-placeholder block invisible h-[2.5vh]"></a>
+      <div class="image-container h-[60vh]">
+        <img src="https://res.cloudinary.com/dumtyosqg/image/upload/${post.id}" loading="lazy" alt="something went wrong!" class="h-full w-auto max-w-full object-contain mx-auto">
       </div>
-      <button class="prev-slide absolute h-[5vh] left-2 top-[2.5vh] transform -translate-y-1/2 bg-slate-300 text-white  rounded-full focus:outline-none">←</button>
-      <button class="next-slide absolute h-[5vh] right-2 top-[2.5vh] transform -translate-y-1/2 bg-slate-400 text-white  rounded-full focus:outline-none">→</button>
-    </div>
-
-    <div class="button-section h-[15%] flex justify-center items-center">
-      <button class="donate-button border-2 border-green-500 px-3 h-1/2 w-1/3 text-center text-lg">Donate</button>
-    </div>
-
-    </div>
+      <a href="#" class="PhotographerIdxl block w-full text-white text-center h-[2.5vh] text-[1.5vh] leading-[2.5vh]">By: ${post.photographer}</a>
   </div>
 
-      
+  <div class="info-side w-[40%] flex flex-col bg-green-300 h-full">
+
+    <div class="info-carousel w-full h-[85%] relative overflow-hidden transition-all duration-700 ease-in-out">
+       <div class="carousel-container w-full h-full flex transition-transform duration-500 ease-in-out ">
+        <div class="first-slide carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+          <div class="slide1-content min-h-[18vh] max-h-full"> 
+            <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>At The Moment</span></div>
+            <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${post.atTheMoment}</p>
+          </div>
+          <div class="flex-auto bg-black"></div> 
+        </div>
+  
+        <div class="second-slide carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+          <div class="slide2-content min-h-[18vh] max-h-full"> 
+            <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Facts</span></div>
+            
+            <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${post.facts}</p>
+          </div>
+          <div class="flex-auto bg-black"></div> 
+        </div>
+  
+        <div class="third-slide carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+          <div class="slide3-content min-h-[18vh] max-h-full"> 
+            <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Atrocities</span></div><!--made 7vh highest size for the text below to not overlay on this no matter how small the window is resized-->
+            
+            <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${post.atrocities}</p>
+          </div>
+          <div class="flex-auto bg-black"></div> 
+        </div>
+  
+    </div>
+    <button class="prev-slide absolute h-[5vh] left-2 top-[2.5vh] transform -translate-y-1/2 bg-slate-300 text-white  rounded-full focus:outline-none">←</button>
+    <button class="next-slide absolute h-[5vh] right-2 top-[2.5vh] transform -translate-y-1/2 bg-slate-400 text-white  rounded-full focus:outline-none">→</button>
+  </div>
+
+  <div class="button-section h-[15%] flex justify-center items-center">
+    <button class="donate-button border-2 border-green-500 px-3 h-1/2 w-1/3 text-center text-lg">Donate</button>
+  </div>
+
+  </div>
+</div>
+
+    
 </div>`;
 }
 
-async function init() {
+// Start app: Show animation, fetch posts, and manage visibility
+async function startAppFlow() {
+  showLoadingAnimation();
+
   const isMobile = window.innerWidth < 1280;
   generatePostHTML = isMobile ? generateMobilePost : generateDesktopPost;
-
   await fetchGalleryPosts();
-  fetch5posts(); // Load the first 5 posts on page load
-}
-init();
+  fetchPosts(0, 4); // Lazy load posts 0–4 initially
 
-// let currentPostIndex = 0;
-
-function fetch5posts() {
-  for (let i = lastIndex; i < lastIndex + 5 && i < allposts.length; i++) {
-        const post = allposts[i];
-        const postHTML = generatePostHTML(post, i); // use i directly
-        wrapper.insertAdjacentHTML("beforeend", postHTML);
-      }
-      lastIndex += 5; // update last index
-      observePosts();
+  // Always hide the animation screen after exactly 5 seconds
+  setTimeout(() => {
+    hideLoadingAnimation();
+    observePostNavigation(); // Start tracking navigation
+  }, 2000);
 }
 
-function observePosts() {
-  const observer = new IntersectionObserver((entries) => {
+// Show full-screen animation overlay (optional element to add visually)
+function showLoadingAnimation() {
+  console.log("⏳ Showing 5-sec animation screen...");
+  // You can make a loading screen visible here (e.g., remove hidden class)
+}
+
+// Hide full-screen animation overlay
+function hideLoadingAnimation() {
+  console.log("✅ Hiding animation screen");
+  animationDone = true;
+  // You can hide the loading screen here (e.g., add hidden class)
+}
+
+// Fetch and render a set of posts from index `start` to `end`
+function fetchPosts(start, end, currentpostat=null, resolve = () => {}, reject = () => {}) {
+console.log(`📦 Trying to Fetch posts from ${start} to ${end}`);
+
+for (let i = start; i <= end && i < allposts.length; i++) {
+  if (currentpostat != null && currentpostat > currentPost) {
+    console.log(`⛔ Aborting fetch: currentpostat (${currentpostat}) > currentpost (${currentPost})`);
+    reject("Aborted fetch due to scroll back");
+    return;
+  }
+
+  if(!wrapper.children[i+1]){/* i+1 because the first child is bottom-7.5vh, checking if the post exists before creating it*/
+  const postHTML = generatePostHTML(allposts[i], i);
+  wrapper.insertAdjacentHTML("beforeend", postHTML);
+  if (i > maxLoadedIndex) maxLoadedIndex = i;
+
+  const newPost = document.querySelector(`.main[data-index="${i}"]`);
+  if (newPost && postObserver) {
+    postObserver.observe(newPost);
+    console.log(`📡 Observing new post ${i}`);
+  }
+}
+else{
+  console.log(`Post ${i} already exists`);
+}
+}
+
+resolve(); // done loading
+}
+
+
+
+let postObserver = null;
+
+
+// Observer to track currently visible post and trigger logic
+function observePostNavigation() {
+
+  postObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        const index = entry.target.getAttribute('data-index');
-        console.log(`👀 Current visible post: ${index}`);
+        const currentPostAt = parseInt(entry.target.getAttribute("data-index"));
+        if (currentPostAt !== currentPost) {
+          console.log(`👀 Viewing Post: ${currentPostAt}`);
+          previousPost= currentPost;
+          currentPost = currentPostAt;
+        }
+          if((currentPostAt - 3) % 5 === 0 && maxLoadedIndex>=currentPostAt+2 && previousPost>currentPostAt){
+            killProgressiveLoad = true;//see if you should add back loading="lazy" or is it redundant because we remove posts from containers and add lazy anyaways while recreating them? 
+            fillEmptyPosts(currentPostAt)
+            .then(() =>removeFarPosts(currentPostAt)) // clean up phase (empty for now)
+            .then(() => {
+              console.log("✅ Finished filling empty containers & removing far posts ");
+            })
+            .catch(err => {
+              console.warn(`⚠️ Skipped or aborted at post ${currentPostAt}:`, err);
+            });
+          }else if((currentPostAt - 3) % 5 === 0&& previousPost<currentPostAt) {
+          lazyLoadFuturePosts(currentPostAt)
+            .then(() => {if(currentPostAt>3)removeOldPosts(currentPostAt)}) // clean up phase (empty for now)
+            .then(() => {
+              console.log(`✅ Finished loading & cleanup for post ${currentPostAt}`);
+            })
+            .catch(err => {
+              console.warn(`⚠️ Skipped or aborted at post ${currentPostAt}:`, err);
+            });
+        }
+
+
       }
     });
   }, {
@@ -324,25 +400,178 @@ function observePosts() {
     threshold: 0.6
   });
 
-  const posts = document.querySelectorAll('.main');
-  posts.forEach(post => observer.observe(post));
+  // Initial observe for first 5 posts
+  document.querySelectorAll('.main').forEach(post => postObserver.observe(post));
+}
+  
+function fillEmptyPosts(currentpostat) {
+  return new Promise((resolve, reject) => {
+    if (currentpostat <= 3) {
+      console.log("ℹ️ Skipping fill: currentpostat <= 3");
+      resolve();
+      return;
+    }
+
+    const isMobile = window.innerWidth < 1280;
+    const from = currentpostat - 4;
+    const to = currentpostat - 8;
+
+    for (let i = from; i >= to && i >= 0; i--) {
+      if (currentPost > currentpostat) {
+        console.log("⛔ Aborted fill: user navigated back");
+        reject("User navigated back during fill");
+        return;
+      }
+
+      const container = document.querySelector(`.main[data-index='${i}']`);
+      if (container && container.children.length === 0 && allposts[i]) {
+        const post = allposts[i];
+
+        const innerHTML = isMobile
+          ? `
+            <div class="post-card w-[80%] h-[70vh] flex flex-row justify-center items-center mx-auto my-auto">
+              <div class="image-side w-full bg-black relative h-full flex flex-col justify-center items-center">
+                <a href="#" class="PhotographerId block w-full absolute bottom-[100%] text-center text-[clamp(.5rem,1rem,3.75vh)] leading-[4vh] bg-green-200 h-[4vh]">By: ${post.photographer}</a>
+                <div class="image-container max-md:h-[60vh] md:h-[63.5vh] absolute top-0 transition-all duration-700 ease-in-out border-2 border-white">
+                  <img src="https://res.cloudinary.com/dumtyosqg/image/upload/${post.id}" loading="lazy" alt="something went wrong!" class="h-full w-auto max-w-full object-contain mx-auto">
+                </div>
+                <div class="carousel-preview max-md:h-[10vh] h-[6.5vh] bg-green-200 absolute max-md:top-[60vh] md:top-[63.5vh] transition-all duration-700 ease-in-out w-full">
+                  <div class="just-a-wrapper h-full w-full px-2 py-[1vh] md:pb-0 flex flex-col">
+                    <p class="text-gray-700 max-md:line-clamp-2 md:line-clamp-1 overflow-hidden text-[clamp(.25rem,1rem,2.5vh)] leading-[2.5vh]">
+                      <span class="font-bold">At the Moment: </span><span>${post.atTheMoment}</span>
+                    </p>
+                    <a class="read-more-link text-blue-400 text-[clamp(.05rem,1rem,2.5vh)] h-[3vh]">Full info</a>
+                  </div>
+                </div>
+                <div class="social-icons hidden max-md:flex w-full absolute top-[100%] justify-evenly items-center h-[4vh]">
+                  <a href="#">I</a>
+                  <a href="#">F</a>
+                  <a href="#">W</a>
+                </div>
+              </div>
+            </div>`
+          : `
+            <div class="post-card w-[80%] h-[65vh] flex flex-row justify-center items-center mx-auto my-auto">
+              <div class="image-side w-[60%] bg-black relative h-full flex flex-col justify-center items-center">
+                <a href="#" class="PhotographerIdxl-placeholder block invisible h-[2.5vh]"></a>
+                <div class="image-container h-[60vh]">
+                  <img src="https://res.cloudinary.com/dumtyosqg/image/upload/${post.id}" loading="lazy" alt="something went wrong!" class="h-full w-auto max-w-full object-contain mx-auto">
+                </div>
+                <a href="#" class="PhotographerIdxl block w-full text-white text-center h-[2.5vh] text-[1.5vh] leading-[2.5vh]">By: ${post.photographer}</a>
+              </div>
+              <div class="info-side w-[40%] flex flex-col bg-green-300 h-full">
+                <div class="info-carousel w-full h-[85%] relative overflow-hidden transition-all duration-700 ease-in-out">
+                  <div class="carousel-container w-full h-full flex transition-transform duration-500 ease-in-out">
+                    <div class="first-slide carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+                      <div class="slide1-content min-h-[18vh] max-h-full">
+                        <div class="font-bold h-[7.5vh] text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>At The Moment</span></div>
+                        <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${post.atTheMoment}</p>
+                      </div>
+                      <div class="flex-auto bg-black"></div>
+                    </div>
+                    <div class="second-slide carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+                      <div class="slide2-content min-h-[18vh] max-h-full">
+                        <div class="font-bold h-[7.5vh] text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Facts</span></div>
+                        <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${post.facts}</p>
+                      </div>
+                      <div class="flex-auto bg-black"></div>
+                    </div>
+                    <div class="third-slide carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+                      <div class="slide3-content min-h-[18vh] max-h-full">
+                        <div class="font-bold h-[7.5vh] text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Atrocities</span></div>
+                        <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${post.atrocities}</p>
+                      </div>
+                      <div class="flex-auto bg-black"></div>
+                    </div>
+                  </div>
+                  <button class="prev-slide absolute h-[5vh] left-2 top-[2.5vh] transform -translate-y-1/2 bg-slate-300 text-white rounded-full focus:outline-none">←</button>
+                  <button class="next-slide absolute h-[5vh] right-2 top-[2.5vh] transform -translate-y-1/2 bg-slate-400 text-white rounded-full focus:outline-none">→</button>
+                </div>
+                <div class="button-section h-[15%] flex justify-center items-center">
+                  <button class="donate-button border-2 border-green-500 px-3 h-1/2 w-1/3 text-center text-lg">Donate</button>
+                </div>
+              </div>
+            </div>`;
+
+        container.innerHTML = innerHTML;
+        console.log(`🧩 Refilled content into post container ${i}`);
+      }
+    }
+
+    resolve();
+  });
+}
+function removeFarPosts(currentpostat){
+  console.log("removeFarPosts() reached for now it does nothing");
+  //whats it abort logic, wrap it in idlecallback maybe and check if exists before removing and what about maxloadedIndex, yeah you can decrement it but does it affect something else midway, asses if anymore potential issues arise
+}
+
+function lazyLoadFuturePosts(currentpostat) {
+return new Promise((resolve, reject) => {
+  // if(previousPost<currentpostat){
+    fetchPosts(currentpostat + 2, currentpostat + 6, currentpostat, resolve, reject);
+  // }else{resolve()}
+});
+}
+function removeOldPosts(currentpostat) {
+let i = 0;
+const limit = currentpostat - 3;
+
+function runCleanupStep() {
+  if (currentpostat > currentPost) {
+    console.log("⛔ Aborted cleanup: user went back");
+    return;
+  }
+
+  if (i >= limit) {
+    console.log("✅ Finished cleanup.");
+    return;
+  }
+
+  clearPostChildren(i);
+  console.log(`🧹 Cleanup: ${i}th post is removed from container`);
+  i++;
+
+  setTimeout(runCleanupStep, 1000);
+}
+
+runCleanupStep();
 }
 
 
 
 
+
+
+// 🔁 Begin the application logic
+startAppFlow();
+
 document.getElementById("next-post").addEventListener("click", () => {
-      wrapper.scrollBy({ top: window.innerHeight, behavior: "smooth" });
-    });
+    wrapper.scrollBy({ top: window.innerHeight, behavior: "smooth" });
+  });
 
-    document.getElementById("prev-post").addEventListener("click", () => {
-      wrapper.scrollBy({ top: -window.innerHeight, behavior: "smooth" });
-    });
+  document.getElementById("prev-post").addEventListener("click", () => {
+    wrapper.scrollBy({ top: -window.innerHeight, behavior: "smooth" });
+  });
 
 
+//to use in console for testing post removal from container
+function clearPostChildren(index) {
+  const el = document.querySelector(`.main[data-index='${index}']`);
+  if (el) {
+    console.log(`🧼 Clearing children of post ${index}`);
+    el.innerHTML = "";
+    // clearedPosts.add(index);
+  } else {
+    console.warn(`⚠️ Post ${index} not found in DOM`);
+  }
+}
 
 
 </script>
+
+
+
 
 
 
