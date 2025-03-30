@@ -10,8 +10,8 @@
 </head>
 <body class="h-screen w-full min-w-[350px] min-h-[350px] bg-red-300">
   <!-- fixed the min h and w based on window resizing and content fit -->
-    <header class="w-full fixed top-0 bg-green-200 h-[10vh] xl:h-[15vh] z-10">
-      <!-- in the above header i had to put z-10 for the mobile-menu to overlay on the rest of the body to be visible -->
+    <header class="w-full fixed top-0 bg-green-200 h-[10vh] xl:h-[15vh] z-20">
+      <!-- in the above header i had to put z-200 for the mobile-menu to overlay on the rest of the body to be visible -->
         <div class="flex w-full md:w-[90%] h-full mx-auto">
             <div class="flex w-2/3 md:w-1/2 justify-left sm:justify-left ml-4 md:ml-0 items-center">
                 <img src="assets/Unknown.jpeg" alt="logo" class="h-1/2">
@@ -26,7 +26,7 @@
             </nav>
             <div class="md:hidden relative my-auto flex w-1/3 justify-end h-1/2">
               <!-- the below <p> makes the button unclickable between to complete the animations -->
-            <p id="overlay" class="md:hidden block absolute top-0 left-auto mr-4 w-12 h-full z-[-1]"></p>
+            <p id="overlay" class="md:hidden block absolute top-0 left-auto mr-4 w-12 h-full z-0"></p>
             <button id="menu-toggle" class="md:hidden my-auto mr-4 h-full w-12 text-[clamp(0.25rem,1rem,5vh)] leading-[5vh]">|||</button> <!--text-[clamp(0.25rem,1rem,5vh)] leading-[5vh] set these temporarily to make the text inside responsive to vertical resizing, don't need this if not using text-->
           </div>
               <!-- nav bar for smaller screens -->
@@ -46,7 +46,7 @@
               <script>
                 // //to make the bricks broken-fall effect
                 document.getElementById("menu-toggle").addEventListener("click", function() {
-                  document.getElementById("overlay").classList.replace("z-[-1]", "z-10");
+                  document.getElementById("overlay").classList.replace("z-0", "z-20");
                   let menu = document.getElementById("mobile-menu");
                   let menuItems = document.querySelectorAll(".menu-item");
               
@@ -76,13 +76,13 @@
                     }, 500);
                   }
                   setTimeout(() => {
-                    document.getElementById("overlay").classList.replace("z-10", "z-[-1]");
+                    document.getElementById("overlay").classList.replace("z-20", "z-0");
                   }, 700);
                 });
 
               //to make the bricks falls one after the other
               // document.getElementById("menu-toggle").addEventListener("click", function() {
-              //     document.getElementById("overlay").classList.replace("z-[-1]", "z-10");
+              //     document.getElementById("overlay").classList.replace("z-0", "z-20");
               //     let menu = document.getElementById("mobile-menu");
               //     let menuItems = document.querySelectorAll(".menu-item");
               
@@ -107,7 +107,7 @@
               //       }, 500);
               //     }
               //     setTimeout(() => {
-              //       document.getElementById("overlay").classList.replace("z-10", "z-[-1]");
+              //       document.getElementById("overlay").classList.replace("z-20", "z-0");
               //     }, 1000);
               //   });
               </script>
@@ -116,7 +116,7 @@
         </div>
     </header>
 
-    <nav id="internal-nav" class="w-[90%] max-sm:w-full flex flex-row fixed max-sm:bottom-0 sm:top-[10vh] xl:top-[15vh] h-[5vh] max-sm:mx-0 items-center mx-[5%] z-10">
+    <nav id="internal-nav" class="w-[90%] max-sm:w-full flex flex-row fixed max-sm:bottom-0 sm:top-[10vh] xl:top-[15vh] h-[5vh] max-sm:mx-0 items-center mx-[5%] z-20">
       <!-- had to mention "max-sm:flex max-sm:items-center max-sm:justify-center" to make the items centered vertically in 100% cases  -->
         <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">All</a>
         <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">Flora</a>
@@ -132,7 +132,7 @@
       </div>
 </div>       
 
-    <footer class="hidden md:flex fixed w-full bottom-0 bg-green-200 h-[5vh]">
+    <footer class="hidden md:flex fixed w-full bottom-0 bg-green-200 h-[5vh] z-20">
         <div class="w-[90%] h-full mx-auto flex">
         <div class="w-1/2 flex h-full justify-center items-center">
           <a id="prev-post" href="#" class="m-4 text-[clamp(.5rem,1rem,5vh)]">prev ^</a>
@@ -145,7 +145,7 @@
         </div>
         </div>
     </footer>
-<div id="tailwind-safelist-dummy" class="hidden snap-start"></div>
+<div id="tailwind-safelist-dummy" class="hidden snap-start -translate-x-full translate-x-0 z-0 z-10 z-20"></div>
 
 <!-- <div class="h-screen overflow-y-scroll snap-y snap-mandatory">
     <section class="h-screen bg-red-300 snap-start"></section>
@@ -210,7 +210,7 @@ try {
 }
 
 function generateMobilePost(post, index) {
-return `<div data-index="${index}" class="main w-full flex flex-col h-screen  max-sm:pt-[5vh] sm:pt-[15vh] md:pt-[14vh] xl:pt-[19vh] snap-start snap-always">  
+return `<div data-index="${index}" data-animated="false" class="main w-full flex flex-col h-screen  max-sm:pt-[5vh] sm:pt-[15vh] md:pt-[14vh] xl:pt-[19vh] snap-start snap-always">  
 <div class="post-card w-[80%] h-[70vh] flex flex-row justify-center items-center mx-auto my-auto">
   <div class="image-side w-full  bg-black relative h-full flex flex-col justify-center items-center">
     <a href="#" class="PhotographerId block w-full absolute bottom-[100%] text-center text-[clamp(.5rem,1rem,3.75vh)] leading-[4vh] bg-green-200 h-[4vh]">By: ${post.photographer}</a>
@@ -236,12 +236,12 @@ return `<div data-index="${index}" class="main w-full flex flex-col h-screen  ma
 }
 
 function generateDesktopPost(post, index) {
-return `<div data-index="${index}" class="main w-full flex flex-col h-screen pt-[15vh] snap-start snap-always min-w-[950px]">
+return `<div data-index="${index}" data-animated="false" class="main w-full flex flex-col h-screen pt-[15vh] snap-start snap-always min-w-[950px]">
       
   
 <div class="post-card w-[80%] h-[65vh] flex flex-row justify-center items-center mx-auto my-auto">
 
-  <div class="image-side w-[60%] bg-black relative h-full flex flex-col justify-center items-center">
+  <div class="image-side w-[60%] bg-black relative h-full flex flex-col justify-center items-center z-10">
       <a href="#" class="PhotographerIdxl-placeholder block invisible h-[2.5vh]"></a>
       <div class="image-container h-[60vh]">
         <img src="https://res.cloudinary.com/dumtyosqg/image/upload/${post.id}" loading="lazy" alt="something went wrong!" class="h-full w-auto max-w-full object-contain mx-auto">
@@ -249,7 +249,7 @@ return `<div data-index="${index}" class="main w-full flex flex-col h-screen pt-
       <a href="#" class="PhotographerIdxl block w-full text-white text-center h-[2.5vh] text-[1.5vh] leading-[2.5vh]">By: ${post.photographer}</a>
   </div>
 
-  <div class="info-side w-[40%] flex flex-col bg-green-300 h-full">
+  <div class="info-side w-[40%] flex flex-col bg-green-300 h-full -translate-x-full opacity-0 transition-all duration-700 ease-in-out">
 
     <div class="info-carousel w-full h-[85%] relative overflow-hidden transition-all duration-700 ease-in-out">
        <div class="carousel-container w-full h-full flex transition-transform duration-500 ease-in-out ">
@@ -302,12 +302,11 @@ async function startAppFlow() {
   const isMobile = window.innerWidth < 1280;
   generatePostHTML = isMobile ? generateMobilePost : generateDesktopPost;
   await fetchGalleryPosts();
-  fetchPosts(0, 4); // Lazy load posts 0–4 initially
+  fetchPosts(0, 4, null, () => observePostNavigation()); // Lazy load posts 0–4 initially
 
   // Always hide the animation screen after exactly 5 seconds
   setTimeout(() => {
     hideLoadingAnimation();
-    observePostNavigation(); // Start tracking navigation
   }, 2000);
 }
 
@@ -371,6 +370,18 @@ function observePostNavigation() {
           previousPost= currentPost;
           currentPost = currentPostAt;
         }
+                  if (entry.target.dataset.animated === "false") {
+            setTimeout(() => {
+                const info_side = entry.target.querySelector(".info-side"); // ⬅️ Add the dot (important)
+                if (info_side) {
+                  info_side.classList.remove("-translate-x-full","opacity-0");
+                  info_side.classList.add("translate-x-0","opacity-100");
+                  entry.target.dataset.animated = "true";
+                  console.log(`🎞️ Animated post ${currentPostAt}`);
+                }
+            }, 500); // You chose 500ms delay here
+          }
+
           if((currentPostAt - 3) % 5 === 0 && maxLoadedIndex>=currentPostAt+2 && previousPost>currentPostAt){
             killProgressiveLoad = true;//see if you should add back loading="lazy" or is it redundant because we remove posts from containers and add lazy anyaways while recreating them? 
             fillEmptyPosts(currentPostAt)
@@ -418,8 +429,8 @@ function fillEmptyPosts(currentpostat) {
 
     for (let i = from; i >= to && i >= 0; i--) {
       if (currentPost > currentpostat) {
-        console.log("⛔ Aborted fill: user navigated back");
-        reject("User navigated back during fill");
+        console.log("⛔ Aborted fill: user navigated away");
+        reject("User navigated away during fill");
         return;
       }
 
@@ -501,10 +512,29 @@ function fillEmptyPosts(currentpostat) {
     resolve();
   });
 }
-function removeFarPosts(currentpostat){
-  console.log("removeFarPosts() reached for now it does nothing");
-  //whats it abort logic, wrap it in idlecallback maybe and check if exists before removing and what about maxloadedIndex, yeah you can decrement it but does it affect something else midway, asses if anymore potential issues arise
+function removeFarPosts(currentpostat) {
+  console.log(`🧹 removeFarPosts(): trying to remove posts from ${maxLoadedIndex} to ${currentpostat + 7}`);
+  
+  for (let i = maxLoadedIndex; i >= currentpostat + 7; i--) {
+    if (currentPost < currentpostat) {
+      console.warn(`⛔ Abort removal: user went back to post ${currentPost}`);
+      return;
+    }
+
+    const el = document.querySelector(`.main[data-index='${i}']`);
+    if (el) {
+      el.remove();
+      console.log(`🗑️ Removed post container ${i}`);
+    } else {
+      console.log(`⚠️ Skipped: post container ${i} not found`);
+    }
+  }
+
+  // Update maxLoadedIndex
+  maxLoadedIndex = wrapper.children.length-1;//length -1 to account for the bottom-7.5vh
+  console.log(`🔄 maxLoadedIndex now updated to ${maxLoadedIndex}`);
 }
+
 
 function lazyLoadFuturePosts(currentpostat) {
 return new Promise((resolve, reject) => {
