@@ -145,7 +145,7 @@
         </div>
         </div>
     </footer>
-<div id="tailwind-safelist-dummy" class="hidden snap-start -translate-x-full translate-x-0 z-0 z-10 z-20"></div>
+<div id="tailwind-safelist-dummy" class="hidden snap-start -translate-x-full translate-x-0 z-0 z-10 z-20 !overflow-y-hidden"></div>
 
 <!-- <div class="h-screen overflow-y-scroll snap-y snap-mandatory">
     <section class="h-screen bg-red-300 snap-start"></section>
@@ -375,7 +375,7 @@ function observePostNavigation() {
                   initializeCarousel(entry.target);
                   console.log("inside if block");
                 }else{
-                  setupReadMoreListener(entry.target); 
+                  setupReadMoreListener(entry.target,currentPostAt); 
                 }
         }
                   if (entry.target.dataset.animated === "false") {
@@ -426,7 +426,7 @@ function observePostNavigation() {
 if (firstPost && !isMobile) {
   initializeCarousel(firstPost);
 }else if(firstPost){
-  setupReadMoreListener(firstPost);
+  setupReadMoreListener(firstPost,0);
 }
 
 }
@@ -650,7 +650,7 @@ function initializeCarousel(postInView) {
 
 // Single global listener outside of initializeCarousel:
 document.addEventListener("keydown", (e) => {
-  if (!activeCarousel) return;
+  if (!activeCarousel || isMobile) return;
   if (e.key === "ArrowLeft" && activeCarousel.currentSlide > 0) {
     activeCarousel.currentSlide--;
   } else if (e.key === "ArrowRight" && activeCarousel.currentSlide < activeCarousel.totalSlides - 1) {
@@ -675,12 +675,16 @@ let activeReadMoreCleanup = null;
 let activeGoBackCleanup = null;
 
 
-function setupReadMoreListener(postEl) {
+function setupReadMoreListener(postEl,index) {
   // Clean up previous listener if exists
   if (activeReadMoreCleanup) {
     activeReadMoreCleanup(); // remove old listener
     activeReadMoreCleanup = null;
   }
+  if (typeof index !== "number" || !allposts[index]) {
+  console.warn("❌ Invalid post index or post data not found in allposts", index);
+  return;
+}
 
   const readMoreLink = postEl.querySelector(".read-more-link");
   const imageContainer = postEl.querySelector(".image-container");
@@ -692,6 +696,8 @@ function setupReadMoreListener(postEl) {
 
   const onClick = (e) => {
     e.preventDefault();
+
+    wrapper.classList.toggle("!overflow-y-hidden");//to make the page non-scrollable while on full screen
 
     imageContainer.classList.add(
       "max-sm:top-[-17.5vh]", "max-md:top-[-22.5vh]",
@@ -706,35 +712,63 @@ function setupReadMoreListener(postEl) {
 
     previewContent.classList.add("hidden");
 
-    const fullCarouselHtml = `<div id="info-carousel" class="w-full h-full relative overflow-hidden transition-all duration-700 ease-in-out opacity-0">
-                    <div id="carousel-container" class="w-full h-full flex transition-transform duration-500 ease-in-out ">
-                      <div id="first-slide" class="carousel-slide min-w-full max-h-full px-6 flex flex-col bg-green-300">
-                        <div id="slide1-content" class="min-h-[18vh] max-h-full"> <!--min-h-[18vh]-> 3.5*3+7.5 to leave space for 3 lines and heading at least-->
-                          <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Slide 1 Title</span></div>
-                          <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">Lorem  Lorem ipsum dolor sit sit amet,Loremamet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amdolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet, </p>
-                        </div>
-                        <div class="flex-auto bg-black"></div> 
+    const fullCarouselHtml = `<div class="info-carousel w-full h-full relative overflow-hidden transition-all duration-700 ease-in-out">
+                  <div class="carousel-container w-full h-full flex transition-transform duration-500 ease-in-out">
+                    <div class="first-slide carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+                      <div class="slide1-content min-h-[18vh] max-h-full">
+                        <div class="font-bold h-[7.5vh] text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>At The Moment</span></div>
+                        <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${allposts[index].atTheMoment}</p>
                       </div>
-                
-                      <div id="second-slide" class="carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
-                        <div id="slide2-content" class="min-h-[18vh] max-h-full"> 
-                          <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Slide 2 Title</span></div>
-                          <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">Lorem  Lorem ipsum dolor sit sit amet,Loremamet,Lorem ipsum dolor </p>
-                        </div>
-                        <div class="flex-auto bg-black"></div> 
+                      <div class="flex-auto bg-black"></div>
+                    </div>
+                    <div class="second-slide carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+                      <div class="slide2-content min-h-[18vh] max-h-full">
+                        <div class="font-bold h-[7.5vh] text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Facts</span></div>
+                        <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${allposts[index].facts}</p>
                       </div>
-                
-                      <div id="third-slide" class="carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
-                        <div id="slide3-content" class="min-h-[18vh] max-h-full">
-                          <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Slide 3 Title</span></div>
-                          <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">Lorem  Lorem ipsum dolor sit sit amet,Loremamet,Lorem Lorem ipsum dolor sit sit amet,Loremamet,Lorem Lorem ipsum dolor sit sit amet,Loremamet,Lorem  Lorem ipsum dolor sit sit amet,Loremamet,Lorem </p>
-                        </div>
-                        <div class="flex-auto bg-black"></div> 
+                      <div class="flex-auto bg-black"></div>
+                    </div>
+                    <div class="third-slide carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+                      <div class="slide3-content min-h-[18vh] max-h-full">
+                        <div class="font-bold h-[7.5vh] text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Atrocities</span></div>
+                        <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${allposts[index].atrocities}</p>
                       </div>
+                      <div class="flex-auto bg-black"></div>
+                    </div>
                   </div>
-                  <button id="prev-slide" class="absolute h-[5vh] left-2 top-[2.5vh] transform -translate-y-1/2 bg-slate-300 text-white  rounded-full focus:outline-none">←</button>
-                  <button id="next-slide" class="absolute h-[5vh] right-2 top-[2.5vh] transform -translate-y-1/2 bg-slate-400 text-white  rounded-full focus:outline-none">→</button>
+                  <button class="prev-slide absolute h-[5vh] left-2 top-[2.5vh] transform -translate-y-1/2 bg-slate-300 text-white rounded-full focus:outline-none">←</button>
+                  <button class="next-slide absolute h-[5vh] right-2 top-[2.5vh] transform -translate-y-1/2 bg-slate-400 text-white rounded-full focus:outline-none">→</button>
                 </div>`;
+    
+    // `<div id="info-carousel" class="w-full h-full relative overflow-hidden transition-all duration-700 ease-in-out opacity-0">
+    //                 <div id="carousel-container" class="w-full h-full flex transition-transform duration-500 ease-in-out ">
+    //                   <div id="first-slide" class="carousel-slide min-w-full max-h-full px-6 flex flex-col bg-green-300">
+    //                     <div id="slide1-content" class="min-h-[18vh] max-h-full"> <!--min-h-[18vh]-> 3.5*3+7.5 to leave space for 3 lines and heading at least-->
+    //                       <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Slide 1 Title</span></div>
+    //                       <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">Lorem  Lorem ipsum dolor sit sit amet,Loremamet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amdolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet, </p>
+    //                     </div>
+    //                     <div class="flex-auto bg-black"></div> 
+    //                   </div>
+                
+    //                   <div id="second-slide" class="carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+    //                     <div id="slide2-content" class="min-h-[18vh] max-h-full"> 
+    //                       <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Slide 2 Title</span></div>
+    //                       <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">Lorem  Lorem ipsum dolor sit sit amet,Loremamet,Lorem ipsum dolor </p>
+    //                     </div>
+    //                     <div class="flex-auto bg-black"></div> 
+    //                   </div>
+                
+    //                   <div id="third-slide" class="carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+    //                     <div id="slide3-content" class="min-h-[18vh] max-h-full">
+    //                       <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Slide 3 Title</span></div>
+    //                       <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">Lorem  Lorem ipsum dolor sit sit amet,Loremamet,Lorem Lorem ipsum dolor sit sit amet,Loremamet,Lorem Lorem ipsum dolor sit sit amet,Loremamet,Lorem  Lorem ipsum dolor sit sit amet,Loremamet,Lorem </p>
+    //                     </div>
+    //                     <div class="flex-auto bg-black"></div> 
+    //                   </div>
+    //               </div>
+    //               <button id="prev-slide" class="prev-slide absolute h-[5vh] left-2 top-[2.5vh] transform -translate-y-1/2 bg-slate-300 text-white  rounded-full focus:outline-none">←</button>
+    //               <button id="next-slide" class="next-slide absolute h-[5vh] right-2 top-[2.5vh] transform -translate-y-1/2 bg-slate-400 text-white  rounded-full focus:outline-none">→</button>
+    //             </div>`;
 
                 const full_carousel_wrapper = document.createElement("div");
       full_carousel_wrapper.innerHTML = fullCarouselHtml.trim();
@@ -744,8 +778,11 @@ function setupReadMoreListener(postEl) {
 
       requestAnimationFrame(() => {
         fullCarouselEl.classList.replace("opacity-0", "opacity-100"); // ✅ now this won’t be null
+        setTimeout(() => {
+    initializeCarousel(fullCarouselEl); // ✅ wait, so DOM can fully render it
+  }, 100);
       });
-
+      
 
     // Show bottom bar
     bottom.classList.remove("hidden");
@@ -782,11 +819,14 @@ setTimeout(() => {
 
       previewContent.classList.remove("hidden");
 
-      const infoCarousel = document.getElementById("info-carousel");
+      const infoCarousel = postEl.querySelector(".info-carousel");
       if (infoCarousel) infoCarousel.remove();
 
       bottom.classList.replace("opacity-100", "opacity-0");
       setTimeout(() => bottom.classList.add("hidden"), 700);
+
+      wrapper.classList.toggle("!overflow-y-hidden");//to make the page scrollable again after exiting full screen
+
 
       // 🧼 Clean up the event listener
       goBackBtn.removeEventListener("click", goBackHandler);
