@@ -126,8 +126,8 @@
 <div id="wrapper" class="h-screen w-full  snap-y snap-mandatory overflow-y-scroll">
     
      
-    <div id="bottom-7.5vh" class="hidden fixed bottom-0 left-0 z-30 h-[7.5vh] flex w-full justify-around items-center bg-slate-500 transition-all duration-1000 ease-in-out  opacity-0 xl:hidden"><!--xl:bottom-[15vh] xl:w-[32vw] xl:left-[58%] for ipad screen rotation scenario, after completing the layout for desktop carousel decide on this! can make the element xl:absolute but add 100vh from bottom to accomodate for the prepared for next post scenario-->
-        <button id="go-back" class="border-2 border-white xl:hidden">Go Back</button>
+    <div id="bottom-7.5vh" class="hidden fixed bottom-0 left-0 z-30 h-[7.5vh] flex w-full justify-around items-center bg-slate-500 transition-all duration-1000 ease-in-out  opacity-0"><!--xl:bottom-[15vh] xl:w-[32vw] xl:left-[58%] for ipad screen rotation scenario, after completing the layout for desktop carousel decide on this! can make the element xl:absolute but add 100vh from bottom to accomodate for the prepared for next post scenario-->
+        <button id="go-back" class="border-2 border-white">Go Back</button>
         <button id="" class="border-2 border-white w-1/2">Donate</button>
       </div>
 </div>       
@@ -211,11 +211,11 @@ try {
 }
 
 function generateMobilePost(post, index) {
-return `<div data-index="${index}" data-animated="false" class="main w-full flex flex-col h-screen  max-sm:pt-[5vh] sm:pt-[15vh] md:pt-[14vh] xl:pt-[19vh] snap-start snap-always">  
+return `<div data-index="${index}" class="main w-full flex flex-col h-screen  max-sm:pt-[5vh] sm:pt-[15vh] md:pt-[14vh] xl:pt-[19vh] snap-start snap-always">  
 <div class="post-card w-[80%] h-[70vh] flex flex-row justify-center items-center mx-auto my-auto">
   <div class="image-side w-full  bg-black relative h-full flex flex-col justify-center items-center">
     <a href="#" class="PhotographerId block w-full absolute bottom-[100%] text-center text-[clamp(.5rem,1rem,3.75vh)] leading-[4vh] bg-green-200 h-[4vh]">By: ${post.photographer}</a>
-      <div class="image-container max-md:h-[60vh] md:h-[63.5vh] absolute top-0 transition-all duration-700 ease-in-out border-2 border-white">
+      <div class="image-container max-md:h-[60vh] md:h-[63.5vh] absolute top-0 transition-all duration-700 ease-in-out w-full">
         <img src="https://res.cloudinary.com/dumtyosqg/image/upload/${post.id}" loading="lazy" alt="something went wrong!" class="h-full w-auto max-w-full object-contain mx-auto">
       </div>
   <div class="carousel-preview max-md:h-[10vh] h-[6.5vh] bg-green-200 absolute max-md:top-[60vh] md:top-[63.5vh] transition-all duration-700 ease-in-out w-full">
@@ -374,6 +374,8 @@ function observePostNavigation() {
                 if (!isMobile) {
                   initializeCarousel(entry.target);
                   console.log("inside if block");
+                }else{
+                  setupReadMoreListener(entry.target); 
                 }
         }
                   if (entry.target.dataset.animated === "false") {
@@ -423,6 +425,8 @@ function observePostNavigation() {
   const firstPost = document.querySelector('.main[data-index="0"]');
 if (firstPost && !isMobile) {
   initializeCarousel(firstPost);
+}else if(firstPost){
+  setupReadMoreListener(firstPost);
 }
 
 }
@@ -607,6 +611,8 @@ function clearPostChildren(index) {
   }
 }
 
+let activeCarousel = null;
+
 function initializeCarousel(postInView) {
   let currentSlide = 0;
   const slides = postInView.querySelectorAll(".carousel-slide");
@@ -615,42 +621,46 @@ function initializeCarousel(postInView) {
   const prevBtn = postInView.querySelector(".prev-slide");
   const nextBtn = postInView.querySelector(".next-slide");
 
-  function updateCarousel() {
-    carouselContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+  activeCarousel = { currentSlide, slides, totalSlides, carouselContainer };
 
-    if (currentSlide === 0) {
-      prevBtn.classList.replace("bg-slate-400", "bg-slate-300");
-    } else if (currentSlide === 1) {
-      if (prevBtn.classList.contains("bg-slate-300")) prevBtn.classList.replace("bg-slate-300", "bg-slate-400");
-      if (nextBtn.classList.contains("bg-slate-300")) nextBtn.classList.replace("bg-slate-300", "bg-slate-400");
-    } else {
-      nextBtn.classList.replace("bg-slate-400", "bg-slate-300");
-    }
+  function updateCarousel() {
+    activeCarousel.carouselContainer.style.transform = `translateX(-${activeCarousel.currentSlide * 100}%)`;
+    prevBtn.classList.toggle("bg-slate-400", activeCarousel.currentSlide > 0);
+    prevBtn.classList.toggle("bg-slate-300", activeCarousel.currentSlide === 0);
+    nextBtn.classList.toggle("bg-slate-400", activeCarousel.currentSlide < activeCarousel.totalSlides - 1);
+    nextBtn.classList.toggle("bg-slate-300", activeCarousel.currentSlide === activeCarousel.totalSlides - 1);
   }
 
   prevBtn.addEventListener("click", () => {
-    if (currentSlide > 0) {
-      currentSlide--;
+    if (activeCarousel.currentSlide > 0) {
+      activeCarousel.currentSlide--;
       updateCarousel();
     }
   });
 
   nextBtn.addEventListener("click", () => {
-    if (currentSlide < totalSlides - 1) {
-      currentSlide++;
+    if (activeCarousel.currentSlide < activeCarousel.totalSlides - 1) {
+      activeCarousel.currentSlide++;
       updateCarousel();
     }
   });
 
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "ArrowLeft" && currentSlide > 0) {
-      currentSlide--;
-    } else if (event.key === "ArrowRight" && currentSlide < totalSlides - 1) {
-      currentSlide++;
-    }
-    updateCarousel();
-  });
+  updateCarousel(); // Initialize the state
 }
+
+// Single global listener outside of initializeCarousel:
+document.addEventListener("keydown", (e) => {
+  if (!activeCarousel) return;
+  if (e.key === "ArrowLeft" && activeCarousel.currentSlide > 0) {
+    activeCarousel.currentSlide--;
+  } else if (e.key === "ArrowRight" && activeCarousel.currentSlide < activeCarousel.totalSlides - 1) {
+    activeCarousel.currentSlide++;
+  } else {
+    return;
+  }
+  activeCarousel.carouselContainer.style.transform = `translateX(-${activeCarousel.currentSlide * 100}%)`;
+});
+
 
 //after DOM loaded
 document.addEventListener("keydown", function(e) {
@@ -659,14 +669,157 @@ document.addEventListener("keydown", function(e) {
   }
 });
 
+  
+
+let activeReadMoreCleanup = null;
+let activeGoBackCleanup = null;
+
+
+function setupReadMoreListener(postEl) {
+  // Clean up previous listener if exists
+  if (activeReadMoreCleanup) {
+    activeReadMoreCleanup(); // remove old listener
+    activeReadMoreCleanup = null;
+  }
+
+  const readMoreLink = postEl.querySelector(".read-more-link");
+  const imageContainer = postEl.querySelector(".image-container");
+  const carousel = postEl.querySelector(".carousel-preview");
+  const bottom = document.getElementById("bottom-7.5vh");
+  const previewContent = postEl.querySelector(".just-a-wrapper");
+
+  if (!readMoreLink || !imageContainer || !carousel || !previewContent) return;
+
+  const onClick = (e) => {
+    e.preventDefault();
+
+    imageContainer.classList.add(
+      "max-sm:top-[-17.5vh]", "max-md:top-[-22.5vh]",
+      "md:top-[-22vh]", "xl:top-[-24.5vh]","w-screen", "!h-[50vh]", "z-30", "bg-black"
+    );
+
+    carousel.classList.remove("max-sm:top-[60vh]", "md:top-[63.5vh]");
+    carousel.classList.add(
+      "max-sm:top-[32.5vh]", "sm:top-[27.5vh]", "md:top-[28vh]","xl:top-[25.5vh]", "w-screen",
+      "!h-[42.5vh]", "z-30"
+    );
+
+    previewContent.classList.add("hidden");
+
+    const fullCarouselHtml = `<div id="info-carousel" class="w-full h-full relative overflow-hidden transition-all duration-700 ease-in-out opacity-0">
+                    <div id="carousel-container" class="w-full h-full flex transition-transform duration-500 ease-in-out ">
+                      <div id="first-slide" class="carousel-slide min-w-full max-h-full px-6 flex flex-col bg-green-300">
+                        <div id="slide1-content" class="min-h-[18vh] max-h-full"> <!--min-h-[18vh]-> 3.5*3+7.5 to leave space for 3 lines and heading at least-->
+                          <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Slide 1 Title</span></div>
+                          <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">Lorem  Lorem ipsum dolor sit sit amet,Loremamet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amdolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet,Lorem ipsum dolor sit amet, </p>
+                        </div>
+                        <div class="flex-auto bg-black"></div> 
+                      </div>
+                
+                      <div id="second-slide" class="carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+                        <div id="slide2-content" class="min-h-[18vh] max-h-full"> 
+                          <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Slide 2 Title</span></div>
+                          <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">Lorem  Lorem ipsum dolor sit sit amet,Loremamet,Lorem ipsum dolor </p>
+                        </div>
+                        <div class="flex-auto bg-black"></div> 
+                      </div>
+                
+                      <div id="third-slide" class="carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
+                        <div id="slide3-content" class="min-h-[18vh] max-h-full">
+                          <div class="font-bold h-[7.5vh]  text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Slide 3 Title</span></div>
+                          <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">Lorem  Lorem ipsum dolor sit sit amet,Loremamet,Lorem Lorem ipsum dolor sit sit amet,Loremamet,Lorem Lorem ipsum dolor sit sit amet,Loremamet,Lorem  Lorem ipsum dolor sit sit amet,Loremamet,Lorem </p>
+                        </div>
+                        <div class="flex-auto bg-black"></div> 
+                      </div>
+                  </div>
+                  <button id="prev-slide" class="absolute h-[5vh] left-2 top-[2.5vh] transform -translate-y-1/2 bg-slate-300 text-white  rounded-full focus:outline-none">←</button>
+                  <button id="next-slide" class="absolute h-[5vh] right-2 top-[2.5vh] transform -translate-y-1/2 bg-slate-400 text-white  rounded-full focus:outline-none">→</button>
+                </div>`;
+
+                const full_carousel_wrapper = document.createElement("div");
+      full_carousel_wrapper.innerHTML = fullCarouselHtml.trim();
+
+      const fullCarouselEl = full_carousel_wrapper.firstChild; // ✅ store firstChild before appending
+      carousel.appendChild(fullCarouselEl);
+
+      requestAnimationFrame(() => {
+        fullCarouselEl.classList.replace("opacity-0", "opacity-100"); // ✅ now this won’t be null
+      });
+
+
+    // Show bottom bar
+    bottom.classList.remove("hidden");
+    requestAnimationFrame(() => {
+      bottom.classList.replace("opacity-0", "opacity-100");
+    });
+
+
+
+setTimeout(() => {
+  const goBackBtn = document.getElementById("go-back");
+  if (goBackBtn) {
+    if (activeGoBackCleanup) {
+  activeGoBackCleanup();
+  activeGoBackCleanup = null;
+}
+    // ✅ Define handler first
+    const goBackHandler = () => {
+      // Revert image container classes
+      imageContainer.classList.remove(
+        "xl:w-full", "max-sm:top-[-17.5vh]", "max-md:top-[-22.5vh]",
+        "md:top-[-22vh]", "xl:top-[-24.5vh]", "w-screen", "!h-[50vh]", "bg-black"
+      );
+
+      setTimeout(() => imageContainer.classList.remove("z-30"),700);//removed it later to lay over the header while animating back
+      
+
+      // Revert carousel preview
+      carousel.classList.add("max-sm:top-[60vh]", "md:top-[63.5vh]");
+      carousel.classList.remove(
+        "max-sm:top-[32.5vh]", "sm:top-[27.5vh]", "md:top-[28vh]",
+        "xl:top-[25.5vh]", "w-screen", "!h-[42.5vh]", "z-30"
+      );
+
+      previewContent.classList.remove("hidden");
+
+      const infoCarousel = document.getElementById("info-carousel");
+      if (infoCarousel) infoCarousel.remove();
+
+      bottom.classList.replace("opacity-100", "opacity-0");
+      setTimeout(() => bottom.classList.add("hidden"), 700);
+
+      // 🧼 Clean up the event listener
+      goBackBtn.removeEventListener("click", goBackHandler);
+      activeGoBackCleanup = null;
+    };
+
+    // 🧠 Clean up previous listener if exists
+    if (activeGoBackCleanup) {
+      activeGoBackCleanup();
+      activeGoBackCleanup = null;
+    }
+
+    // ✅ Attach and store cleanup
+    goBackBtn.addEventListener("click", goBackHandler);
+    activeGoBackCleanup = () => {
+      goBackBtn.removeEventListener("click", goBackHandler);
+    };
+  }
+}, 1000);
+
+
+  };
+
+  readMoreLink.addEventListener("click", onClick);
+
+  // Set up cleanup to remove this listener later
+  activeReadMoreCleanup = () => {
+    readMoreLink.removeEventListener("click", onClick);
+    activeReadMoreCleanup = null;
+  };
+}
+
 
 </script>
-
-
-
-
-
-
-
 
 </html>
