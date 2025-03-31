@@ -163,10 +163,11 @@ const allposts = [];
 let generatePostHTML; // global
 const wrapper = document.getElementById("wrapper");
 // Lazy loading tracking state
-let maxLoadedIndex = -1; // Highest post index that has ever been fully loaded
+let maxLoadedIndex = -1;// total number of loaded posts in memory
 let currentPost=0;
 let previousPost=-1;
 let killProgressiveLoad = false;
+let viewed =[];
 
 async function fetchGalleryPosts() {
 const cloudName = "dumtyosqg";
@@ -249,7 +250,7 @@ return `<div data-index="${index}" data-animated="false" class="main w-full flex
       <a href="#" class="PhotographerIdxl block w-full text-white text-center h-[2.5vh] text-[1.5vh] leading-[2.5vh]">By: ${post.photographer}</a>
   </div>
 
-  <div class="info-side w-[40%] flex flex-col bg-green-300 h-full -translate-x-full opacity-0 transition-all duration-700 ease-in-out">
+  <div class="info-side w-[40%] flex flex-col bg-green-300 h-full ${viewed.includes(index)?"":"-translate-x-full opacity-0 transition-all duration-700 ease-in-out"}">
 
     <div class="info-carousel w-full h-[85%] relative overflow-hidden transition-all duration-700 ease-in-out">
        <div class="carousel-container w-full h-full flex transition-transform duration-500 ease-in-out ">
@@ -294,12 +295,13 @@ return `<div data-index="${index}" data-animated="false" class="main w-full flex
     
 </div>`;
 }
+const isMobile = window.innerWidth < 1280;
+
 
 // Start app: Show animation, fetch posts, and manage visibility
 async function startAppFlow() {
   showLoadingAnimation();
 
-  const isMobile = window.innerWidth < 1280;
   generatePostHTML = isMobile ? generateMobilePost : generateDesktopPost;
   await fetchGalleryPosts();
   fetchPosts(0, 4, null, () => observePostNavigation()); // Lazy load posts 0–4 initially
@@ -369,6 +371,10 @@ function observePostNavigation() {
           console.log(`👀 Viewing Post: ${currentPostAt}`);
           previousPost= currentPost;
           currentPost = currentPostAt;
+                if (!isMobile) {
+                  initializeCarousel(entry.target);
+                  console.log("inside if block");
+                }
         }
                   if (entry.target.dataset.animated === "false") {
             setTimeout(() => {
@@ -381,9 +387,10 @@ function observePostNavigation() {
                 }
             }, 500); // You chose 500ms delay here
           }
+          viewed.push(currentPostAt);//to keep track of viewed posts so far no matter the order of navigation, or regenrated posts, its used for animating carousel for desktop
+                  console.log(viewed);//you can also use viewed array to keep track of user navigation sequence.
 
-          if((currentPostAt - 3) % 5 === 0 && maxLoadedIndex>=currentPostAt+2 && previousPost>currentPostAt){
-            killProgressiveLoad = true;//see if you should add back loading="lazy" or is it redundant because we remove posts from containers and add lazy anyaways while recreating them? 
+          if((currentPostAt - 2) % 5 === 0 && maxLoadedIndex>=currentPostAt+3 && previousPost>currentPostAt){
             fillEmptyPosts(currentPostAt)
             .then(() =>removeFarPosts(currentPostAt)) // clean up phase (empty for now)
             .then(() => {
@@ -413,19 +420,22 @@ function observePostNavigation() {
 
   // Initial observe for first 5 posts
   document.querySelectorAll('.main').forEach(post => postObserver.observe(post));
+  const firstPost = document.querySelector('.main[data-index="0"]');
+if (firstPost && !isMobile) {
+  initializeCarousel(firstPost);
+}
+
 }
   
 function fillEmptyPosts(currentpostat) {
   return new Promise((resolve, reject) => {
-    if (currentpostat <= 3) {
-      console.log("ℹ️ Skipping fill: currentpostat <= 3");
+    if (currentpostat <= 2) {
+      console.log("ℹ️ Skipping fill: currentpostat <= 2");
       resolve();
       return;
     }
-
-    const isMobile = window.innerWidth < 1280;
-    const from = currentpostat - 4;
-    const to = currentpostat - 8;
+    const from = currentpostat - 3;
+    const to = currentpostat - 7;
 
     for (let i = from; i >= to && i >= 0; i--) {
       if (currentPost > currentpostat) {
@@ -515,7 +525,7 @@ function fillEmptyPosts(currentpostat) {
 function removeFarPosts(currentpostat) {
   console.log(`🧹 removeFarPosts(): trying to remove posts from ${maxLoadedIndex} to ${currentpostat + 7}`);
   
-  for (let i = maxLoadedIndex; i >= currentpostat + 7; i--) {
+  for (let i = maxLoadedIndex; i >= currentpostat + 3; i--) {
     if (currentPost < currentpostat) {
       console.warn(`⛔ Abort removal: user went back to post ${currentPost}`);
       return;
@@ -596,6 +606,58 @@ function clearPostChildren(index) {
     console.warn(`⚠️ Post ${index} not found in DOM`);
   }
 }
+
+function initializeCarousel(postInView) {
+  let currentSlide = 0;
+  const slides = postInView.querySelectorAll(".carousel-slide");
+  const totalSlides = slides.length;
+  const carouselContainer = postInView.querySelector(".carousel-container");
+  const prevBtn = postInView.querySelector(".prev-slide");
+  const nextBtn = postInView.querySelector(".next-slide");
+
+  function updateCarousel() {
+    carouselContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+
+    if (currentSlide === 0) {
+      prevBtn.classList.replace("bg-slate-400", "bg-slate-300");
+    } else if (currentSlide === 1) {
+      if (prevBtn.classList.contains("bg-slate-300")) prevBtn.classList.replace("bg-slate-300", "bg-slate-400");
+      if (nextBtn.classList.contains("bg-slate-300")) nextBtn.classList.replace("bg-slate-300", "bg-slate-400");
+    } else {
+      nextBtn.classList.replace("bg-slate-400", "bg-slate-300");
+    }
+  }
+
+  prevBtn.addEventListener("click", () => {
+    if (currentSlide > 0) {
+      currentSlide--;
+      updateCarousel();
+    }
+  });
+
+  nextBtn.addEventListener("click", () => {
+    if (currentSlide < totalSlides - 1) {
+      currentSlide++;
+      updateCarousel();
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowLeft" && currentSlide > 0) {
+      currentSlide--;
+    } else if (event.key === "ArrowRight" && currentSlide < totalSlides - 1) {
+      currentSlide++;
+    }
+    updateCarousel();
+  });
+}
+
+//after DOM loaded
+document.addEventListener("keydown", function(e) {
+  if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+    e.preventDefault();
+  }
+});
 
 
 </script>
