@@ -11,7 +11,7 @@
 <body class="h-screen w-full min-w-[350px] min-h-[350px] bg-red-300">
   <!-- fixed the min h and w based on window resizing and content fit -->
     <header class="w-full fixed top-0 bg-green-200 h-[10vh] xl:h-[15vh] z-20">
-      <!-- in the above header i had to put z-200 for the mobile-menu to overlay on the rest of the body to be visible -->
+      <!-- in the above header i had to put z-20 for the mobile-menu to overlay on the rest of the body to be visible -->
         <div class="flex w-full md:w-[90%] h-full mx-auto">
             <div class="flex w-2/3 md:w-1/2 justify-left sm:justify-left ml-4 md:ml-0 items-center">
                 <img src="assets/Unknown.jpeg" alt="logo" class="h-1/2">
@@ -20,22 +20,22 @@
             <!-- nav bar for large screens -->
             <nav class="hidden md:flex flex-row w-1/2 h-1/2 mx-auto justify-evenly items-end my-auto">
                 <a href="#" class="hover:text-gray-400 text-center p-1 w-1/6 h-auto">Home</a>
-                <a href="#" class="hover:text-gray-400 text-center p-1 w-1/6 h-auto">About</a>
-                <a href="#" class="hover:text-gray-400 text-center p-1 w-1/6 h-auto">Gallery</a>
-                <a href="#" class="hover:text-gray-400 text-center p-1 w-1/6 h-auto">Contact</a>
+                <a href="#" class="hover:text-gray-400 text-center p-1 w-1/6 h-auto">Upload</a>
+                <a href="#" class="hover:text-gray-400 text-center p-1 w-1/6 h-auto">Favorites</a>
+                <a href="#" class="hover:text-gray-400 text-center p-1 w-1/6 h-auto">Yours</a>
             </nav>
             <div class="md:hidden relative my-auto flex w-1/3 justify-end h-1/2">
               <!-- the below <p> makes the button unclickable between to complete the animations -->
-            <p id="overlay" class="md:hidden block absolute top-0 left-auto mr-4 w-12 h-full z-0"></p>
+            <p id="overlay" class="md:hidden block absolute top-0 left-auto mr-4 w-12 h-full z-[-1]"></p>
             <button id="menu-toggle" class="md:hidden my-auto mr-4 h-full w-12 text-[clamp(0.25rem,1rem,5vh)] leading-[5vh]">|||</button> <!--text-[clamp(0.25rem,1rem,5vh)] leading-[5vh] set these temporarily to make the text inside responsive to vertical resizing, don't need this if not using text-->
           </div>
               <!-- nav bar for smaller screens -->
               <nav id="mobile-menu" class="hidden flex flex-col absolute top-[10vh] right-0 bg-green-200 p-4 w-48 shadow-lg overflow-hidden">
               <!--elements to make the bricks broken-fall effect -->
               <a href="#" class="menu-item block px-4 py-2 bg-green-700 opacity-0 transform translate-x-full transition-all duration-300">Home</a>
-                <a href="#" class="menu-item block px-4 py-2 bg-green-700 opacity-0 transform translate-x-full transition-all duration-500">About</a>
-                <a href="#" class="menu-item block px-4 py-2 bg-green-700 opacity-0 transform translate-x-full transition-all duration-700">Gallery</a>
-                <a href="#" class="menu-item block px-4 py-2 bg-green-700 opacity-0 transform translate-x-full transition-all duration-900">Contact</a>
+                <a href="#" class="menu-item block px-4 py-2 bg-green-700 opacity-0 transform translate-x-full transition-all duration-500">Upload</a>
+                <a href="#" class="menu-item block px-4 py-2 bg-green-700 opacity-0 transform translate-x-full transition-all duration-700">Favorites</a>
+                <a href="#" class="menu-item block px-4 py-2 bg-green-700 opacity-0 transform translate-x-full transition-all duration-900">Yours</a>
               <!-- to make the bricks falls one after the other -->
                 <!-- <a class="menu-item transform translate-x-full transition-all ease-linear duration-500 block px-4 py-2 bg-green-700 opacity-0">Home</a>
                 <a class="menu-item transform translate-x-full transition-all ease-linear duration-500 block px-4 py-2 bg-green-700 opacity-0">Home</a>
@@ -46,7 +46,7 @@
               <script>
                 // //to make the bricks broken-fall effect
                 document.getElementById("menu-toggle").addEventListener("click", function() {
-                  document.getElementById("overlay").classList.replace("z-0", "z-20");
+                  document.getElementById("overlay").classList.replace("z-[-1]", "z-20");
                   let menu = document.getElementById("mobile-menu");
                   let menuItems = document.querySelectorAll(".menu-item");
               
@@ -76,13 +76,13 @@
                     }, 500);
                   }
                   setTimeout(() => {
-                    document.getElementById("overlay").classList.replace("z-20", "z-0");
+                    document.getElementById("overlay").classList.replace("z-20", "z-[-1]");
                   }, 700);
                 });
 
               //to make the bricks falls one after the other
               // document.getElementById("menu-toggle").addEventListener("click", function() {
-              //     document.getElementById("overlay").classList.replace("z-0", "z-20");
+              //     document.getElementById("overlay").classList.replace("z-[-1]", "z-20");
               //     let menu = document.getElementById("mobile-menu");
               //     let menuItems = document.querySelectorAll(".menu-item");
               
@@ -107,7 +107,7 @@
               //       }, 500);
               //     }
               //     setTimeout(() => {
-              //       document.getElementById("overlay").classList.replace("z-20", "z-0");
+              //       document.getElementById("overlay").classList.replace("z-20", "z-[-1]");
               //     }, 1000);
               //   });
               </script>
@@ -118,19 +118,22 @@
 
     <nav id="internal-nav" class="w-[90%] max-sm:w-full flex flex-row fixed max-sm:bottom-0 sm:top-[10vh] xl:top-[15vh] h-[5vh] max-sm:mx-0 items-center mx-[5%] z-20">
       <!-- had to mention "max-sm:flex max-sm:items-center max-sm:justify-center" to make the items centered vertically in 100% cases  -->
-        <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">All</a>
-        <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">Flora</a>
-        <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">Fauna</a>
+        <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">Filters</a>
+        <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">Add to Fav's</a>
+        <!-- <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">Fauna</a> -->
     </nav>
-
-<div id="wrapper" class="h-screen w-full  snap-y snap-mandatory overflow-y-scroll">
-    
-     
+<div id="home" class="w-full h-screen">
+  <div id="wrapper" class="h-screen w-full  snap-y snap-mandatory overflow-y-scroll">  
     <div id="bottom-7.5vh" class="hidden fixed bottom-0 left-0 z-30 h-[7.5vh] flex w-full justify-around items-center bg-slate-500 transition-all duration-1000 ease-in-out  opacity-0"><!--xl:bottom-[15vh] xl:w-[32vw] xl:left-[58%] for ipad screen rotation scenario, after completing the layout for desktop carousel decide on this! can make the element xl:absolute but add 100vh from bottom to accomodate for the prepared for next post scenario-->
         <button id="go-back" class="border-2 border-white">Go Back</button>
         <button id="" class="border-2 border-white w-1/2">Donate</button>
-      </div>
-</div>       
+    </div>
+  </div>
+</div>    
+<div id="upload" class="hidden h-screen w-full overflow-y-scroll pt-[10vh] xl:pt-[15vh]">This is the Upload Page!</div>
+<div id="favorites" class="hidden h-screen w-full  snap-y snap-mandatory overflow-y-scroll"><div class="pt-[10vh] xl:pt-[15vh]">Favorites go Here!</div></div>
+<div id="yours" class="hidden h-screen w-full  snap-y snap-mandatory overflow-y-scroll"><div class="pt-[10vh] xl:pt-[15vh]">Your posts appear here!</div></div>
+
 
     <footer class="hidden md:flex fixed w-full bottom-0 bg-green-200 h-[5vh] z-20">
         <div class="w-[90%] h-full mx-auto flex">
@@ -145,7 +148,7 @@
         </div>
         </div>
     </footer>
-<div id="tailwind-safelist-dummy" class="hidden snap-start -translate-x-full translate-x-0 z-0 z-10 z-20 !overflow-y-hidden"></div>
+<div id="tailwind-safelist-dummy" class="hidden snap-start -translate-x-full translate-x-0 z-[-1] z-10 z-20 !overflow-y-hidden"></div>
 
 <!-- <div class="h-screen overflow-y-scroll snap-y snap-mandatory">
     <section class="h-screen bg-red-300 snap-start"></section>
@@ -858,6 +861,91 @@ setTimeout(() => {
     activeReadMoreCleanup = null;
   };
 }
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  const navItems = ["home", "upload", "favorites", "yours"];
+  let homeScrollTop = 0;
+
+  function showSection(sectionId) {
+    const sections = ["home", "upload", "favorites", "yours"];
+    const footer = document.querySelector("footer");
+    const internalNav = document.getElementById("internal-nav");
+    // const homeWrapper = document.getElementById("wrapper");
+
+    // Save scrollTop if leaving home
+    if (
+      document.getElementById("home") &&
+      !document.getElementById("home").classList.contains("hidden") &&
+      sectionId !== "home"
+    ) {
+      homeScrollTop = wrapper.scrollTop;
+    }
+
+    // Fade out current section
+    const currentSection = document.querySelector("#home:not(.hidden), #upload:not(.hidden), #favorites:not(.hidden), #yours:not(.hidden)");
+    if (currentSection) {
+      currentSection.classList.add("opacity-0", "transition-opacity", "duration-500");
+      setTimeout(() => {
+        currentSection.classList.add("hidden");
+        currentSection.classList.remove("opacity-0", "transition-opacity", "duration-500");
+      }, 500);
+    }
+
+    // Fade in selected section after hiding others
+    const target = document.getElementById(sectionId);
+    if (target) {
+      setTimeout(() => {
+        target.classList.remove("hidden");
+        target.classList.add("opacity-0", "transition-opacity", "duration-500");
+        requestAnimationFrame(() => {
+          target.classList.remove("opacity-0");
+        });
+      }, 500);
+    }
+
+    // Restore scrollTop if returning to home
+    if (sectionId === "home" && wrapper) {
+      setTimeout(() => {
+        wrapper.scrollTop = homeScrollTop;
+      }, 0);
+    }
+
+    // Show/hide internal-nav and visually hide footer (not .hidden)
+    const shouldShowNav = sectionId !== "upload";
+    const shouldShowFooter = sectionId !== "upload";
+
+    if (internalNav) internalNav.classList.toggle("hidden", !shouldShowNav);
+    if (footer) footer.classList.toggle("invisible", !shouldShowFooter);
+  }
+
+  function attachNavListeners() {
+    const allLinks = document.querySelectorAll("header nav a");
+
+    allLinks.forEach(link => {
+      const label = link.textContent.trim().toLowerCase();
+
+      if (navItems.includes(label)) {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          showSection(label);
+
+          // Hide mobile menu if open
+          const mobileMenu = document.getElementById("mobile-menu");
+          const overlay = document.getElementById("overlay");
+          if (mobileMenu && !mobileMenu.classList.contains("hidden")) {
+            mobileMenu.classList.add("hidden");
+            if (overlay) overlay.classList.replace("z-20", "z-[-1]");
+          }
+        });
+      }
+    });
+  }
+
+  attachNavListeners();
+});
+
+
 
 
 </script>

@@ -1450,5 +1450,89 @@ function removeOldPosts(currentpostat) {
     }
   }
   
+
+  //navigating through tabs backup
+  document.addEventListener("DOMContentLoaded", function () {
+  const navItems = ["home", "upload", "favorites", "yours"];
+  let homeScrollTop = 0;
+  const wrapper = document.getElementById("wrapper"); // existing reference reused
+
+  function showSection(sectionId) {
+    const sections = ["home", "upload", "favorites", "yours"];
+    const footer = document.querySelector("footer");
+    const internalNav = document.getElementById("internal-nav");
+
+    // Save scrollTop if leaving home
+    if (
+      document.getElementById("home") &&
+      !document.getElementById("home").classList.contains("hidden") &&
+      sectionId !== "home"
+    ) {
+      homeScrollTop = wrapper.scrollTop;
+    }
+
+    // Fade out current section
+    const currentSection = document.querySelector("#home:not(.hidden), #upload:not(.hidden), #favorites:not(.hidden), #yours:not(.hidden)");
+    if (currentSection) {
+      currentSection.classList.add("opacity-0", "transition-opacity", "duration-500");
+      setTimeout(() => {
+        currentSection.classList.add("hidden");
+        currentSection.classList.remove("opacity-0", "transition-opacity", "duration-500");
+      }, 500);
+    }
+
+    // Fade in selected section after hiding others
+    const target = document.getElementById(sectionId);
+    if (target) {
+      setTimeout(() => {
+        target.classList.remove("hidden");
+        target.classList.add("opacity-0", "transition-opacity", "duration-500");
+        requestAnimationFrame(() => {
+          target.classList.remove("opacity-0");
+        });
+      }, 500);
+    }
+
+    // Restore scrollTop if returning to home
+    if (sectionId === "home" && wrapper) {
+      setTimeout(() => {
+        wrapper.scrollTop = homeScrollTop;
+      }, 0);
+    }
+
+    // Show/hide internal-nav and visually hide footer (not .hidden)
+    const shouldShowNav = sectionId !== "upload";
+    const shouldShowFooter = sectionId !== "upload";
+
+    if (internalNav) internalNav.classList.toggle("hidden", !shouldShowNav);
+    if (footer) footer.classList.toggle("invisible", !shouldShowFooter);
+  }
+
+  function attachNavListeners() {
+    const allLinks = document.querySelectorAll("header nav a");
+
+    allLinks.forEach(link => {
+      const label = link.textContent.trim().toLowerCase();
+
+      if (navItems.includes(label)) {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          showSection(label);
+
+          // Hide mobile menu if open
+          const mobileMenu = document.getElementById("mobile-menu");
+          const overlay = document.getElementById("overlay");
+          if (mobileMenu && !mobileMenu.classList.contains("hidden")) {
+            mobileMenu.classList.add("hidden");
+            if (overlay) overlay.classList.replace("z-20", "z-[-1]");
+          }
+        });
+      }
+    });
+  }
+
+  attachNavListeners();
+});
+
   
   </script>
