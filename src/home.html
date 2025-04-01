@@ -395,7 +395,7 @@ function observePostNavigation() {
           viewed.push(currentPostAt);//to keep track of viewed posts so far no matter the order of navigation, or regenrated posts, its used for animating carousel for desktop
                   console.log(viewed);//you can also use viewed array to keep track of user navigation sequence.
 
-          if((currentPostAt - 2) % 5 === 0 && maxLoadedIndex>=currentPostAt+3 && previousPost>currentPostAt){
+          if((currentPostAt - 2) % 5 === 0 && previousPost>currentPostAt){
             fillEmptyPosts(currentPostAt)
             .then(() =>removeFarPosts(currentPostAt)) // clean up phase (empty for now)
             .then(() => {
