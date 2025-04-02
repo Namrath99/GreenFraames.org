@@ -59,5 +59,21 @@
   scrollbar-width: none;
 }
 
+select {
+  width: 100%;
+  max-width: 100%;
+  display: block;
+  box-sizing: border-box;
+  padding: 0.5rem 2rem 0.5rem 0.5rem;
+  border: 2px solid orange;
+  border-radius: 6px;
+  appearance: none;
+  background-color: white;
+  font-size: 1rem;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%204%205'%3E%3Cpath%20fill='black'%20d='M2%205L0%200h4z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 0.65rem auto;
+}
 
   

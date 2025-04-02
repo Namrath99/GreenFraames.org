@@ -125,8 +125,8 @@
       const formData = new FormData();
       formData.append("file", file);
       formData.append("upload_preset", uploadPreset);
-      formData.append("folder", "gallery");
-      formData.append("tags", `gallery,${category}`);
+      // formData.append("folder", "gallery");
+      formData.append("tags", `gallery`);
       formData.append(
         "context",
         `caption=${title}|moment=${moment}|facts=${facts}|atrocities=${atrocities}|donation=${donation}|photographer=${photographer}|social=${social}|approved=true`
