@@ -118,16 +118,13 @@
 
     <nav id="internal-nav" class="w-[90%] max-sm:w-full flex flex-row fixed max-sm:bottom-0 sm:top-[10vh] xl:top-[15vh] h-[5vh] max-sm:mx-0 items-center mx-[5%] z-20">
       <!-- had to mention "max-sm:flex max-sm:items-center max-sm:justify-center" to make the items centered vertically in 100% cases  -->
-        <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">Filters</a>
+        <a href="#" id="filter-trigger" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">Filters</a>
         <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">Add to Fav's</a>
         <!-- <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">Fauna</a> -->
     </nav>
 <div id="home" class="w-full h-screen">
   <div id="wrapper" class="h-screen w-full  snap-y snap-mandatory overflow-y-scroll">  
-    <div id="bottom-7.5vh" class="hidden fixed bottom-0 left-0 z-30 h-[7.5vh] flex w-full justify-around items-center bg-slate-500 transition-all duration-1000 ease-in-out  opacity-0"><!--xl:bottom-[15vh] xl:w-[32vw] xl:left-[58%] for ipad screen rotation scenario, after completing the layout for desktop carousel decide on this! can make the element xl:absolute but add 100vh from bottom to accomodate for the prepared for next post scenario-->
-        <button id="go-back" class="border-2 border-white">Go Back</button>
-        <button id="" class="border-2 border-white w-1/2">Donate</button>
-    </div>
+    
   </div>
 </div>    
 <div id="upload" class="hidden h-screen w-full overflow-y-scroll pt-[10vh] xl:pt-[15vh]">
@@ -327,6 +324,40 @@ console.log("Atrocities Length:", atrocities.length);
 </div>
 <div id="favorites" class="hidden h-screen w-full  snap-y snap-mandatory overflow-y-scroll"><div class="pt-[10vh] xl:pt-[15vh]">Favorites go Here!</div></div>
 <div id="yours" class="hidden h-screen w-full  snap-y snap-mandatory overflow-y-scroll"><div class="pt-[10vh] xl:pt-[15vh]">Your posts appear here!</div></div>
+  
+  <!-- Filter Box (place at bottom of body) -->
+<div id="filters-box" class="hidden fixed top-[15vh] left-1/2 transform -translate-x-1/2 bg-white shadow-lg rounded-lg z-50 p-4 w-[90%] max-w-md space-y-4">
+  <h2 class="text-xl font-bold text-center">🔍 Filter Posts</h2>
+
+  <select id="filter-classification">
+    <option value="_">-- Any Classification --</option>
+    <option value="flora">Flora</option>
+    <option value="fauna">Fauna</option>
+  </select>
+  
+  <select id="filter-sub">
+    <option value="_">-- Any Subtype --</option>
+  </select>
+  
+  <select id="filter-rarity">
+    <option value="_">-- Any Rarity --</option>
+    <option value="common">Common</option>
+    <option value="native">Native</option>
+    <option value="exotic">Exotic</option>
+  </select>
+  
+
+  <div class="flex justify-between space-x-4 pt-2">
+    <button id="apply-filter" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 w-1/2">Apply</button>
+    <button id="reset-filter" class="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500 w-1/2">Reset</button>
+  </div>
+</div>
+
+<div id="bottom-7.5vh" class="hidden fixed bottom-0 left-0 z-30 h-[7.5vh] flex w-full justify-around items-center bg-slate-500 transition-all duration-1000 ease-in-out  opacity-0"><!--xl:bottom-[15vh] xl:w-[32vw] xl:left-[58%] for ipad screen rotation scenario, after completing the layout for desktop carousel decide on this! can make the element xl:absolute but add 100vh from bottom to accomodate for the prepared for next post scenario-->
+  <button id="go-back" class="border-2 border-white">Go Back</button>
+  <button id="" class="border-2 border-white w-1/2">Donate</button>
+</div>
+
 
 
     <footer class="hidden md:flex fixed w-full bottom-0 bg-green-200 h-[5vh] z-20">
@@ -356,14 +387,15 @@ console.log("Atrocities Length:", atrocities.length);
 
 // Animation state for intro screen
 let animationDone = false;
-const allposts = [];
+const fullposts = [];
+let allposts = [];
 let generatePostHTML; // global
 const wrapper = document.getElementById("wrapper");
 // Lazy loading tracking state
 let maxLoadedIndex = -1;// total number of loaded posts in memory
 let currentPost=0;
 let previousPost=-1;
-let killProgressiveLoad = false;
+// let killProgressiveLoad = false;
 let viewed =[];
 
 async function fetchGalleryPosts() {
@@ -395,8 +427,10 @@ try {
     };
     });
 
-  allposts.push(...filteredPosts);
-  console.log(`[✅ Total Posts Loaded: ${allposts.length}]`, allposts);
+  fullposts.push(...filteredPosts);
+
+  console.log(`[✅ Total Posts Loaded: ${fullposts.length}]`, fullposts);
+
 } catch (err) {
   console.error("❌ Error fetching gallery:", err);
 }
@@ -491,11 +525,42 @@ const isMobile = window.innerWidth < 1280;
 
 
 // Start app: Show animation, fetch posts, and manage visibility
-async function startAppFlow() {
+async function startAppFlow(filter=null) {
   showLoadingAnimation();
+  wrapper.scrollTop=0;
+
+  if (postObserver) {
+    postObserver.disconnect();
+    postObserver = null;
+  }
+
+  wrapper.innerHTML = "";
+  currentPost = 0;
+  previousPost = -1;
+  viewed = [];
+  maxLoadedIndex = -1;
 
   generatePostHTML = isMobile ? generateMobilePost : generateDesktopPost;
-  await fetchGalleryPosts();
+  if (fullposts.length === 0) {
+  await fetchGalleryPosts(); // Only fetch once
+}
+
+
+// If no filter, use all posts
+if (!filter || filter === "_-_-_") {
+    allposts = [...fullposts];
+  } else {
+    const [type, subtype, rarity] = filter.split("-");
+    allposts = fullposts.filter(post => {
+      const [pType, pSub, pRarity] = post.Classification.split("-");
+      return (
+        (type === "_" || type === pType) &&
+        (subtype === "_" || subtype === pSub) &&
+        (rarity === "_" || rarity === pRarity)
+      );
+    });
+  }  console.log(`[✅ filtered Posts Loaded: ${allposts.length}]`, allposts);
+
   fetchPosts(0, 4, null, () => observePostNavigation()); // Lazy load posts 0–4 initially
 
   // Always hide the animation screen after exactly 5 seconds
@@ -528,7 +593,7 @@ for (let i = start; i <= end && i < allposts.length; i++) {
     return;
   }
 
-  if(!wrapper.children[i+1]){/* i+1 because the first child is bottom-7.5vh, checking if the post exists before creating it*/
+  if(!wrapper.children[i]){
   const postHTML = generatePostHTML(allposts[i], i);
   wrapper.insertAdjacentHTML("beforeend", postHTML);
   if (i > maxLoadedIndex) maxLoadedIndex = i;
@@ -737,7 +802,7 @@ function removeFarPosts(currentpostat) {
   }
 
   // Update maxLoadedIndex
-  maxLoadedIndex = wrapper.children.length-1;//length -1 to account for the bottom-7.5vh
+  maxLoadedIndex = wrapper.children.length;
   console.log(`🔄 maxLoadedIndex now updated to ${maxLoadedIndex}`);
 }
 
@@ -1106,6 +1171,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (internalNav) internalNav.classList.toggle("hidden", !shouldShowNav);
     if (footer) footer.classList.toggle("invisible", !shouldShowFooter);
+    const filtersBtn = document.getElementById("filter-trigger");
+    filtersBtn.classList.toggle("hidden", sectionId !== "home");
+
   }
 
   function attachNavListeners() {
@@ -1132,6 +1200,61 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   attachNavListeners();
+});
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  const filterBox = document.getElementById("filters-box");
+  const filterTrigger = document.getElementById("filter-trigger");
+  const filterClass = document.getElementById("filter-classification");
+  const filterSub = document.getElementById("filter-sub");
+  const filterRarity = document.getElementById("filter-rarity");
+  const applyBtn = document.getElementById("apply-filter");
+  const resetBtn = document.getElementById("reset-filter");
+
+  // Show the filter box when filter button is clicked
+  filterTrigger.addEventListener("click", (e) => {
+    e.preventDefault();
+    filterBox.classList.remove("hidden");
+  });
+
+  // Populate sub-classification based on classification selection
+  filterClass.addEventListener("change", function () {
+    const type = this.value;
+    filterSub.innerHTML = `<option value="_">-- Any Subtype --</option>`;
+    if (type === "flora") {
+      filterSub.innerHTML += `
+        <option value="water based">Water Based</option>
+        <option value="land based">Land Based</option>`;
+    } else if (type === "fauna") {
+      filterSub.innerHTML += `
+        <option value="land dwellers">Land Dwellers</option>
+        <option value="amphibious">Amphibious</option>
+        <option value="aquatic">Aquatic</option>`;
+    }
+  });
+
+  // Apply Filter
+  applyBtn.addEventListener("click", () => {
+    const type = filterClass.value || "_";
+    const subtype = filterSub.value || "_";
+    const rarity = filterRarity.value || "_";
+
+    const filterStr = `${type}-${subtype}-${rarity}`;
+    console.log("🔍 Filtering by:", filterStr);
+
+    filterBox.classList.add("hidden");
+    startAppFlow(filterStr);
+  });
+
+  // Reset Filter
+  resetBtn.addEventListener("click", () => {
+    filterClass.value = "_";
+    filterSub.innerHTML = `<option value="_">-- Any Subtype --</option>`;
+    filterRarity.value = "_";
+    filterBox.classList.add("hidden");
+    startAppFlow(); // Load all posts
+  });
 });
 
 
