@@ -120,7 +120,7 @@
       <!-- had to mention "max-sm:flex max-sm:items-center max-sm:justify-center" to make the items centered vertically in 100% cases  -->
         <a href="#" id="filter-trigger" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">Filters</a>
         <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">Add to Fav's</a>
-        <!-- <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">Fauna</a> -->
+        <a href="#" id="yourPosts" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">Your Posts</a>
     </nav>
 <div id="home" class="w-full h-screen">
   <div id="wrapper" class="h-screen w-full  snap-y snap-mandatory overflow-y-scroll">  
@@ -323,7 +323,9 @@ console.log("Atrocities Length:", atrocities.length);
   </script>
 </div>
 <div id="favorites" class="hidden h-screen w-full  snap-y snap-mandatory overflow-y-scroll"><div class="pt-[10vh] xl:pt-[15vh]">Favorites go Here!</div></div>
-<div id="yours" class="hidden h-screen w-full  snap-y snap-mandatory overflow-y-scroll"><div class="pt-[10vh] xl:pt-[15vh]">Your posts appear here!</div></div>
+<div id="yours" class="hidden h-screen w-full  snap-y snap-mandatory overflow-y-scroll">
+  <div id="yoursWrapper" class="max-sm:pt-[10vh] sm:pt-[15vh] xl:pt-[20vh] h-screen w-full  snap-y snap-mandatory overflow-y-scroll"><p>Your posts appear here!</p></div>
+</div>
   
   <!-- Filter Box (place at bottom of body) -->
 <div id="filters-box" class="hidden fixed top-[15vh] left-1/2 transform -translate-x-1/2 bg-white shadow-lg rounded-lg z-50 p-4 w-[90%] max-w-md space-y-4">
@@ -388,15 +390,28 @@ console.log("Atrocities Length:", atrocities.length);
 // Animation state for intro screen
 let animationDone = false;
 const fullposts = [];
-let allposts = [];
 let generatePostHTML; // global
-const wrapper = document.getElementById("wrapper");
-// Lazy loading tracking state
-let maxLoadedIndex = -1;// total number of loaded posts in memory
-let currentPost=0;
-let previousPost=-1;
-// let killProgressiveLoad = false;
-let viewed =[];
+
+const homeState = {
+  posts: [], // previously homeposts
+  wrapper: document.getElementById("wrapper"),
+  maxLoadedIndex: -1,
+  currentPost: 0,
+  previousPost: -1,
+  viewed: [],
+  postObserver: null
+};
+const yourState = {
+  posts: [], // previously homeposts
+  wrapper: document.getElementById("yoursWrapper"),
+  maxLoadedIndex: -1,
+  currentPost: 0,
+  previousPost: -1,
+  viewed: [],
+  postObserver: null
+};
+
+
 
 async function fetchGalleryPosts() {
 const cloudName = "dumtyosqg";
@@ -476,7 +491,7 @@ return `<div data-index="${index}" data-animated="false" class="main w-full flex
       <a href="${post.Social}" class="PhotographerIdxl block w-full text-white text-center h-[2.5vh] text-[1.5vh] leading-[2.5vh]">By: ${post.Photographer_name}</a>
   </div>
 
-  <div class="info-side w-[40%] flex flex-col bg-green-300 h-full ${viewed.includes(index)?"":"-translate-x-full opacity-0 transition-all duration-700 ease-in-out"}">
+  <div class="info-side w-[40%] flex flex-col bg-green-300 h-full ${homeState.viewed.includes(index)?"":"-translate-x-full opacity-0 transition-all duration-700 ease-in-out"}">
 
     <div class="info-carousel w-full h-[85%] relative overflow-hidden transition-all duration-700 ease-in-out">
        <div class="carousel-container w-full h-full flex transition-transform duration-500 ease-in-out ">
@@ -527,18 +542,18 @@ const isMobile = window.innerWidth < 1280;
 // Start app: Show animation, fetch posts, and manage visibility
 async function startAppFlow(filter=null) {
   showLoadingAnimation();
-  wrapper.scrollTop=0;
+  homeState.wrapper.scrollTop=0;
 
-  if (postObserver) {
-    postObserver.disconnect();
-    postObserver = null;
+  if (homeState.postObserver) {
+    homeState.postObserver.disconnect();
+    homeState.postObserver = null;
   }
 
-  wrapper.innerHTML = "";
-  currentPost = 0;
-  previousPost = -1;
-  viewed = [];
-  maxLoadedIndex = -1;
+  homeState.wrapper.innerHTML = "";
+  homeState.currentPost = 0;
+  homeState.previousPost = -1;
+  homeState.viewed = [];
+  homeState.maxLoadedIndex = -1;
 
   generatePostHTML = isMobile ? generateMobilePost : generateDesktopPost;
   if (fullposts.length === 0) {
@@ -548,10 +563,10 @@ async function startAppFlow(filter=null) {
 
 // If no filter, use all posts
 if (!filter || filter === "_-_-_") {
-    allposts = [...fullposts];
+  homeState.posts = [...fullposts];
   } else {
     const [type, subtype, rarity] = filter.split("-");
-    allposts = fullposts.filter(post => {
+    homeState.posts = fullposts.filter(post => {
       const [pType, pSub, pRarity] = post.Classification.split("-");
       return (
         (type === "_" || type === pType) &&
@@ -559,9 +574,10 @@ if (!filter || filter === "_-_-_") {
         (rarity === "_" || rarity === pRarity)
       );
     });
-  }  console.log(`[✅ filtered Posts Loaded: ${allposts.length}]`, allposts);
+  }  console.log(`[✅ filtered Posts Loaded: ${homeState.posts.length}]`, homeState.posts);
 
-  fetchPosts(0, 4, null, () => observePostNavigation()); // Lazy load posts 0–4 initially
+  observePostNavigation();  // Initialize once
+fetchPosts(homeState, 0, 4);         // It will now observe as it renders
 
   // Always hide the animation screen after exactly 5 seconds
   setTimeout(() => {
@@ -583,24 +599,24 @@ function hideLoadingAnimation() {
 }
 
 // Fetch and render a set of posts from index `start` to `end`
-function fetchPosts(start, end, currentpostat=null, resolve = () => {}, reject = () => {}) {
-console.log(`📦 Trying to Fetch posts from ${start} to ${end}`);
+function fetchPosts(state, start, end, currentpostat = null, resolve = () => {}, reject = () => {}) {
+  console.log(`📦 Trying to Fetch posts from ${start} to ${end}`);
 
-for (let i = start; i <= end && i < allposts.length; i++) {
-  if (currentpostat != null && currentpostat > currentPost) {
-    console.log(`⛔ Aborting fetch: currentpostat (${currentpostat}) > currentpost (${currentPost})`);
+for (let i = start; i <= end && i < state.posts.length; i++) {
+  if (currentpostat != null && currentpostat > state.currentPost) {
+    console.log(`⛔ Aborting fetch: currentpostat (${currentpostat}) > currentpost (${state.currentPost})`);
     reject("Aborted fetch due to scroll back");
     return;
   }
 
-  if(!wrapper.children[i]){
-  const postHTML = generatePostHTML(allposts[i], i);
-  wrapper.insertAdjacentHTML("beforeend", postHTML);
-  if (i > maxLoadedIndex) maxLoadedIndex = i;
+  if(!state.wrapper.children[i]){
+  const postHTML = generatePostHTML(state.posts[i], i);
+  state.wrapper.insertAdjacentHTML("beforeend", postHTML);
+  if (i > state.maxLoadedIndex) state.maxLoadedIndex = i;
 
-  const newPost = document.querySelector(`.main[data-index="${i}"]`);
-  if (newPost && postObserver) {
-    postObserver.observe(newPost);
+  const newPost = state.wrapper.querySelector(`.main[data-index="${i}"]`);
+  if (newPost && state.postObserver) {
+    state.postObserver.observe(newPost);
     console.log(`📡 Observing new post ${i}`);
   }
 }
@@ -614,28 +630,29 @@ resolve(); // done loading
 
 
 
-let postObserver = null;
 
 
-// Observer to track currently visible post and trigger logic
+
+//for home Observer to track currently visible post and trigger logic
 function observePostNavigation() {
 
-  postObserver = new IntersectionObserver((entries) => {
+  homeState.postObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         const currentPostAt = parseInt(entry.target.getAttribute("data-index"));
-        if (currentPostAt !== currentPost) {
+        if (currentPostAt !== homeState.currentPost) {
           console.log(`👀 Viewing Post: ${currentPostAt}`);
-          previousPost= currentPost;
-          currentPost = currentPostAt;
+          homeState.previousPost= homeState.currentPost;
+          homeState.currentPost = currentPostAt;
+        }
                 if (!isMobile) {
                   initializeCarousel(entry.target);
                   console.log("inside if block");
                 }else{
-                  setupReadMoreListener(entry.target,currentPostAt); 
+                  // setupReadMoreListener(entry.target,currentPostAt); uncomment after making the listener function reusable
                 }
-        }
-                  if (entry.target.dataset.animated === "false") {
+                 
+                if (entry.target.dataset.animated === "false") {
             setTimeout(() => {
                 const info_side = entry.target.querySelector(".info-side"); // ⬅️ Add the dot (important)
                 if (info_side) {
@@ -646,10 +663,10 @@ function observePostNavigation() {
                 }
             }, 500); // You chose 500ms delay here
           }
-          viewed.push(currentPostAt);//to keep track of viewed posts so far no matter the order of navigation, or regenrated posts, its used for animating carousel for desktop
-                  console.log(viewed);//you can also use viewed array to keep track of user navigation sequence.
+          homeState.viewed.push(currentPostAt);//to keep track of viewed posts so far no matter the order of navigation, or regenrated posts, its used for animating carousel for desktop
+                  console.log(homeState.viewed);//you can also use viewed array to keep track of user navigation sequence.
 
-          if((currentPostAt - 2) % 5 === 0 && previousPost>currentPostAt){
+          if((currentPostAt - 2) % 5 === 0 && homeState.previousPost>currentPostAt){
             fillEmptyPosts(currentPostAt)
             .then(() =>removeFarPosts(currentPostAt)) // clean up phase (empty for now)
             .then(() => {
@@ -658,7 +675,7 @@ function observePostNavigation() {
             .catch(err => {
               console.warn(`⚠️ Skipped or aborted at post ${currentPostAt}:`, err);
             });
-          }else if((currentPostAt - 3) % 5 === 0&& previousPost<currentPostAt) {
+          }else if((currentPostAt - 3) % 5 === 0&& homeState.previousPost<currentPostAt) {
           lazyLoadFuturePosts(currentPostAt)
             .then(() => {if(currentPostAt>3)removeOldPosts(currentPostAt)}) // clean up phase (empty for now)
             .then(() => {
@@ -673,18 +690,9 @@ function observePostNavigation() {
       }
     });
   }, {
-    root: wrapper,
+    root: homeState.wrapper,
     threshold: 0.6
   });
-
-  // Initial observe for first 5 posts
-  document.querySelectorAll('.main').forEach(post => postObserver.observe(post));
-  const firstPost = document.querySelector('.main[data-index="0"]');
-if (firstPost && !isMobile) {
-  initializeCarousel(firstPost);
-}else if(firstPost){
-  setupReadMoreListener(firstPost,0);
-}
 
 }
   
@@ -705,9 +713,9 @@ function fillEmptyPosts(currentpostat) {
         return;
       }
 
-      const container = document.querySelector(`.main[data-index='${i}']`);
-      if (container && container.children.length === 0 && allposts[i]) {
-        const post = allposts[i];
+      const container = wrapper.querySelector(`.main[data-index='${i}']`);
+      if (container && container.children.length === 0 && posts[i]) {
+        const post = posts[i];
 
         const innerHTML = isMobile
           ? `
@@ -792,7 +800,7 @@ function removeFarPosts(currentpostat) {
       return;
     }
 
-    const el = document.querySelector(`.main[data-index='${i}']`);
+    const el = wrapper.querySelector(`.main[data-index='${i}']`);
     if (el) {
       el.remove();
       console.log(`🗑️ Removed post container ${i}`);
@@ -810,7 +818,7 @@ function removeFarPosts(currentpostat) {
 function lazyLoadFuturePosts(currentpostat) {
 return new Promise((resolve, reject) => {
   // if(previousPost<currentpostat){
-    fetchPosts(currentpostat + 2, currentpostat + 6, currentpostat, resolve, reject);
+    fetchPosts(homeState, currentpostat + 2, currentpostat + 6, currentpostat, resolve, reject);
   // }else{resolve()}
 });
 }
@@ -848,17 +856,24 @@ runCleanupStep();
 startAppFlow();
 
 document.getElementById("next-post").addEventListener("click", () => {
-    wrapper.scrollBy({ top: window.innerHeight, behavior: "smooth" });
-  });
+  const visibleWrapper = document.querySelector("#wrapper:not(.hidden), #yoursWrapper:not(.hidden), #favoritesWrapper:not(.hidden)");
+  if (visibleWrapper) {
+    visibleWrapper.scrollBy({ top: window.innerHeight, behavior: "smooth" });
+  }
+});
 
-  document.getElementById("prev-post").addEventListener("click", () => {
-    wrapper.scrollBy({ top: -window.innerHeight, behavior: "smooth" });
-  });
+document.getElementById("prev-post").addEventListener("click", () => {
+  const visibleWrapper = document.querySelector("#wrapper:not(.hidden), #yoursWrapper:not(.hidden), #favoritesWrapper:not(.hidden)");
+  if (visibleWrapper) {
+    visibleWrapper.scrollBy({ top: -window.innerHeight, behavior: "smooth" });
+  }
+});
+
 
 
 //to use in console for testing post removal from container
 function clearPostChildren(index) {
-  const el = document.querySelector(`.main[data-index='${index}']`);
+  const el = wrapper.querySelector(`.main[data-index='${index}']`);
   if (el) {
     console.log(`🧼 Clearing children of post ${index}`);
     el.innerHTML = "";
@@ -938,8 +953,8 @@ function setupReadMoreListener(postEl,index) {
     activeReadMoreCleanup(); // remove old listener
     activeReadMoreCleanup = null;
   }
-  if (typeof index !== "number" || !allposts[index]) {
-  console.warn("❌ Invalid post index or post data not found in allposts", index);
+  if (typeof index !== "number" || !posts[index]) {
+  console.warn("❌ Invalid post index or post data not found in posts", index);
   return;
 }
 
@@ -974,21 +989,21 @@ function setupReadMoreListener(postEl,index) {
                     <div class="first-slide carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
                       <div class="slide1-content min-h-[18vh] max-h-full">
                         <div class="font-bold h-[7.5vh] text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>At The Moment</span></div>
-                        <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${allposts[index].At_the_moment}</p>
+                        <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${posts[index].At_the_moment}</p>
                       </div>
                       <div class="flex-auto bg-black"></div>
                     </div>
                     <div class="second-slide carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
                       <div class="slide2-content min-h-[18vh] max-h-full">
                         <div class="font-bold h-[7.5vh] text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Facts</span></div>
-                        <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${allposts[index].Facts}</p>
+                        <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${posts[index].Facts}</p>
                       </div>
                       <div class="flex-auto bg-black"></div>
                     </div>
                     <div class="third-slide carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
                       <div class="slide3-content min-h-[18vh] max-h-full">
                         <div class="font-bold h-[7.5vh] text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Atrocities</span></div>
-                        <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${allposts[index].Atrocities}</p>
+                        <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${posts[index].Atrocities}</p>
                       </div>
                       <div class="flex-auto bg-black"></div>
                     </div>
@@ -1125,7 +1140,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const sections = ["home", "upload", "favorites", "yours"];
     const footer = document.querySelector("footer");
     const internalNav = document.getElementById("internal-nav");
-    // const homeWrapper = document.getElementById("wrapper");
+    // const homeState.wrapper = document.getElementById("wrapper");
 
     // Save scrollTop if leaving home
     if (
@@ -1133,7 +1148,7 @@ document.addEventListener("DOMContentLoaded", function () {
       !document.getElementById("home").classList.contains("hidden") &&
       sectionId !== "home"
     ) {
-      homeScrollTop = wrapper.scrollTop;
+      homeScrollTop = homeState.wrapper.scrollTop;
     }
 
     // Fade out current section
@@ -1154,14 +1169,19 @@ document.addEventListener("DOMContentLoaded", function () {
         target.classList.add("opacity-0", "transition-opacity", "duration-500");
         requestAnimationFrame(() => {
           target.classList.remove("opacity-0");
+
+          if (sectionId === "yours") {
+        startYoursSection(); // your async function — no need to await here
+      }
+
         });
       }, 500);
     }
 
     // Restore scrollTop if returning to home
-    if (sectionId === "home" && wrapper) {
+    if (sectionId === "home" && homeState.wrapper) {
       setTimeout(() => {
-        wrapper.scrollTop = homeScrollTop;
+        homeState.wrapper.scrollTop = homeScrollTop;
       }, 0);
     }
 
@@ -1256,6 +1276,78 @@ document.addEventListener("DOMContentLoaded", function () {
     startAppFlow(); // Load all posts
   });
 });
+
+//Yours logic starts here!
+async function startYoursSection() {
+  // Disconnect previous observer if any
+  if (yourState.postObserver) {
+    yourState.postObserver.disconnect();
+    yourState.postObserver = null;
+  }
+
+  if (yourState.wrapper) {
+    yourState.wrapper.innerHTML = ""; // Reset DOM
+    yourState.wrapper.scrollTop = 0;  // Scroll to top
+  }
+
+  // Fetch fresh data
+  const name = localStorage.getItem("photographer-name");
+  if (!name) {
+    alert("No photographer name found");
+    return;
+  }else{
+    console.log(`fetching posts of ${name}`);
+  }
+
+  yourState.posts = await yourPostsOnly(name);
+  if (yourState.posts.length === 0) {
+    yourState.wrapper.innerHTML = "<p class='text-center p-4'>No posts found for you yet 😔</p>";
+    return;
+  }else{
+    console.log(yourState.posts)
+  }
+
+  //observeYoursPosts();
+  fetchPosts(yourState, 0, 4); 
+}
+
+async function yourPostsOnly(name) {
+
+  const cloudName = "dumtyosqg";
+  const url = `https://res.cloudinary.com/${cloudName}/image/list/gallery.json`;
+
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Failed to fetch posts");
+
+    const data = await res.json();
+    const resources = data.resources || [];
+
+    const all = resources
+      .filter(asset => asset.context?.custom?.Photographer_name === name)
+      .map(asset => {
+        const ctx = asset.context.custom;
+        return {
+          assetId: asset.asset_id,
+          publicId: asset.public_id,
+          createdAt: asset.created_at,
+          Photographer_name: ctx.Photographer_name,
+          Social: ctx.Social,
+          At_the_moment: ctx.At_the_moment,
+          Facts: ctx.Facts,
+          Atrocities: ctx.Atrocities,
+          Classification: ctx.Classification,
+          Rejected: ctx.Rejected // <-- no transformation
+        };
+      });
+
+    return all;
+  } catch (err) {
+    console.error("❌ Error fetching 'Yours' posts:", err);
+    return [];
+  }
+}
+
 
 
 
