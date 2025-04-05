@@ -119,8 +119,10 @@
     <nav id="internal-nav" class="w-[90%] max-sm:w-full flex flex-row fixed max-sm:bottom-0 sm:top-[10vh] xl:top-[15vh] h-[5vh] max-sm:mx-0 items-center mx-[5%] z-20">
       <!-- had to mention "max-sm:flex max-sm:items-center max-sm:justify-center" to make the items centered vertically in 100% cases  -->
         <a href="#" id="filter-trigger" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">Filters</a>
-        <a href="#" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">Add to Fav's</a>
-        <a href="#" id="yourPosts" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">Your Posts</a>
+        <a href="#" id="yours-heading" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)] hidden">Your Posts</a>
+        <a href="#" id="favorites-heading" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)] hidden">Favorities</a>
+        <a href="#" id="favorite-button" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">Add to Fav's</a>
+
     </nav>
 <div id="home" class="w-full h-screen">
   <div id="wrapper" class="h-screen w-full  snap-y snap-mandatory overflow-y-scroll">  
@@ -407,7 +409,7 @@ const yourState = {
   maxLoadedIndex: -1,
   currentPost: 0,
   previousPost: -1,
-  viewed: [],
+  // viewed: [],
   postObserver: null
 };
 
@@ -451,7 +453,7 @@ try {
 }
 }
 
-function generateMobilePost(post, index) {
+function generateMobilePost(state, post, index) {
 return `<div data-index="${index}" class="main w-full flex flex-col h-screen  max-sm:pt-[5vh] sm:pt-[15vh] md:pt-[14vh] xl:pt-[19vh] snap-start snap-always">  
 <div class="post-card w-[80%] h-[70vh] flex flex-row justify-center items-center mx-auto my-auto">
   <div class="image-side w-full  bg-black relative h-full flex flex-col justify-center items-center">
@@ -467,17 +469,33 @@ return `<div data-index="${index}" class="main w-full flex flex-col h-screen  ma
       <a class="read-more-link text-blue-400 text-[clamp(.05rem,1rem,2.5vh)] h-[3vh]">Full info</a>
       </div>
   </div>
-    <div class="social-icons hidden max-md:flex w-full absolute top-[100%] justify-evenly items-center h-[4vh]">
-      <a href="#" class="">I</a>
-      <a href="#" class="">F</a>
-      <a href="#" class="">W</a>
+  <div class="social-icons hidden max-md:flex w-full absolute top-[100%] justify-evenly items-center h-[4vh]">
+    ${
+    state !== yourState
+      ? `
+        <a href="#" class="">I</a>
+        <a href="#" class="">F</a>
+        <a href="#" class="">W</a>`
+      : (() => {
+          switch (post.Rejected) {
+            case "false":
+              return `<span class="bg-yellow-500 w-full text-center h-full">Pending Approval</span>`;
+            case "approved":
+              return `<span class="bg-green-500 w-full text-center h-full">Approved</span>`;
+            default:
+              return `<span class="bg-red-500 w-full text-center h-full">Rejected</span>
+              <div class="max-md:flex w-screen bg-red-100 absolute top-[4vh] h-[3vh] overflow-x-auto leading-[3vh] whitespace-nowrap text-center mx-auto">Reason: ${post.Rejected}</div>
+              `;
+          }
+        })()
+  }
     </div>
   </div>
 </div>
 </div>`;
 }
 
-function generateDesktopPost(post, index) {
+function generateDesktopPost(state, post, index) {
 return `<div data-index="${index}" data-animated="false" class="main w-full flex flex-col h-screen pt-[15vh] snap-start snap-always min-w-[950px]">
       
   
@@ -491,7 +509,7 @@ return `<div data-index="${index}" data-animated="false" class="main w-full flex
       <a href="${post.Social}" class="PhotographerIdxl block w-full text-white text-center h-[2.5vh] text-[1.5vh] leading-[2.5vh]">By: ${post.Photographer_name}</a>
   </div>
 
-  <div class="info-side w-[40%] flex flex-col bg-green-300 h-full ${homeState.viewed.includes(index)?"":"-translate-x-full opacity-0 transition-all duration-700 ease-in-out"}">
+  <div class="info-side w-[40%] flex flex-col bg-green-300 h-full ${(state==homeState && !state.viewed.includes(index))?"-translate-x-full opacity-0 transition-all duration-700 ease-in-out":""}">
 
     <div class="info-carousel w-full h-[85%] relative overflow-hidden transition-all duration-700 ease-in-out">
        <div class="carousel-container w-full h-full flex transition-transform duration-500 ease-in-out ">
@@ -610,7 +628,7 @@ for (let i = start; i <= end && i < state.posts.length; i++) {
   }
 
   if(!state.wrapper.children[i]){
-  const postHTML = generatePostHTML(state.posts[i], i);
+  const postHTML = generatePostHTML(state, state.posts[i], i);
   state.wrapper.insertAdjacentHTML("beforeend", postHTML);
   if (i > state.maxLoadedIndex) state.maxLoadedIndex = i;
 
@@ -1193,7 +1211,12 @@ document.addEventListener("DOMContentLoaded", function () {
     if (footer) footer.classList.toggle("invisible", !shouldShowFooter);
     const filtersBtn = document.getElementById("filter-trigger");
     filtersBtn.classList.toggle("hidden", sectionId !== "home");
-
+    const favoriteBtn = document.getElementById("favorite-button");
+    favoriteBtn.classList.toggle("hidden", sectionId !== "home" && sectionId !== "favorites");
+    const yoursHeading = document.getElementById("yours-heading");
+    yoursHeading.classList.toggle("hidden", sectionId !== "yours");
+    const favoritesHeading = document.getElementById("favorites-heading");
+    favoritesHeading.classList.toggle("hidden", sectionId !== "favorites");
   }
 
   function attachNavListeners() {
@@ -1307,7 +1330,7 @@ async function startYoursSection() {
     console.log(yourState.posts)
   }
 
-  //observeYoursPosts();
+  observeYoursPosts();
   fetchPosts(yourState, 0, 4); 
 }
 
@@ -1348,7 +1371,52 @@ async function yourPostsOnly(name) {
   }
 }
 
+function observeYoursPosts() {
 
+  yourState.postObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const currentPostAt = parseInt(entry.target.getAttribute("data-index"));
+      if (currentPostAt !== yourState.currentPost) {
+        console.log(`👀 Viewing Post: ${currentPostAt}`);
+        yourState.previousPost= yourState.currentPost;
+        yourState.currentPost = currentPostAt;
+      }
+              if (!isMobile) {
+                initializeCarousel(entry.target);
+                console.log("inside if block");
+              }else{
+                setupReadMoreListener(yourState, entry.target,currentPostAt); //uncomment after making the listener function reusable
+              }
+        if((currentPostAt - 2) % 5 === 0 && yourState.previousPost>currentPostAt){
+          fillEmptyPosts(yourState, currentPostAt)
+          .then(() =>removeFarPosts(yourState, currentPostAt)) // clean up phase (empty for now)
+          .then(() => {
+            console.log("✅ Finished filling empty containers & removing far posts ");
+          })
+          .catch(err => {
+            console.warn(`⚠️ Skipped or aborted at post ${currentPostAt}:`, err);
+          });
+        }else if((currentPostAt - 3) % 5 === 0&& yourState.previousPost<currentPostAt) {
+        lazyLoadFuturePosts(yourState, currentPostAt)
+          .then(() => {if(currentPostAt>3)removeOldPosts(yourState, currentPostAt)}) // clean up phase (empty for now)
+          .then(() => {
+            console.log(`✅ Finished loading & cleanup for post ${currentPostAt}`);
+          })
+          .catch(err => {
+            console.warn(`⚠️ Skipped or aborted at post ${currentPostAt}:`, err);
+          });
+      }
+
+
+    }
+  });
+}, {
+  root: yourState.wrapper,
+  threshold: 0.6
+});
+
+}
 
 
 
