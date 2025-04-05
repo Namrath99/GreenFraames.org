@@ -649,7 +649,7 @@ function observePostNavigation() {
                   initializeCarousel(entry.target);
                   console.log("inside if block");
                 }else{
-                  // setupReadMoreListener(entry.target,currentPostAt); uncomment after making the listener function reusable
+                  setupReadMoreListener(homeState, entry.target,currentPostAt); //uncomment after making the listener function reusable
                 }
                  
                 if (entry.target.dataset.animated === "false") {
@@ -667,8 +667,8 @@ function observePostNavigation() {
                   console.log(homeState.viewed);//you can also use viewed array to keep track of user navigation sequence.
 
           if((currentPostAt - 2) % 5 === 0 && homeState.previousPost>currentPostAt){
-            fillEmptyPosts(currentPostAt)
-            .then(() =>removeFarPosts(currentPostAt)) // clean up phase (empty for now)
+            fillEmptyPosts(homeState, currentPostAt)
+            .then(() =>removeFarPosts(homeState, currentPostAt)) // clean up phase (empty for now)
             .then(() => {
               console.log("✅ Finished filling empty containers & removing far posts ");
             })
@@ -676,8 +676,8 @@ function observePostNavigation() {
               console.warn(`⚠️ Skipped or aborted at post ${currentPostAt}:`, err);
             });
           }else if((currentPostAt - 3) % 5 === 0&& homeState.previousPost<currentPostAt) {
-          lazyLoadFuturePosts(currentPostAt)
-            .then(() => {if(currentPostAt>3)removeOldPosts(currentPostAt)}) // clean up phase (empty for now)
+          lazyLoadFuturePosts(homeState, currentPostAt)
+            .then(() => {if(currentPostAt>3)removeOldPosts(homeState, currentPostAt)}) // clean up phase (empty for now)
             .then(() => {
               console.log(`✅ Finished loading & cleanup for post ${currentPostAt}`);
             })
@@ -696,7 +696,7 @@ function observePostNavigation() {
 
 }
   
-function fillEmptyPosts(currentpostat) {
+function fillEmptyPosts(state, currentpostat) {
   return new Promise((resolve, reject) => {
     if (currentpostat <= 2) {
       console.log("ℹ️ Skipping fill: currentpostat <= 2");
@@ -707,15 +707,15 @@ function fillEmptyPosts(currentpostat) {
     const to = currentpostat - 7;
 
     for (let i = from; i >= to && i >= 0; i--) {
-      if (currentPost > currentpostat) {
+      if (state.currentPost > currentpostat) {
         console.log("⛔ Aborted fill: user navigated away");
         reject("User navigated away during fill");
         return;
       }
 
-      const container = wrapper.querySelector(`.main[data-index='${i}']`);
-      if (container && container.children.length === 0 && posts[i]) {
-        const post = posts[i];
+      const container = state.wrapper.querySelector(`.main[data-index='${i}']`);
+      if (container && container.children.length === 0 && state.posts[i]) {
+        const post = state.posts[i];
 
         const innerHTML = isMobile
           ? `
@@ -791,16 +791,16 @@ function fillEmptyPosts(currentpostat) {
     resolve();
   });
 }
-function removeFarPosts(currentpostat) {
-  console.log(`🧹 removeFarPosts(): trying to remove posts from ${maxLoadedIndex} to ${currentpostat + 7}`);
+function removeFarPosts(state, currentpostat) {
+  console.log(`🧹 removeFarPosts(): trying to remove posts from ${state.maxLoadedIndex} to ${currentpostat + 3}`);
   
-  for (let i = maxLoadedIndex; i >= currentpostat + 3; i--) {
-    if (currentPost < currentpostat) {
-      console.warn(`⛔ Abort removal: user went back to post ${currentPost}`);
+  for (let i = state.maxLoadedIndex; i >= currentpostat + 3; i--) {
+    if (state.currentPost < currentpostat) {
+      console.warn(`⛔ Abort removal: user went back to post ${state.currentPost}`);
       return;
     }
 
-    const el = wrapper.querySelector(`.main[data-index='${i}']`);
+    const el = state.wrapper.querySelector(`.main[data-index='${i}']`);
     if (el) {
       el.remove();
       console.log(`🗑️ Removed post container ${i}`);
@@ -810,24 +810,24 @@ function removeFarPosts(currentpostat) {
   }
 
   // Update maxLoadedIndex
-  maxLoadedIndex = wrapper.children.length;
-  console.log(`🔄 maxLoadedIndex now updated to ${maxLoadedIndex}`);
+  state.maxLoadedIndex = state.wrapper.children.length;
+  console.log(`🔄 maxLoadedIndex now updated to ${state.maxLoadedIndex}`);
 }
 
 
-function lazyLoadFuturePosts(currentpostat) {
+function lazyLoadFuturePosts(state, currentpostat) {
 return new Promise((resolve, reject) => {
   // if(previousPost<currentpostat){
-    fetchPosts(homeState, currentpostat + 2, currentpostat + 6, currentpostat, resolve, reject);
+    fetchPosts(state, currentpostat + 2, currentpostat + 6, currentpostat, resolve, reject);
   // }else{resolve()}
 });
 }
-function removeOldPosts(currentpostat) {
+function removeOldPosts(state, currentpostat) {
 let i = 0;
 const limit = currentpostat - 3;
 
 function runCleanupStep() {
-  if (currentpostat > currentPost) {
+  if (currentpostat > state.currentPost) {
     console.log("⛔ Aborted cleanup: user went back");
     return;
   }
@@ -837,7 +837,7 @@ function runCleanupStep() {
     return;
   }
 
-  clearPostChildren(i);
+  clearPostChildren(state.wrapper, i);
   console.log(`🧹 Cleanup: ${i}th post is removed from container`);
   i++;
 
@@ -872,7 +872,7 @@ document.getElementById("prev-post").addEventListener("click", () => {
 
 
 //to use in console for testing post removal from container
-function clearPostChildren(index) {
+function clearPostChildren(wrapper,index) {
   const el = wrapper.querySelector(`.main[data-index='${index}']`);
   if (el) {
     console.log(`🧼 Clearing children of post ${index}`);
@@ -947,13 +947,13 @@ let activeReadMoreCleanup = null;
 let activeGoBackCleanup = null;
 
 
-function setupReadMoreListener(postEl,index) {
+function setupReadMoreListener(state, postEl, index) {
   // Clean up previous listener if exists
   if (activeReadMoreCleanup) {
     activeReadMoreCleanup(); // remove old listener
     activeReadMoreCleanup = null;
   }
-  if (typeof index !== "number" || !posts[index]) {
+  if (typeof index !== "number" || !state.posts[index]) {
   console.warn("❌ Invalid post index or post data not found in posts", index);
   return;
 }
@@ -969,7 +969,7 @@ function setupReadMoreListener(postEl,index) {
   const onClick = (e) => {
     e.preventDefault();
 
-    wrapper.classList.toggle("!overflow-y-hidden");//to make the page non-scrollable while on full screen
+    state.wrapper.classList.toggle("!overflow-y-hidden");//to make the page non-scrollable while on full screen
 
     imageContainer.classList.add(
       "max-sm:top-[-17.5vh]", "max-md:top-[-22.5vh]",
@@ -989,21 +989,21 @@ function setupReadMoreListener(postEl,index) {
                     <div class="first-slide carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
                       <div class="slide1-content min-h-[18vh] max-h-full">
                         <div class="font-bold h-[7.5vh] text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>At The Moment</span></div>
-                        <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${posts[index].At_the_moment}</p>
+                        <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${state.posts[index].At_the_moment}</p>
                       </div>
                       <div class="flex-auto bg-black"></div>
                     </div>
                     <div class="second-slide carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
                       <div class="slide2-content min-h-[18vh] max-h-full">
                         <div class="font-bold h-[7.5vh] text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Facts</span></div>
-                        <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${posts[index].Facts}</p>
+                        <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${state.posts[index].Facts}</p>
                       </div>
                       <div class="flex-auto bg-black"></div>
                     </div>
                     <div class="third-slide carousel-slide min-w-full max-h-full px-6 flex flex-col bg-slate-300">
                       <div class="slide3-content min-h-[18vh] max-h-full">
                         <div class="font-bold h-[7.5vh] text-[clamp(.5rem,1.25rem,7vh)] flex justify-center items-center"><span>Atrocities</span></div>
-                        <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${posts[index].Atrocities}</p>
+                        <p class="text-gray-700 max-h-[35vh] overflow-y-auto text-[clamp(.5rem,1rem,3.5vh)] leading-[3.5vh]">${state.posts[index].Atrocities}</p>
                       </div>
                       <div class="flex-auto bg-black"></div>
                     </div>
@@ -1097,7 +1097,7 @@ setTimeout(() => {
       bottom.classList.replace("opacity-100", "opacity-0");
       setTimeout(() => bottom.classList.add("hidden"), 700);
 
-      wrapper.classList.toggle("!overflow-y-hidden");//to make the page scrollable again after exiting full screen
+      state.wrapper.classList.toggle("!overflow-y-hidden");//to make the page scrollable again after exiting full screen
 
 
       // 🧼 Clean up the event listener
