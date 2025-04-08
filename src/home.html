@@ -121,7 +121,7 @@
         <a href="#" id="filter-trigger" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">Filters</a>
         <a href="#" id="yours-heading" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-auto max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)] hidden">Your Posts</a>
         <a href="#" id="favorites-heading" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)] hidden">Favorities</a>
-        <a href="#" id="favorite-button" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">Add to Fav's</a>
+        <a href="#" id="favorite-button" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">☆</a>
 
     </nav>
 <div id="home" class="w-full h-screen">
@@ -415,6 +415,9 @@ const yourState = {
   postObserver: null
 };
 
+let activeState = homeState; // default view
+
+
 
 
 async function fetchGalleryPosts() {
@@ -691,6 +694,7 @@ function observePostNavigation() {
           homeState.previousPost= homeState.currentPost;
           homeState.currentPost = currentPostAt;
         }
+        updateFavoriteButton(homeState.posts[currentPostAt]?.assetId);
                 if (!isMobile) {
                   initializeCarousel(entry.target);
                   console.log("inside if block");
@@ -1265,6 +1269,11 @@ document.addEventListener("DOMContentLoaded", function () {
       }, 500);
     }
 
+    if (sectionId === "home") activeState = homeState;
+else if (sectionId === "favorites") activeState = favoriteState;
+else if (sectionId === "yours") activeState = yourState;
+else activeState = null;
+
     // Restore scrollTop if returning to home
     if (sectionId === "home" && homeState.wrapper) {
       setTimeout(() => {
@@ -1597,6 +1606,49 @@ function reportThisImage(state, postEl, index) {
   };
 }
 
+
+
+function getFavorites() {
+  try {
+    const stored = JSON.parse(localStorage.getItem("favoritePosts"));
+    return Array.isArray(stored) ? stored : [];
+  } catch {
+    return [];
+  }
+}
+
+function setFavorites(favs) {
+  localStorage.setItem("favoritePosts", JSON.stringify(favs));
+}
+
+if (!localStorage.getItem("favoritePosts")) {
+  setFavorites([]); // initializes if not present
+}
+
+function updateFavoriteButton(assetId) {
+  const favButton = document.getElementById("favorite-button");
+  if (!favButton || !assetId) return;
+
+  const favorites = getFavorites();
+  favButton.textContent = favorites.includes(assetId) ? "★" : "☆";
+}
+
+document.getElementById("favorite-button").addEventListener("click", () => {
+  const currentPost = activeState.posts[activeState.currentPost];
+  if (!currentPost) return;
+
+  const assetId = currentPost.assetId;
+  let favorites = getFavorites();
+
+  if (favorites.includes(assetId)) {
+    favorites = favorites.filter(id => id !== assetId);
+  } else {
+    favorites.push(assetId);
+  }
+
+  setFavorites(favorites);
+  updateFavoriteButton(assetId);
+});
 
 
 
