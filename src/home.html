@@ -116,10 +116,10 @@
         </div>
     </header>
 
-    <nav id="internal-nav" class="w-[90%] max-sm:w-full flex flex-row fixed max-sm:bottom-0 sm:top-[10vh] xl:top-[15vh] h-[5vh] max-sm:mx-0 items-center mx-[5%] z-20">
+    <nav id="internal-nav" class="w-[90%] max-sm:w-full flex flex-row fixed max-sm:bottom-0 sm:top-[10vh] xl:top-[15vh] h-[5vh] max-sm:mx-0 items-center mx-[5%] z-10">
       <!-- had to mention "max-sm:flex max-sm:items-center max-sm:justify-center" to make the items centered vertically in 100% cases  -->
         <a href="#" id="filter-trigger" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">Filters</a>
-        <a href="#" id="yours-heading" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)] hidden">Your Posts</a>
+        <a href="#" id="yours-heading" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-auto max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)] hidden">Your Posts</a>
         <a href="#" id="favorites-heading" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)] hidden">Favorities</a>
         <a href="#" id="favorite-button" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">Add to Fav's</a>
 
@@ -294,7 +294,7 @@ console.log("Atrocities Length:", atrocities.length);
     });
 
     if (!response.ok) throw new Error("Upload failed");
-    AfterUpload.textContent = "✅ Image uploaded successfully!";
+    AfterUpload.innerHTML = `✅ Image uploaded successfully!<br>By: ${localStorage.getItem("photographer-name")}<br>(your Nature given name, remember to use it in another Browser-Account/Browser/Device)`;
     uploadForm.classList.add("hidden");
     uploadMoreBtn.classList.remove("hidden");
   } catch (err) {
@@ -324,8 +324,10 @@ console.log("Atrocities Length:", atrocities.length);
 
   </script>
 </div>
-<div id="favorites" class="hidden h-screen w-full  snap-y snap-mandatory overflow-y-scroll"><div class="pt-[10vh] xl:pt-[15vh]">Favorites go Here!</div></div>
-<div id="yours" class="hidden h-screen w-full  snap-y snap-mandatory overflow-y-scroll">
+<div id="favorites" class="hidden h-screen w-full">
+  <div id="favoritesWrapper" class="pt-[10vh] xl:pt-[15vh]">Favorites go Here!</div>
+</div>
+<div id="yours" class="hidden h-screen w-full">
   <div id="yoursWrapper" class="max-sm:pt-[10vh] sm:pt-[15vh] xl:pt-[20vh] h-screen w-full  snap-y snap-mandatory overflow-y-scroll"><p>Your posts appear here!</p></div>
 </div>
   
@@ -366,18 +368,18 @@ console.log("Atrocities Length:", atrocities.length);
 
     <footer class="hidden md:flex fixed w-full bottom-0 bg-green-200 h-[5vh] z-20">
         <div class="w-[90%] h-full mx-auto flex">
-        <div class="w-1/2 flex h-full justify-center items-center">
+        <div class="flex h-full justify-center items-center flex-1">
           <a id="prev-post" href="#" class="m-4 text-[clamp(.5rem,1rem,5vh)]">prev ^</a>
           <a id="next-post" href="#" class="m-4 text-[clamp(.5rem,1rem,5vh)]">next v</a>
         </div>
-        <div class="w-1/2 flex h-full justify-center items-center">
+        <div id="footer-social-icons" class="w-1/2 flex h-full justify-center items-center">
             <a href="#" class="m-4">I</a>
             <a href="#" class="m-4">F</a>
             <a href="#" class="m-4">W</a>
         </div>
         </div>
     </footer>
-<div id="tailwind-safelist-dummy" class="hidden snap-start -translate-x-full translate-x-0 z-[-1] z-10 z-20 !overflow-y-hidden"></div>
+<div id="tailwind-safelist-dummy" class="hidden snap-start -translate-x-full translate-x-0 z-[-1] z-10 z-20 !overflow-y-hidden relative bottom-[5vh]"></div>
 
 <!-- <div class="h-screen overflow-y-scroll snap-y snap-mandatory">
     <section class="h-screen bg-red-300 snap-start"></section>
@@ -452,12 +454,14 @@ try {
   console.error("❌ Error fetching gallery:", err);
 }
 }
-
+// ${state===yourState?`<button class="report-icon">❗</button>`:""}
+// 
 function generateMobilePost(state, post, index) {
 return `<div data-index="${index}" class="main w-full flex flex-col h-screen  max-sm:pt-[5vh] sm:pt-[15vh] md:pt-[14vh] xl:pt-[19vh] snap-start snap-always">  
 <div class="post-card w-[80%] h-[70vh] flex flex-row justify-center items-center mx-auto my-auto">
   <div class="image-side w-full  bg-black relative h-full flex flex-col justify-center items-center">
-    <a href="${post.Social}" class="PhotographerId block w-full absolute bottom-[100%] text-center text-[clamp(.5rem,1rem,3.75vh)] leading-[4vh] bg-green-200 h-[4vh]">By: ${post.Photographer_name}</a>
+    <a ${post.Social?`href=${post.Social}target="_blank"`:""} class="PhotographerId block w-full absolute bottom-[100%] text-center text-[clamp(.5rem,1rem,3.75vh)] leading-[4vh] bg-green-200 h-[4vh]">By: ${post.Photographer_name}</a>
+    ${state===yourState?`<button class="report-icon absolute bottom-[100%] right-0 h-[4vh]">❗</button>`:""}
       <div class="image-container max-md:h-[60vh] md:h-[63.5vh] absolute top-0 transition-all duration-700 ease-in-out w-full">
         <img src="https://res.cloudinary.com/dumtyosqg/image/upload/${post.publicId}" loading="lazy" alt="something went wrong!" class="h-full w-auto max-w-full object-contain mx-auto">
       </div>
@@ -469,34 +473,38 @@ return `<div data-index="${index}" class="main w-full flex flex-col h-screen  ma
       <a class="read-more-link text-blue-400 text-[clamp(.05rem,1rem,2.5vh)] h-[3vh]">Full info</a>
       </div>
   </div>
-  <div class="social-icons hidden max-md:flex w-full absolute top-[100%] justify-evenly items-center h-[4vh]">
     ${
     state !== yourState
-      ? `
+      ? `  <div class="social-icons hidden max-md:flex w-full absolute top-[100%] justify-evenly items-center h-[4vh]">
         <a href="#" class="">I</a>
         <a href="#" class="">F</a>
-        <a href="#" class="">W</a>`
-      : (() => {
+        <a href="#" class="">W</a>
+          </div>`
+      : 
+      (() => {
           switch (post.Rejected) {
             case "false":
-              return `<span class="bg-yellow-500 w-full text-center h-full">Pending Approval</span>`;
+              return `<div class="approval-status w-full absolute top-[100%] h-[3vh] xl:top-0 bg-yellow-500 text-center">
+              <p class="w-full leading-[3vh] text-[clamp(.25rem,1rem,2.5vh)]">Pending Approval</p>
+                      </div>`;
             case "approved":
-              return `<span class="bg-green-500 w-full text-center h-full">Approved</span>`;
+              return `<div class="approval-status w-full absolute top-[100%] h-[3vh] xl:top-0 bg-green-500 text-center">
+              <p class="w-full leading-[3vh] text-[clamp(.25rem,1rem,2.5vh)]">Approved</p>
+                      </div>`;
             default:
-              return `<span class="bg-red-500 w-full text-center h-full">Rejected</span>
-              <div class="max-md:flex w-screen bg-red-100 absolute top-[4vh] h-[3vh] overflow-x-auto leading-[3vh] whitespace-nowrap text-center mx-auto">Reason: ${post.Rejected}</div>
-              `;
+              return `<div class="approval-status w-full absolute top-[100%] h-[3vh] xl:top-0 bg-red-500 text-center">
+              <p class="w-full leading-[3vh] text-[clamp(.25rem,1rem,2.5vh)] overflow-x-auto whitespace-nowrap px-2">Rejected : ${post.Rejected}</p>
+                      </div>`;
           }
         })()
   }
-    </div>
   </div>
 </div>
 </div>`;
 }
 
 function generateDesktopPost(state, post, index) {
-return `<div data-index="${index}" data-animated="false" class="main w-full flex flex-col h-screen pt-[15vh] snap-start snap-always min-w-[950px]">
+return `<div data-index="${index}" data-animated="false" class="main w-full flex flex-col h-screen snap-start snap-always min-w-[950px] ${state===yourState?"relative pt-[12vh]":"pt-[15vh]"}">
       
   
 <div class="post-card w-[80%] h-[65vh] flex flex-row justify-center items-center mx-auto my-auto">
@@ -506,7 +514,7 @@ return `<div data-index="${index}" data-animated="false" class="main w-full flex
       <div class="image-container h-[60vh]">
         <img src="https://res.cloudinary.com/dumtyosqg/image/upload/${post.publicId}" loading="lazy" alt="something went wrong!" class="h-full w-auto max-w-full object-contain mx-auto">
       </div>
-      <a href="${post.Social}" class="PhotographerIdxl block w-full text-white text-center h-[2.5vh] text-[1.5vh] leading-[2.5vh]">By: ${post.Photographer_name}</a>
+      <a ${post.Social?`href=${post.Social}target="_blank"`:""} class="PhotographerIdxl block w-full text-white text-center h-[2.5vh] text-[1.5vh] leading-[2.5vh]">By: ${post.Photographer_name}</a>
   </div>
 
   <div class="info-side w-[40%] flex flex-col bg-green-300 h-full ${(state==homeState && !state.viewed.includes(index))?"-translate-x-full opacity-0 transition-all duration-700 ease-in-out":""}">
@@ -545,14 +553,34 @@ return `<div data-index="${index}" data-animated="false" class="main w-full flex
   </div>
 
   <div class="button-section h-[15%] flex justify-center items-center">
-    <button class="donate-button border-2 border-green-500 px-3 h-1/2 w-1/3 text-center text-lg">Donate</button>
+    ${state===yourState?`<button class="report-icon text-red-600 border-2 border-red-500 px-3 h-1/2 w-1/3 text-center text-lg">Report</button>`
+    :`<button class="donate-button border-2 border-green-500 px-3 h-1/2 w-1/3 text-center text-lg">Donate</button>`
+  }
   </div>
 
   </div>
 </div>
 
-    
-</div>`;
+${state === yourState?
+(() => {
+          switch (post.Rejected) {
+            case "false":
+              return `<div class="approval-status w-full absolute bottom-[5vh] h-[3vh] bg-yellow-500 text-center">
+              <p class="w-full leading-[3vh] text-[clamp(.25rem,1rem,2.5vh)]">Pending Approval</p>
+                      </div>`;
+            case "approved":
+              return `<div class="approval-status w-full absolute bottom-[5vh] h-[3vh] bg-green-500 text-center">
+              <p class="w-full leading-[3vh] text-[clamp(.25rem,1rem,2.5vh)]">Approved</p>
+                      </div>`;
+            default:
+              return `<div class="approval-status w-full absolute bottom-[5vh] h-[3vh] bg-red-500 text-center">
+              <p class="w-full leading-[3vh] text-[clamp(.25rem,1rem,2.5vh)] overflow-x-auto whitespace-nowrap px-2">Rejected : ${post.Rejected}</p>
+                      </div>`;
+          }
+        })()
+  :""}
+</div>
+`;
 }
 const isMobile = window.innerWidth < 1280;
 
@@ -739,7 +767,8 @@ function fillEmptyPosts(state, currentpostat) {
           ? `
             <div class="post-card w-[80%] h-[70vh] flex flex-row justify-center items-center mx-auto my-auto">
               <div class="image-side w-full bg-black relative h-full flex flex-col justify-center items-center">
-                <a href="${post.Social}" class="PhotographerId block w-full absolute bottom-[100%] text-center text-[clamp(.5rem,1rem,3.75vh)] leading-[4vh] bg-green-200 h-[4vh]">By: ${post.Photographer_name}</a>
+                <a ${post.Social?`href=${post.Social}target="_blank"`:""} class="PhotographerId block w-full absolute bottom-[100%] text-center text-[clamp(.5rem,1rem,3.75vh)] leading-[4vh] bg-green-200 h-[4vh]">By: ${post.Photographer_name}</a>
+                    ${state===yourState?`<button class="report-icon absolute bottom-[100%] right-0 h-[4vh]">❗</button>`:""}
                 <div class="image-container max-md:h-[60vh] md:h-[63.5vh] absolute top-0 transition-all duration-700 ease-in-out border-2 border-white">
                   <img src="https://res.cloudinary.com/dumtyosqg/image/upload/${post.publicId}" loading="lazy" alt="something went wrong!" class="h-full w-auto max-w-full object-contain mx-auto">
                 </div>
@@ -751,11 +780,31 @@ function fillEmptyPosts(state, currentpostat) {
                     <a class="read-more-link text-blue-400 text-[clamp(.05rem,1rem,2.5vh)] h-[3vh]">Full info</a>
                   </div>
                 </div>
-                <div class="social-icons hidden max-md:flex w-full absolute top-[100%] justify-evenly items-center h-[4vh]">
-                  <a href="#">I</a>
-                  <a href="#">F</a>
-                  <a href="#">W</a>
-                </div>
+    ${
+    state !== yourState
+      ? `  <div class="social-icons hidden max-md:flex w-full absolute top-[100%] justify-evenly items-center h-[4vh]">
+        <a href="#" class="">I</a>
+        <a href="#" class="">F</a>
+        <a href="#" class="">W</a>
+          </div>`
+      : 
+      (() => {
+          switch (post.Rejected) {
+            case "false":
+              return `<div class="approval-status w-full absolute top-[100%] h-[3vh] xl:top-0 bg-yellow-500 text-center">
+              <p class="w-full leading-[3vh] text-[clamp(.25rem,1rem,2.5vh)]">Pending Approval</p>
+                      </div>`;
+            case "approved":
+              return `<div class="approval-status w-full absolute top-[100%] h-[3vh] xl:top-0 bg-green-500 text-center">
+              <p class="w-full leading-[3vh] text-[clamp(.25rem,1rem,2.5vh)]">Approved</p>
+                      </div>`;
+            default:
+              return `<div class="approval-status w-full absolute top-[100%] h-[3vh] xl:top-0 bg-red-500 text-center">
+              <p class="w-full leading-[3vh] text-[clamp(.25rem,1rem,2.5vh)] overflow-x-auto whitespace-nowrap px-2">Rejected : ${post.Rejected}</p>
+                      </div>`;
+          }
+        })()
+  }
               </div>
             </div>`
           : `
@@ -765,7 +814,7 @@ function fillEmptyPosts(state, currentpostat) {
                 <div class="image-container h-[60vh]">
                   <img src="https://res.cloudinary.com/dumtyosqg/image/upload/${post.publicId}" loading="lazy" alt="something went wrong!" class="h-full w-auto max-w-full object-contain mx-auto">
                 </div>
-                <a href="${post.Social}" class="PhotographerIdxl block w-full text-white text-center h-[2.5vh] text-[1.5vh] leading-[2.5vh]">By: ${post.Photographer_name}</a>
+                ${post.Social?`href=${post.Social}target="_blank"`:""} class="PhotographerIdxl block w-full text-white text-center h-[2.5vh] text-[1.5vh] leading-[2.5vh]">By: ${post.Photographer_name}</a>
               </div>
               <div class="info-side w-[40%] flex flex-col bg-green-300 h-full">
                 <div class="info-carousel w-full h-[85%] relative overflow-hidden transition-all duration-700 ease-in-out">
@@ -796,10 +845,30 @@ function fillEmptyPosts(state, currentpostat) {
                   <button class="next-slide absolute h-[5vh] right-2 top-[2.5vh] transform -translate-y-1/2 bg-slate-400 text-white rounded-full focus:outline-none">→</button>
                 </div>
                 <div class="button-section h-[15%] flex justify-center items-center">
-                  <button class="donate-button border-2 border-green-500 px-3 h-1/2 w-1/3 text-center text-lg">Donate</button>
+                  ${state===yourState?`<button class="report-icon text-red-600 border-2 border-red-500 px-3 h-1/2 w-1/3 text-center text-lg">Report</button>`
+                  :`<button class="donate-button border-2 border-green-500 px-3 h-1/2 w-1/3 text-center text-lg">Donate</button>`
+                }
                 </div>
               </div>
-            </div>`;
+            </div>
+${state === yourState?
+(() => {
+          switch (post.Rejected) {
+            case "false":
+              return `<div class="approval-status w-full absolute bottom-[5vh] h-[3vh] bg-yellow-500 text-center">
+              <p class="w-full leading-[3vh] text-[clamp(.25rem,1rem,2.5vh)]">Pending Approval</p>
+                      </div>`;
+            case "approved":
+              return `<div class="approval-status w-full absolute bottom-[5vh] h-[3vh] bg-green-500 text-center">
+              <p class="w-full leading-[3vh] text-[clamp(.25rem,1rem,2.5vh)]">Approved</p>
+                      </div>`;
+            default:
+              return `<div class="approval-status w-full absolute bottom-[5vh] h-[3vh] bg-red-500 text-center">
+              <p class="w-full leading-[3vh] text-[clamp(.25rem,1rem,2.5vh)] overflow-x-auto whitespace-nowrap px-2">Rejected : ${post.Rejected}</p>
+                      </div>`;
+          }
+        })()
+  :""}            `;
 
         container.innerHTML = innerHTML;
         console.log(`🧩 Refilled content into post container ${i}`);
@@ -1217,6 +1286,8 @@ document.addEventListener("DOMContentLoaded", function () {
     yoursHeading.classList.toggle("hidden", sectionId !== "yours");
     const favoritesHeading = document.getElementById("favorites-heading");
     favoritesHeading.classList.toggle("hidden", sectionId !== "favorites");
+    const footerSocialIcons = document.getElementById("footer-social-icons");
+    footerSocialIcons.classList.toggle("hidden", sectionId === "yours"|| sectionId !== "favorites" && sectionId !== "home");
   }
 
   function attachNavListeners() {
@@ -1316,15 +1387,88 @@ async function startYoursSection() {
   // Fetch fresh data
   const name = localStorage.getItem("photographer-name");
   if (!name) {
-    alert("No photographer name found");
-    return;
+
+    yourState.wrapper.innerHTML = `<div id="usernamePrompt" class="flex flex-col justify-center items-center h-full text-center p-4 text-[clamp(.5rem,1.25rem,3vh)]">
+      <p class="mb-4 font-semibold text-red-500">No user name found in this Browser-Account/Browser/Device</p>
+      <p class="mb-6">Have you uploaded to Green Frames before?</p>
+      <div class="flex gap-4">
+        <button id="yesBtn" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Yes</button>
+        <button id="noBtn" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">No</button>
+      </div>
+    </div>
+  `;
+
+  document.getElementById("noBtn").onclick = () => {
+    document.getElementById("usernamePrompt").innerHTML = `
+      <p class="text-green-700 font-medium">Please go to the <span>Uploads</span> section, post your first image, and return here to check its status.</p>
+    `;
+  };
+
+  document.getElementById("yesBtn").onclick = () => {
+    document.getElementById("usernamePrompt").innerHTML = `
+      <p class="mb-4">Please enter the name that was given to you after your first upload: (the user names are case-sensitive)</p>
+      <input id="usernameInput" type="text" placeholder="Your username" class="border px-3 py-2 rounded w-[80%] max-w-sm mb-4" />
+      <button id="submitUsername" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Submit</button>
+    `;
+
+    document.getElementById("submitUsername").onclick = () => {
+      const enteredName = document.getElementById("usernameInput").value.trim();
+      if (!enteredName || enteredName.length < 6) {
+        alert("Please enter a valid name.");
+        return;
+      }
+      localStorage.setItem("photographer-name", enteredName);
+      document.getElementById("photographer-name").value = enteredName;
+
+      startYoursSection(); // Reload your posts
+    };
+  };
+
+
+
+  return;
+
+
   }else{
-    console.log(`fetching posts of ${name}`);
+    document.getElementById("yours-heading").innerHTML = `${name} <a id="change-user">=></a>`;
+    document.getElementById("change-user").onclick = () => {
+      yourState.wrapper.innerHTML = `<div id="usernamePrompt" class="flex flex-col justify-center items-center h-full text-center p-4 text-[clamp(.5rem,1.25rem,3vh)]">
+      <p class="mb-4 font-semibold text-red-500">Are you sure you want to change the user?</p>
+      <div class="flex gap-4">
+        <button id="yesBtn" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Yes</button>
+        <button id="noBtn" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">No</button>
+      </div>
+    </div>
+  `;
+
+  document.getElementById("noBtn").onclick = () => {
+    startYoursSection();
+  };
+  document.getElementById("yesBtn").onclick = () => {
+    document.getElementById("usernamePrompt").innerHTML = `
+      <p class="mb-4">Please enter the name that was given to you after your first upload: (the user names are case-sensitive)</p>
+      <input id="usernameInput" type="text" placeholder="Your username" class="border px-3 py-2 rounded w-[80%] max-w-sm mb-4" />
+      <button id="submitUsername" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Submit</button>
+    `;
+
+    document.getElementById("submitUsername").onclick = () => {
+      const enteredName = document.getElementById("usernameInput").value.trim();
+      if (!enteredName || enteredName.length < 6) {
+        alert("Please enter a valid name.");
+        return;
+      }
+      document.getElementById("photographer-name").value = enteredName;
+      localStorage.setItem("photographer-name", enteredName);
+      startYoursSection(); // Reload your posts
+    };
+  };
+    };
+  
   }
 
   yourState.posts = await yourPostsOnly(name);
   if (yourState.posts.length === 0) {
-    yourState.wrapper.innerHTML = "<p class='text-center p-4'>No posts found for you yet 😔</p>";
+    yourState.wrapper.innerHTML = "<p class='text-center p-4'>Coudn't find any posts in your name!<br><br>If you just uploaded your first post,<br>Please wait atleast a minute and come back to check progress<br><br><br> If you are trying to see your existing posts in this Browser-Account/Browser/Device,<br>you must have typed your username wrong!<br>you can change the user name by clicking the edit icon next to the current name</p>";
     return;
   }else{
     console.log(yourState.posts)
@@ -1386,8 +1530,9 @@ function observeYoursPosts() {
                 initializeCarousel(entry.target);
                 console.log("inside if block");
               }else{
-                setupReadMoreListener(yourState, entry.target,currentPostAt); //uncomment after making the listener function reusable
+                setupReadMoreListener(yourState, entry.target,currentPostAt); 
               }
+        reportThisImage(yourState, entry.target, currentPostAt);
         if((currentPostAt - 2) % 5 === 0 && yourState.previousPost>currentPostAt){
           fillEmptyPosts(yourState, currentPostAt)
           .then(() =>removeFarPosts(yourState, currentPostAt)) // clean up phase (empty for now)
@@ -1417,6 +1562,41 @@ function observeYoursPosts() {
 });
 
 }
+
+let activeReportCleanup = null;
+
+function reportThisImage(state, postEl, index) {
+  console.log("🔔 reportThisImage() called for index", index);
+
+  if (activeReportCleanup) {
+    activeReportCleanup(); // remove previous listener
+    activeReportCleanup = null;
+  }
+
+  const reportIcon = postEl.querySelector(".report-icon");
+
+  if (!reportIcon || typeof index !== "number" || !state.posts[index]) {
+    console.warn("❌ Report icon or post data not found", postEl, index);
+    return;
+  }
+
+  const onClick = () => {
+    const post = state.posts[index];
+    const subject = encodeURIComponent("I do not remember posting this image");
+    const body = encodeURIComponent(`Hi,\n\nI would like to report an issue with the image below:\n\nPublic ID: ${post.publicId}\nPhotographer: ${post.Photographer_name}\nClassification: ${post.Classification}\n\nThanks.`);
+    const mailto = `mailto:greenframes.report@example.com?subject=${subject}&body=${body}`;
+    window.open(mailto, "_blank");
+  };
+
+  reportIcon.addEventListener("click", onClick);
+
+  // Store cleanup
+  activeReportCleanup = () => {
+    reportIcon.removeEventListener("click", onClick);
+    activeReportCleanup = null;
+  };
+}
+
 
 
 

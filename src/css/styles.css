@@ -50,11 +50,13 @@
   }
 }
 
-#wrapper::-webkit-scrollbar {
+#wrapper::-webkit-scrollbar,
+#yoursWrapper::-webkit-scrollbar,
+#favoritesWrapper::-webkit-scrollbar {
   display: none;
 }
 
-#wrapper {
+#wrapper,#yoursWrapper,#favoritesWrapper {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
