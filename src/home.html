@@ -10,7 +10,7 @@
 </head>
 <body class="h-screen w-full min-w-[350px] min-h-[350px] bg-red-300">
   <!-- fixed the min h and w based on window resizing and content fit -->
-    <header class="w-full fixed top-0 bg-green-200 h-[10vh] xl:h-[15vh] z-20">
+    <header class="w-full fixed top-0 bg-green-200 h-[10vh] xl:h-[15vh] z-30">
       <!-- in the above header i had to put z-20 for the mobile-menu to overlay on the rest of the body to be visible -->
         <div class="flex w-full md:w-[90%] h-full mx-auto">
             <div class="flex w-2/3 md:w-1/2 justify-left sm:justify-left ml-4 md:ml-0 items-center">
@@ -18,7 +18,7 @@
                 <h1 class="font-bold text-gray-800 text-[clamp(0.5rem,1.5rem,10vh)] md:text-3xl lg:text-4xl leading-none">Green Frames</h1> <!--added leading-none to make the text fit inside header for devices as small as apple watch se 40 mm -->
             </div>
             <!-- nav bar for large screens -->
-            <nav class="hidden md:flex flex-row w-1/2 h-1/2 mx-auto justify-evenly items-end my-auto">
+            <nav class="hidden md:flex flex-row w-1/2 h-1/2 mx-auto justify-around items-end my-auto">
                 <a href="#" class="hover:text-gray-400 text-center p-1 w-1/6 h-auto">Home</a>
                 <a href="#" class="hover:text-gray-400 text-center p-1 w-1/6 h-auto">Upload</a>
                 <a href="#" class="hover:text-gray-400 text-center p-1 w-1/6 h-auto">Favorites</a>
@@ -116,7 +116,7 @@
         </div>
     </header>
 
-    <nav id="internal-nav" class="w-[90%] max-sm:w-full flex flex-row fixed max-sm:bottom-0 sm:top-[10vh] xl:top-[15vh] h-[5vh] max-sm:mx-0 items-center mx-[5%] z-10">
+    <nav id="internal-nav" class="w-[90%] max-sm:w-full flex flex-row fixed max-sm:bottom-0 sm:top-[10vh] xl:top-[15vh] h-[5vh] max-sm:mx-0 items-center mx-[5%] z-20">
       <!-- had to mention "max-sm:flex max-sm:items-center max-sm:justify-center" to make the items centered vertically in 100% cases  -->
         <a href="#" id="filter-trigger" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-28 max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)]">Filters</a>
         <a href="#" id="yours-heading" class="hover:text-gray-400 sm:h-3/4 max-sm:h-full flex items-center justify-center w-auto max-sm:flex-1 text-center bg-green-50 box-border border-2 border-green-200 text-[clamp(.5rem,1rem,5vh)] hidden">Your Posts</a>
@@ -325,10 +325,10 @@ console.log("Atrocities Length:", atrocities.length);
   </script>
 </div>
 <div id="favorites" class="hidden h-screen w-full">
-  <div id="favoritesWrapper" class="pt-[10vh] xl:pt-[15vh]">Favorites go Here!</div>
+  <div id="favoritesWrapper" class="h-screen w-full  snap-y snap-mandatory overflow-y-scroll"></div>
 </div>
 <div id="yours" class="hidden h-screen w-full">
-  <div id="yoursWrapper" class="max-sm:pt-[10vh] sm:pt-[15vh] xl:pt-[20vh] h-screen w-full  snap-y snap-mandatory overflow-y-scroll"><p>Your posts appear here!</p></div>
+  <div id="yoursWrapper" class="h-screen w-full  snap-y snap-mandatory overflow-y-scroll"></div>
 </div>
   
   <!-- Filter Box (place at bottom of body) -->
@@ -366,7 +366,7 @@ console.log("Atrocities Length:", atrocities.length);
 
 
 
-    <footer class="hidden md:flex fixed w-full bottom-0 bg-green-200 h-[5vh] z-20">
+    <footer class="hidden md:flex fixed w-full bottom-0 bg-green-200 h-[5vh] z-30">
         <div class="w-[90%] h-full mx-auto flex">
         <div class="flex h-full justify-center items-center flex-1">
           <a id="prev-post" href="#" class="m-4 text-[clamp(.5rem,1rem,5vh)]">prev ^</a>
@@ -414,6 +414,15 @@ const yourState = {
   // viewed: [],
   postObserver: null
 };
+const favoriteState = {
+  posts: [],
+  wrapper: document.getElementById("favoritesWrapper"),
+  maxLoadedIndex: -1,
+  currentPost: 0,
+  previousPost: -1,
+  postObserver: null
+};
+
 
 let activeState = homeState; // default view
 
@@ -607,6 +616,32 @@ async function startAppFlow(filter=null) {
   generatePostHTML = isMobile ? generateMobilePost : generateDesktopPost;
   if (fullposts.length === 0) {
   await fetchGalleryPosts(); // Only fetch once
+
+const lastTopAsset = localStorage.getItem("lastLoadTopPost");
+if (!lastTopAsset && fullposts.length > 0) {
+  // First-time user: set current top post
+  localStorage.setItem("lastLoadTopPost", fullposts[0].assetId);
+} else if (lastTopAsset) {
+  // Returning user: shuffle posts after previously seen top
+  const lastStoredIndex = fullposts.findIndex(p => p.assetId === lastTopAsset);
+
+  if (lastStoredIndex >= 0 && lastStoredIndex < fullposts.length - 1) {
+    const seenPart = fullposts.slice(0, lastStoredIndex);
+    const unseenPart = fullposts.slice(lastStoredIndex);
+
+    // Fisher-Yates shuffle
+    for (let i = unseenPart.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [unseenPart[i], unseenPart[j]] = [unseenPart[j], unseenPart[i]];
+    }
+
+    // Re-assign fullposts
+    fullposts.length = 0;
+    fullposts.push(...seenPart, ...unseenPart);
+  }
+}
+
+
 }
 
 
@@ -947,18 +982,17 @@ runCleanupStep();
 startAppFlow();
 
 document.getElementById("next-post").addEventListener("click", () => {
-  const visibleWrapper = document.querySelector("#wrapper:not(.hidden), #yoursWrapper:not(.hidden), #favoritesWrapper:not(.hidden)");
-  if (visibleWrapper) {
-    visibleWrapper.scrollBy({ top: window.innerHeight, behavior: "smooth" });
+  if (activeState?.wrapper) {
+    activeState.wrapper.scrollBy({ top: window.innerHeight, behavior: "smooth" });
   }
 });
 
 document.getElementById("prev-post").addEventListener("click", () => {
-  const visibleWrapper = document.querySelector("#wrapper:not(.hidden), #yoursWrapper:not(.hidden), #favoritesWrapper:not(.hidden)");
-  if (visibleWrapper) {
-    visibleWrapper.scrollBy({ top: -window.innerHeight, behavior: "smooth" });
+  if (activeState?.wrapper) {
+    activeState.wrapper.scrollBy({ top: -window.innerHeight, behavior: "smooth" });
   }
 });
+
 
 
 
@@ -976,14 +1010,59 @@ function clearPostChildren(wrapper,index) {
 
 let activeCarousel = null;
 
+// function initializeCarousel(postInView) {
+//   let currentSlide = 0;
+//   const slides = postInView.querySelectorAll(".carousel-slide");
+//   const totalSlides = slides.length;
+//   const carouselContainer = postInView.querySelector(".carousel-container");
+//   const prevBtn = postInView.querySelector(".prev-slide");
+//   const nextBtn = postInView.querySelector(".next-slide");
+
+//   activeCarousel = { currentSlide, slides, totalSlides, carouselContainer };
+
+//   function updateCarousel() {
+//     activeCarousel.carouselContainer.style.transform = `translateX(-${activeCarousel.currentSlide * 100}%)`;
+//     prevBtn.classList.toggle("bg-slate-400", activeCarousel.currentSlide > 0);
+//     prevBtn.classList.toggle("bg-slate-300", activeCarousel.currentSlide === 0);
+//     nextBtn.classList.toggle("bg-slate-400", activeCarousel.currentSlide < activeCarousel.totalSlides - 1);
+//     nextBtn.classList.toggle("bg-slate-300", activeCarousel.currentSlide === activeCarousel.totalSlides - 1);
+//   }
+
+//   prevBtn.addEventListener("click", () => {
+//     if (activeCarousel.currentSlide > 0) {
+//       activeCarousel.currentSlide--;
+//       updateCarousel();
+//     }
+//   });
+
+//   nextBtn.addEventListener("click", () => {
+//     if (activeCarousel.currentSlide < activeCarousel.totalSlides - 1) {
+//       activeCarousel.currentSlide++;
+//       updateCarousel();
+//     }
+//   });
+
+//   updateCarousel(); // Initialize the state
+// }
+
 function initializeCarousel(postInView) {
   let currentSlide = 0;
   const slides = postInView.querySelectorAll(".carousel-slide");
   const totalSlides = slides.length;
   const carouselContainer = postInView.querySelector(".carousel-container");
-  const prevBtn = postInView.querySelector(".prev-slide");
-  const nextBtn = postInView.querySelector(".next-slide");
 
+  // Select and clone buttons to remove old listeners
+  const prevBtnOld = postInView.querySelector(".prev-slide");
+  const nextBtnOld = postInView.querySelector(".next-slide");
+
+  const prevBtn = prevBtnOld.cloneNode(true);
+  const nextBtn = nextBtnOld.cloneNode(true);
+
+  // Replace old buttons with clean clones
+  prevBtnOld.replaceWith(prevBtn);
+  nextBtnOld.replaceWith(nextBtn);
+
+  // Update activeCarousel global (used in keydown navigation)
   activeCarousel = { currentSlide, slides, totalSlides, carouselContainer };
 
   function updateCarousel() {
@@ -994,6 +1073,7 @@ function initializeCarousel(postInView) {
     nextBtn.classList.toggle("bg-slate-300", activeCarousel.currentSlide === activeCarousel.totalSlides - 1);
   }
 
+  // Fresh event listeners (no duplicate stacking now!)
   prevBtn.addEventListener("click", () => {
     if (activeCarousel.currentSlide > 0) {
       activeCarousel.currentSlide--;
@@ -1008,8 +1088,9 @@ function initializeCarousel(postInView) {
     }
   });
 
-  updateCarousel(); // Initialize the state
+  updateCarousel(); // Init the state visually
 }
+
 
 // Single global listener outside of initializeCarousel:
 document.addEventListener("keydown", (e) => {
@@ -1263,6 +1344,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
           if (sectionId === "yours") {
         startYoursSection(); // your async function — no need to await here
+      }else if (sectionId === "favorites") {
+        startFavoritesSection(); // ✅ fire it off
       }
 
         });
@@ -1270,9 +1353,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     if (sectionId === "home") activeState = homeState;
-else if (sectionId === "favorites") activeState = favoriteState;
-else if (sectionId === "yours") activeState = yourState;
-else activeState = null;
+    else if (sectionId === "favorites") activeState = favoriteState;
+    else if (sectionId === "yours") activeState = yourState;
+    else activeState = null;
 
     // Restore scrollTop if returning to home
     if (sectionId === "home" && homeState.wrapper) {
@@ -1650,6 +1733,68 @@ document.getElementById("favorite-button").addEventListener("click", () => {
   updateFavoriteButton(assetId);
 });
 
+async function startFavoritesSection() {
+  const favorites = getFavorites(); // already implemented
+  if (fullposts.length === 0) {
+  await fetchGalleryPosts();
+}
+
+const fullMap = new Map(fullposts.map(p => [p.assetId, p]));
+favoriteState.posts = favorites
+  .slice()                     // cloning to avoid mutating original
+  .reverse()                   // reverse order
+  .map(id => fullMap.get(id)) // get full post object for each assetId
+  .filter(Boolean);           // remove any undefined/null values
+  
+  favoriteState.wrapper.innerHTML = "";
+  favoriteState.wrapper.scrollTop = 0;
+  favoriteState.currentPost = 0;
+  favoriteState.previousPost = -1;
+  favoriteState.maxLoadedIndex = -1;
+
+  if (favoriteState.posts.length === 0) {
+    favoriteState.wrapper.innerHTML = `<p class="text-center pt-[50vh]">You haven't added any favorites yet. Tap the ☆ icon on a post to favorite it!</p>`;
+    return;
+  }
+
+  observeFavoritesPosts();
+  fetchPosts(favoriteState, 0, 4);
+}
+
+function observeFavoritesPosts() {
+  favoriteState.postObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const currentPostAt = parseInt(entry.target.getAttribute("data-index"));
+        if (currentPostAt !== favoriteState.currentPost) {
+          favoriteState.previousPost = favoriteState.currentPost;
+          favoriteState.currentPost = currentPostAt;
+        }
+
+        if (!isMobile) {
+          initializeCarousel(entry.target);
+        } else {
+          setupReadMoreListener(favoriteState, entry.target, currentPostAt);
+        }
+
+        updateFavoriteButton(favoriteState.posts[currentPostAt]?.assetId);
+
+        if ((currentPostAt - 2) % 5 === 0 && favoriteState.previousPost > currentPostAt) {
+          fillEmptyPosts(favoriteState, currentPostAt)
+            .then(() => removeFarPosts(favoriteState, currentPostAt));
+        } else if ((currentPostAt - 3) % 5 === 0 && favoriteState.previousPost < currentPostAt) {
+          lazyLoadFuturePosts(favoriteState, currentPostAt)
+            .then(() => {
+              if (currentPostAt > 3) removeOldPosts(favoriteState, currentPostAt);
+            });
+        }
+      }
+    });
+  }, {
+    root: favoriteState.wrapper,
+    threshold: 0.6
+  });
+}
 
 
 </script>
